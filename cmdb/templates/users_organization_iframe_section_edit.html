@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>原力互娱运维管理系统</title>
+    <!-- Bootstrap Core CSS -->
+    <link href="/static/css/bootstrap.min.css" rel="stylesheet">
+    <!-- MetisMenu CSS -->
+    <link href="/static/css/metisMenu.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link href="/static/css/sb-admin-2.css" rel="stylesheet">
+    <!-- 公司logo -->
+    <link rel="shortcut icon" href="/static/img/logo.png?v=c2b4b0669d2669211fbddaf825655942aa8cb33e"
+          type="image/x-icon">
+    <!-- Custom Fonts -->
+    <link href="/static/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href="/static/css/select2.css" rel="stylesheet" type="text/css">
+    <script src="/static/js/jquery.js"></script>
+    <script type="text/javascript" src="/static/js/select2.min.js"></script>
+</head>
+<body id="org_edit_body">
+{% load staticfiles %}
+{% load mptt_tags %}
+
+<!-- 组织架构编辑区域 -->
+<div class="col-lg-8">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h4><b> 编辑节点 - {{ org.name }}</b></h4>
+        </div>
+        <div class="panel-body">
+            <form class="form-horizontal" role="form" action="{% url 'organization_edit' org.id %}"
+                  method="post">
+                {% csrf_token %}
+                <div class="modal-body">
+                    {% if org.id != 1 %}
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">父级节点</label>
+                            <div class="col-sm-8">
+                                <select id="parent" class="form-control" style="width: 100%" name="parent">
+                                    <optgroup label="选择父级节点">
+                                        <option id="parent-option" selected="selected"
+                                                value="{{ org.parent_id }}">
+                                            {% if org.parent %}
+                                                {{ org.get_ancestors_except_self }}{% else %}{% endif %}</option>
+                                    </optgroup>
+                                </select>
+                            </div>
+                        </div>
+                    {% endif %}
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">节点名称</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" id="name" name="name"
+                                   value="{{ org.name }}">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">节点负责人</label>
+                        <div class="col-sm-8">
+                            <select id="leader" class="form-control" style="width: 100%" name="leader">
+                                <optgroup label="选择负责人">
+                                    <option id="leader-option" selected="selected"
+                                            value="{{ org.leader }}">{% if org.leader %}
+                                        {{ org.get_leader_username }}{% else %}{% endif %}</option>
+                                </optgroup>
+                            </select>
+                        </div>
+                        <button class="btn btn-primary" id="reset_leader" type="button">X</button>
+                    </div>
+                    {% if org.project.all %}
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">负责项目</label>
+                            <div class="col-sm-8">
+                                {% for project in org.project.all %}
+                                    <a href="/assets/game_project_list/?project_name={{ project.project_name }}"
+                                       target="_blank">{{ project.project_name }}</a><br/>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    {% endif %}
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">是否公共部门</label>
+                        <div class="col-sm-8">
+                            <label class="radio-inline">
+                                <input type="radio" name="is_public" value="True"
+                                       {% if org.is_public %}checked{% endif %}/> 是
+                            </label>
+                            <label class="radio-inline">
+                                <input type="radio" name="is_public"
+                                       {% if not org.is_public %}checked{% endif %} value="False"/> 否
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">部门 / 小组</label>
+                        <div class="col-sm-8">
+                            <label class="radio-inline">
+                                <input type="radio" name="is_department_group" value="True"
+                                       {% if org.is_department_group %}checked{% endif %}/> 小组
+                            </label>
+                            <label class="radio-inline">
+                                <input type="radio" name="is_department_group"
+                                       {% if not org.is_department_group %}checked{% endif %} value="False"/> 部门
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button id='bt-save' type="submit" class="btn btn-primary" name="org_save">保存</button>
+                    <a type="button" class="btn btn-default" data-dismiss="modal"
+                       href="{% url 'organization_frame_description' %}">返回</a>
+                    <button id="org-delete" type="button" class="btn btn-danger" data-dismiss="modal"
+                            name="org_delete">删除
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!--树状主要样式-->
+<link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap-treeview.css' %}"/>
+
+<script src="/static/js/jquery.json.min.js"></script>
+<script src="/static/js/bootstrap.min.js"></script>
+<script src="/static/js/metisMenu.min.js"></script>
+<script src="/static/js/sb-admin-2.js"></script>
+<script src="/static/js/jquery.confirm.js"></script>
+<script src="/static/js/common.js"></script>
+<script src="/static/js/showloading.min.js"></script>
+<script type="text/javascript" src="{% static 'js/select2.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/bootstrap-treeview.js' %}"></script>
+<script type="text/javascript"
+        src="/static/js/users_organization_iframe_section_edit.js?v=20190508001"></script>
+<script>
+
+    //删除节点
+    $("#org-delete").confirm({
+        //text:"确定删除所选的?",
+        confirm: function () {
+            let url = "/users/organization_delete/" + {{ org.id }} +"/";
+            $.ajax({
+                type: "POST",
+                url: url,
+                contentType: "application/json; charset=utf-8",
+                data: '',
+                success: function (data) {
+                    if (data.success) {
+                        window.location.href = '/users/org_edit_href/'
+                    }
+                    else {
+                        alert(data.msg)
+                    }
+                },
+                error: function (data) {
+                    alert('内部错误')
+                }
+            });
+        },
+        cancel: function (button) {
+        },
+        text: '确定要删除\"' + '{{ org.name }}' + '\"吗?',
+        confirmButton: "确定",
+        cancelButton: "取消",
+    });
+
+    $('#bt-save').click(function () {
+        jQuery('#org_edit_body').showLoading();
+    })
+
+</script>
+<link href="/static/css/select2-bootstrap.css" rel="stylesheet" type="text/css">
+<!-- showloading.css-->
+<link href="/static/css/showloading.css" rel="stylesheet" media="screen">
+
+</body>
+</html>

@@ -1,0 +1,412 @@
+{% extends 'template.html' %}
+
+{% block username %}
+    {{ head.username }}
+{% endblock %}
+
+{% block content %}
+    <div id="page-wrapper">
+        <div class="row">
+            <div class="col-lg-12">
+                <h1 class="page-header">{{ head.value }}</h1>
+            </div>
+        </div>
+        <div class="row">
+            <div class="alert alert-success alert-dismissable" id="div_page_notice" style="display: none;">
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                <span id="span_page_notice"><a href=""
+                                                                                                         class="alert-link">Alert Link</a>.</span>
+            </div>
+            <div class="col-lg-12">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <div class="btn-group">
+                            <a>
+                                <button id='bt-add' type="button" class="btn btn-primary">增加</button>
+                            </a>
+                            <a>
+                                <button id='bt-del' data-text="确定删除所选的游戏项目? 0个" type="button" class="btn btn-danger">
+                                    删除
+                                </button>
+                            </a>
+                            <a>
+                                <button id='role-group' class="btn btn-success" onclick="role_group()">
+                                    对接分组
+                                </button>
+                            </a>
+                        </div>
+                        <div class="pull-right">
+                            <div class="btn-group">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel-body">
+                        <div class="col-sm-2">
+                            <label>对接分组</label>
+                            <select id="filter_role" class="filter_select2" style="width: 100%">
+                                <option value="100" selected>全部</option>
+                                {% for r in head.all_role %}
+                                    <option value="{{ r.id }}">{{ r.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-sm-2">
+                            <label>项目状态</label>
+                            <select id="filter_status" class="filter_select2" style="width: 100%">
+                                <option value="100" selected>全部</option>
+                                {% for s in head.all_status %}
+                                    <option value="{{ s.0 }}">{{ s.1 }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-sm-2">
+                            <label>是否游戏项目</label>
+                            <select id="filter_is_game_project" class="filter_select2" style="width: 100%">
+                                <option value="100" selected>全部</option>
+                                <option value="1">是</option>
+                                <option value="0">否</option>
+                            </select>
+                        </div>
+                        <div class="col-sm-2">
+                            <label>游戏项目类型</label>
+                            <select id="filter_project_type" class="filter_select2" style="width: 100%">
+                                <option value="100" selected>全部</option>
+                                {% for type in head.data %}
+                                    <option value="{{ type.0 }}">{{ type.1 }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-sm-2">
+                            <br>
+                            <button id="bt-reset" type="button" class="btn btn-success">重置</button>
+                        </div>
+                        <br/><br/><br/><br/>
+                        <form>
+                            <div class="form-group">
+                                {% if request.user.is_superuser %}
+                                    <label class="checkbox-inline">
+                                        <input type="checkbox" value="13" class="toggle-visiable">所属云帐号
+                                    </label>
+                                    <label class="checkbox-inline">
+                                        <input type="checkbox" value="14" class="toggle-visiable">web_ip
+                                    </label>
+                                    <label class="checkbox-inline">
+                                        <input type="checkbox" value="15" class="toggle-visiable">管理机IP
+                                    </label>
+                                    <label class="checkbox-inline">
+                                        <input type="checkbox" value="16" class="toggle-visiable">zabbix代理IP
+                                    </label>
+                                    <label class="checkbox-inline">
+                                        <input type="checkbox" value="17" class="toggle-visiable">地区
+                                    </label>
+                                    <label class="checkbox-inline">
+                                        <input type="checkbox" value="18" class="toggle-visiable">软件版本
+                                    </label>
+                                    <label class="checkbox-inline">
+                                        <input type="checkbox" value="21" class="toggle-visiable">微信机器人
+                                    </label>
+                                {% endif %}
+                            </div>
+                        </form>
+                        <table id="mytable" class="display" width="100%" cellspacing="0">
+                            <thead>
+                            <tr>
+                                <th class="center sorting_disabled">
+                                    <label class="pos-rel">
+                                        <input id='chb-all' type="checkbox"/>
+                                    </label>
+                                </th>
+                                <th>id</th>
+                                <th>游戏项目中文名</th>
+                                <th>游戏项目英文名</th>
+                                <th>svn项目名</th>
+                                <th>项目负责人</th>
+                                <th>关联部门</th>
+                                <th>对接运维</th>
+                                <th>对接分组</th>
+                                <th>项目状态</th>
+                                <th>是否游戏项目</th>
+                                <th>WebGameId</th>
+                                <th>游戏项目类型</th>
+                                <th>云帐号</th>
+                                <th>web_ip</th>
+                                <th>管理机ip</th>
+                                <th>zabbix代理ip</th>
+                                <th>地区</th>
+                                <th>软家版本</th>
+                                <th>热更新模板</th>
+                                <th>版本更新</th>
+                                <th>微信机器人</th>
+                                <th>操作</th>
+                            </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modal -->
+            <div class="modal fade" id="myModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                <div class="modal-dialog" id="modal-dialog" style="width: 700px">
+                    <div class="modal-content" id="modal-content">
+                        <div class="modal-header" id="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                            <h4 class="modal-title" id="myModalLabel"></h4>
+                        </div>
+                        <div class="modal-body" id="modal-body">
+                            <div class="alert alert-danger alert-dismissable" id='modal-notify'>
+                                <button type="button" class="close" id="bt-modal-notify">&times;</button>
+                                <label id='lb-msg'></label>
+                            </div>
+                            <form class="form-horizontal" role="form">
+                                <div class="form-group" id='show_id'>
+                                    <label class="col-sm-3 control-label">id</label>
+                                    <div class="col-sm-8">
+                                        <input type="text" class="form-control " placeholder="" id="id">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">游戏项目中文名</label>
+                                    <div class="col-sm-8">
+                                        <input type="text" class="form-control" placeholder="" id="project_name">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">游戏项目英文名</label>
+                                    <div class="col-sm-8">
+                                        <input type="text" class="form-control" placeholder="" id="project_name_en">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">svn仓库名</label>
+                                    <div class="col-sm-8">
+                                        <input type="text" class="form-control" placeholder="" id="svn_repo">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">项目负责人(可选)</label>
+                                    <div class="col-sm-8">
+                                        <select class="form-control" id="leader" style="width: 100%">
+                                            <option value="0" selected="selected">选择负责人</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <!--<div class="form-group">
+                                    <label class="col-sm-3 control-label">所属部门</label>
+                                    <div class="col-sm-8">
+                                        <select class="form-control" id="group" style="width: 50%">
+                                            <option value="0" selected="selected">选择部门</option>
+                                        </select>
+                                        <button id='del_gorup' type="button" class="btn btn-default btn-sm">x</button>
+                                    </div>
+                                </div>-->
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">所属部门</label>
+                                    <div class="col-sm-8 form-inline">
+                                        <select class="form-control" id="related_organization" style="width: 90%" multiple>
+                                        </select>
+                                        <button id='del_related_roganization' type="button"
+                                                class="btn btn-default btn-sm">x
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="form-group" style="display: none">
+                                    <label class="col-sm-3 control-label">对接运维</label>
+                                    <div class="col-sm-8">
+                                        <select id="related_user" style="width: 100%" multiple="multiple">
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">对接人员分组</label>
+                                    <div class="col-sm-8">
+                                        <select id="relate_role" style="width: 100%" multiple="multiple">
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">是否游戏项目</label>
+                                    <div class="col-sm-8">
+                                        <label class="radio-inline">
+                                            <input type="radio" name="is_game_project" checked="checked" value="1"/> 是
+                                        </label>
+                                        <label class="radio-inline">
+                                            <input type="radio" name="is_game_project" value="0"/> 否
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="form-group" style="display: none" id="id_game_project_type">
+                                    <label class="col-sm-3 control-label">游戏项目类型</label>
+                                    <div class="col-sm-8">
+                                        {% for type in head.data %}
+                                            <label class="radio-inline">
+                                                <input type="radio" name="game_project_type"
+                                                       value="{{ type.0 }}"/> {{ type.1 }}
+                                            </label>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">状态</label>
+                                    <div class="col-sm-8">
+                                        <select class="form-control" id="status">
+                                            <option value=0>停用</option>
+                                            <option value=1 selected="selected">可用</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">Web game_id</label>
+                                    <div class="col-sm-8">
+                                        <input type="text" class="form-control" placeholder="" id="web_game_id">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">云帐号</label>
+                                    <div class="col-sm-8">
+                                        <select class="form-control" id="cloud_account" style="width: 100%">
+                                            {% for account in head.all_cloud_account %}
+                                                <option value="{{ account.id }}">{{ account.text }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">版本更新</label>
+                                    <div class="col-sm-8">
+                                        <select class="form-control" id="auto_version_update">
+                                            <option value="0">手动</option>
+                                            <option value="1">自动</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">微信机器人地址</label>
+                                    <div class="col-sm-8">
+                                        <textarea rows="5" class="form-control" id="wx_robot"></textarea>
+                                    </div>
+                                </div>
+
+                                <hr>
+
+                                <div class="modal-header">
+                                    <h4 class="modal-title">初始化参数</h4>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">web_ip</label>
+                                    <div class="col-sm-8">
+                                        <input type="text" class="form-control" placeholder="" id="web_ip">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">管理机外网ip</label>
+                                    <div class="col-sm-8">
+                                        <input type="text" class="form-control" placeholder="" id="manager_wan_ip">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">管理机内网ip</label>
+                                    <div class="col-sm-8">
+                                        <input type="text" class="form-control" placeholder="" id="manager_lan_ip">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">zabbix代理ip</label>
+                                    <div class="col-sm-8">
+                                        <input type="text" class="form-control" placeholder="" id="zabbix_proxy_ip">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">地区</label>
+                                    <div class="col-sm-8">
+                                        <select class="form-control" id="area" style="width: 100%">
+                                            {% for area in head.all_area %}
+                                                <option value="{{ area.id }}">{{ area.chinese_name }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                </div>
+                                {% for soft_name, soft_version_list in head.all_soft.items %}
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label">{{ soft_name }}</label>
+                                        <div class="col-sm-8">
+                                            <select class="form-control soft" id="{{ soft_name }}" style="width: 100%">
+                                                {% for version in soft_version_list %}
+                                                    <option value="{{ version }}">{{ version }}</option>
+                                                {% endfor %}
+                                            </select>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </form>
+                        </div>
+                        <div class="modal-footer" id="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                            <button id='bt-save' type="button" class="btn btn-primary">保存</button>
+                        </div>
+                    </div><!-- /.modal-content -->
+                </div><!-- /.modal-dialog -->
+            </div><!-- /.modal -->
+
+            <div class="modal fade" id="Modal-file" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                            <h4 class="modal-title" id="myModalLabel">导入/导出</h4>
+                        </div>
+                        <div class="modal-body">
+                            <div class="alert alert-dismissable" id='upload-notify'>
+                                <button type="button" class="close" id="bt-upload-notify">&times;</button>
+                                <label id='lb-msg-upload'></label>
+                            </div>
+                            <form id="submit-file-form" enctype="multipart/form-data" action="/assets/upload_devices"
+                                  method="post">
+                                <!-- {% csrf_token %} -->
+                                <div class="form-group">
+                                    {{ form }}
+                                    <p class="help-block">Example block-level help text here.</p>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                            <button type="submit" class="btn btn-primary" name='action'>保存</button>
+                        </div>
+                        </form>
+                    </div><!-- /.modal-content -->
+                </div><!-- /.modal-dialog -->
+            </div>
+
+        </div>
+    </div>
+{% endblock %}
+{% block bodyjs %}
+    <script src="/static/js/jquery.dataTables.js"></script>
+    {{ django_context_varable }}
+    {% verbatim %}
+    <script id="tpl" type="text/x-handlebars-template">
+        {{#each func}}
+        <button type="button" class="btn btn-{{this.type}} btn-sm" onclick="{{this.fn}}">{{this.name}}</button>
+        {{/each}}
+    </script>
+    {% endverbatim %}
+    <script src="/static/js/handlebars-v3.0.1.js"></script>
+    <script src="/static/js/game_project_list.js?v=20191204002"></script>
+    <script src="/static/js/dataTables.colVis.js"></script>
+    <script type="text/javascript" src="/static/js/zebra_datepicker.js"></script>
+    <script>
+        $(document).ready(function () {
+            {% for soft_name, soft_version_list in head.all_soft.items %}
+                $('#{{ soft_name }}').select2();
+            {% endfor %}
+        })
+    </script>
+{% endblock %}
+{% block css %}
+    <link href="/static/css/jquery.dataTables.css" rel="stylesheet" type="text/css">
+    <link href="/static/css/game_project_list.css?v=20191204001" rel="stylesheet" type="text/css">
+    <link href="/static/css/dataTables.colVis.css" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" type="text/css" href="/static/css/datetimepicker.css">
+    <link href="/static/css/select2-bootstrap.css" rel="stylesheet" type="text/css">
+{% endblock %}

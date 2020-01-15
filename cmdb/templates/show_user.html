@@ -1,0 +1,200 @@
+{%extends 'template.html'%}
+{%block css%}
+<link href="/static/css/jquery.dataTables.css" rel="stylesheet" type="text/css">
+{%endblock%}
+{%block content%}
+<div id="page-wrapper">
+    <div class="row">
+        <div class="col-lg-12">
+            <h1 class="page-header">{{head.value}}</h1>                
+        </div>            
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <div class="btn-group">
+                        <a href='/users/add'><button id='bt-add' type="button" class="btn btn-primary">新增</button></a>
+                        <a><button id='bt-del' type="button" class="btn btn-primary">删除</button></a>
+                    </div>
+                    <div class="btn-group pull-right">
+                        <a href='/users/manage_group'><button id='bt-group' type="button" class="btn btn-primary">组管理</button></a>
+                    </div>
+                </div>
+            </div>
+            <div class="panel-body">
+                <table id="example" class="display" width="100%" cellspacing="0">
+                    <thead>
+                        <tr>
+                            <th>用户名</th>
+                            <th>姓名</th>
+                            <th>角色</th>
+                            <th>创建时间</th>
+                            <th>最后登录时间</th>
+                            <th>激活状态</th>
+                            <th>备注</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>               
+                </table>
+            </div>
+        </div>
+    <div class="modal fade" id="Modal-file" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title" id="myModalLabel">新增用户</h4>
+                </div>
+                <div class="modal-body">
+                    <ul id="modal-list">
+                        <li class="form-group">
+                            <label class="col-md-3 control-label">用户名</label>
+                            <div class="col-md-7">
+                                <input type="text" class="form-control " placeholder="用户名" id="type">
+                            </div>
+                        </li>
+                        <li class="form-group">
+                            <label class="col-md-3 control-label">姓名</label>
+                            <div class="col-md-7">
+                                <input type="text" class="form-control " placeholder="姓名" id="type">
+                            </div>
+                        </li>
+                        <li class="form-group">
+                            <label class="col-md-3 control-label">角色</label>
+                            <div class="col-md-7">
+                                <input type="text" class="form-control " placeholder="角色" id="type">
+                            </div>
+                        </li>
+                        <li class="form-group">
+                            <label class="col-md-3 control-label">激活状态</label>
+                            <div class="col-md-2">
+                                <div class="radio inline">
+                                    <input type="radio" value="1" id="c3VwZXJ1c2Vy_allow" name="permissions[c3VwZXJ1c2Vy]">
+                                        激活                                
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="radio inline">
+                                    <input type="radio" value="-1" id="c3VwZXJ1c2Vy_deny" name="permissions[c3VwZXJ1c2Vy]" checked="checked">
+                                        不激活                                
+                                    </label>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                    <button id='file-save' type="button" class="btn btn-primary">保存</button>
+                  </div>
+                </div><!-- /.modal-content -->
+          </div><!-- /.modal-dialog -->          
+        </div>
+    </div>
+</div>
+{%endblock%}
+
+{%block bodyjs%}
+<script src="/static/js/jquery.dataTables.js" ></script>
+<script src="/static/js/handlebars-v3.0.1.js"></script>
+{{ django_context_varable }}
+{% verbatim %}
+<script id="tpl" type="text/x-handlebars-template">
+      {{#each func}}
+      <button type="button" class="btn btn-{{this.type}} btn-sm" onclick="{{this.fn}}">{{this.name}}</button>
+      {{/each}}
+</script>
+{% endverbatim %}
+<script type="text/javascript">
+    var table;
+    var tpl = $("#tpl").html();
+    var template = Handlebars.compile(tpl);
+    function edit(username){
+        window.location.href='/users/manage_user?username='+username
+    };
+    $(document).ready(function() {
+        table = $('#example').DataTable({
+            "ajax": "/users/user_data",
+            "columns": [
+                {"data": "username"},
+                {"data": "name"},
+                {"data": "groups"},
+                {"data": "created"},
+                {"data": "last_login"},
+                {"data": "is_active"},
+                {"data": "note"},
+                {"data": null},
+            ],
+            "order": [[0, 'asc']],
+            columnDefs: [
+                {
+                    targets: 7,
+                    render: function (a, b, c, d) {
+                        var context =
+                        {
+                            func: [
+                                {"name": "修改", "fn": "edit(\'" + c.username + "\')", "type": "primary"},
+                            ]
+                        };
+                        var html = template(context);
+                        return html;
+                    }
+                }
+            ],
+            "language": {
+                "url": "/static/js/i18n/Chinese.json"
+            },
+        });
+     
+        $('#example tbody').on( 'click', 'tr', function () {
+            if ( $(this).hasClass('selected') ) {
+                $(this).removeClass('selected');
+            }
+            else {
+                table.$('tr.selected').removeClass('selected');
+                $(this).addClass('selected');
+            }
+        } );
+     
+        //删除
+        $('#bt-del').click( function () {
+            if (table.row('.selected')[0].length == ''){
+                alert('请选择服务器')
+            }
+            else{
+                if(confirm("您确定要执行删除操作吗？")){
+                    var length=table.rows('.selected').data().length;
+                    var raw=[];
+                    for (var i=0; i<length; i++){
+                        raw[i] = table.rows('.selected').data()[i]
+                    };
+                    var encoded=$.toJSON( raw );
+                    var pdata = encoded;
+                    console.log(pdata);
+                    $.ajax({
+                        type: "POST",
+                        url: "/users/delete",
+                        contentType: "application/json; charset=utf-8",
+                        data: pdata,
+                        success: function (data) {
+                            if (data){
+                                table.ajax.reload();
+                            }
+                            else{
+                                alert(msg)
+                            }
+                        }
+                    });
+                }else{
+                    return false;
+                }
+            }
+        } );
+        $('#file-save').click( function () {
+            $('#Modal-file').modal('hide');
+        } );
+    } );
+</script>
+{%endblock%}

@@ -1,0 +1,129 @@
+{% extends 'template.html' %}
+
+{% block username %}
+    {{ request.user.username }}
+{% endblock %}
+
+{% block content %}
+    <div id="page-wrapper">
+        <div class="row">
+            <div class="col-lg-12">
+                <h1 class="page-header">资产信息批量修改</h1>
+            </div>
+        </div>
+        <div class="alert alert-info">
+            <h5><strong>操作指引</strong></h5>
+            <p>1. 选择修改类型（公司主体、资产状态、仓库位置）</p>
+            <p>2. 下载模板</p>
+            <p>3. 根据模板格式填入数据</p>
+            <p>4. 导入excel</p>
+            <p>5. 提交修改</p>
+            <h5><strong>备注</strong></h5>
+            <p><i class="fa fa-check"></i> 修改资产状态--目前只支持修改为变卖/损毁状态</p>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <div class="btn-group">
+                            <select class="form-control" id="alter_type">
+                                <option value="0" disabled selected>请选择修改类型</option>
+                                {% for type in alter_type %}
+                                    <option value="{{ type.0 }}">{{ type.1 }}</option>
+                                {% endfor %}
+                            </select>
+                            <button class="btn btn-success" type="button" id="download_template">下载模板</button>
+                            <button class="btn btn-primary" type="button" id="import_excel">导入excel</button>
+                            <a class="btn btn-danger" type="button"
+                               href="/it_assets/assets_batch_alter_record/">历史记录</a>
+                        </div>
+                    </div>
+                    <div class="panel-body">
+                        <div class="row" id='table-data'>
+                            <div class="col-lg-6">
+                                {% if table %}
+                                    <div class="container" style="height:400px; overflow:auto">
+
+                                        <table id="mytable" class="table table-hover table-bordered"
+                                               style="overflow: hidden;text-overflow: ellipsis;white-space: nowrap;">
+                                            <thead>
+                                            <tr>
+                                                {% for head in table.thead %}
+                                                    <th>{{ head }}</th>
+                                                {% endfor %}
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            {% for body in table.tbody %}
+                                                <tr>
+                                                    {% for td in body %}
+                                                        <td>{{ td }}</td>
+                                                    {% endfor %}
+                                                </tr>
+                                            {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <button class="btn btn-primary" id="bt-commit">提交修改</button>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modal -->
+            <div class="modal fade" id="myModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <form enctype="multipart/form-data" action="/it_assets/assets_batch_alter_excel_import/"
+                              method="POST">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;
+                                </button>
+                                <h4 class="modal-title" id="myModalLabel"></h4>
+                            </div>
+                            <div class="modal-body">
+                                <div class="alert alert-danger alert-dismissable" id='modal-notify'>
+                                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true"
+                                            id="bt-modal-notify">&times;
+                                    </button>
+                                    <label id='lb-msg'></label>
+                                </div>
+                                {{ form }}
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                                <button id='bt-import' type="submit" class="btn btn-primary">导入</button>
+                            </div>
+                        </form>
+                    </div><!-- /.modal-content -->
+                </div><!-- /.modal-dialog -->
+            </div><!-- /.modal -->
+
+
+        </div>
+    </div>
+{% endblock %}
+{% block bodyjs %}
+    {{ django_context_varable }}
+    {% verbatim %}
+    <script id="tpl" type="text/x-handlebars-template">
+        {{#each func}}
+        <button type="button" class="btn btn-{{this.type}} btn-sm" onclick="{{this.fn}}">{{this.name}}</button>
+        {{/each}}
+    </script>
+    {% endverbatim %}
+    <script src="/static/js/handlebars-v3.0.1.js"></script>
+    <script src="/static/js/jquery-ui.js"></script>
+    <script src="/static/js/assets_batch_alter.js?v=20191209001"></script>
+    <script src="/static/js/jquery.dataTables.js"></script>
+    <script src="/static/js/jquery.toast.min.js"></script>
+    <script src="/static/js/showloading.min.js"></script>
+{% endblock %}
+{% block css %}
+    <link href="/static/css/jquery.toast.min.css" rel="stylesheet" type="text/css">
+    <link href="/static/css/jquery.dataTables.css" rel="stylesheet" type="text/css">
+    <link href="/static/css/jquery-ui.css" rel="stylesheet" type="text/css">
+    <link href="/static/css/showloading.css" rel="stylesheet" media="screen">
+{% endblock %}

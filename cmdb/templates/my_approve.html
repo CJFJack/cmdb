@@ -1,0 +1,217 @@
+{%extends 'template.html'%}
+{%block css%}
+<link href="/static/css/jquery.dataTables.css" rel="stylesheet" type="text/css">
+<link href="/static/css/mycss.css" rel="stylesheet" type="text/css">
+{%endblock%}
+{%block content%}
+<div id="page-wrapper">
+    <div class="row">
+        <div class="col-lg-12">
+            <h1 class="page-header">{{head.value}}</h1>                
+        </div>            
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                                     
+                </div>
+                <div class="panel-body">
+                      <table id="mytable" class="display" width="100%" cellspacing="0">
+                          <thead>
+                              <tr>
+                                  <!-- <th>流程号</th> -->
+                                  <th>流程类型</th>
+                                  <th>申请人</th>
+                                  <th>审批人</th>
+                                  <th>节点状态</th>
+                                  <th>申请时间</th>
+                                  <th>完成时间</th>
+                                  <th>项目</th>
+                                  <th>数量</th>
+                                  <th>资源类型</th>
+                                  <th>服务器IP</th>
+                                  <th>服务器名称</th>
+                                  <th>操作</th>
+                              </tr>
+                          </thead>                
+                      </table>
+                </div>
+            </div>
+        </div>
+    </div>    
+</div>
+{% include 'detailModal.html' %}
+{%endblock%}
+{%block bodyjs%}
+    <script src="/static/js/jquery.dataTables.js" ></script>
+    {{ django_context_varable }}
+    {% verbatim %}
+    <script id="tpl" type="text/x-handlebars-template">
+          {{#each func}}
+          	<button type="button" class="btn btn-{{this.type}} btn-sm" onclick="{{this.fn}}">{{this.name}}</button>
+          {{/each}} 
+    </script>
+    {% endverbatim %}
+    <script src="/static/js/handlebars-v3.0.1.js"></script>
+    <script src="/static/js/flow.js"></script>
+    <script type="text/javascript">
+      function format ( d ) {
+        // `d` is the original data object for the row
+        return '<table cellpadding="5" cellspacing="1" border="1" style="padding-left:50px;">'+
+            '<tr>'+
+                '<td>使用者:</td>'+
+                '<td>购入时间:</td>'+
+                '<td>过保时间:</td>'+
+                '<td>品牌:</td>'+
+                '<td>状态:</td>'+
+                '<td>机柜位置:</td>'+
+                '<td>备注:</td>'+
+            '</tr>'+
+            '<tr>'+
+                '<td>'+d.owner+'</td>'+
+                '<td>'+d.purchase_date+'</td>'+
+                '<td>'+d.eol_date+'</td>'+
+                '<td>'+d.manufacturer+'</td>'+
+                '<td>'+d.status+'</td>'+
+                '<td>'+d.location+'</td>'+
+                '<td>'+d.note+'</td>'+
+            '</tr>'+
+        '</table>';
+      }
+      var table;
+      var editFlag;
+      var tpl = $("#tpl").html();
+      //预编译模板
+      var template = Handlebars.compile(tpl);
+
+      function edit(type, series_id, property_id, server_type, cabinet_id, belong_cabinet, belong_room, belong_project, accident_status, user, owner, location, purchase_date, eol_date, manufacturer, status, note) {
+          // editFlag = true;
+          // $("#myModalLabel").text("修改设备信息");
+          // $("#type").val(type).attr("disabled",'true');
+          // $("#series_id").val(series_id);
+          // $("#property_id").val(property_id);
+          // $("#server_type").val(server_type);
+          // $("#cabinet_id").val(cabinet_id);
+          // $("#belong_cabinet").val(belong_cabinet);
+          // $("#belong_room").val(belong_room);
+          // $("#belong_project").val(belong_project);
+          // $("#myModal").modal("show");
+          window.location.href='/dashboard/flow_edit'
+      }
+
+      function back(type, series_id, property_id, server_type, cabinet_id, belong_cabinet, belong_room, belong_project, accident_status, user, owner, location, purchase_date, eol_date, manufacturer, status, note) {
+          editFlag = false;
+          alert('撤回成功')
+      }
+      $(document).on('hidden.bs.modal', function (e) {
+          document.location.reload();
+      });
+
+      function detail(wf) {
+        $.ajax({
+          type: "POST",
+          url: "/workflow/detail",
+          data: wf, 
+          success: function (data) {
+            console.log('11')
+            if (data['success']){
+              if (data['form_type'] == "申请流程"){
+                $('#belong_room').val(data['belong_room']);
+                $('#name').val(data['name']);
+                if (data.hasOwnProperty('for_project')){
+                  $('#project').val(data['for_project'].text);
+                }
+                $('#server_name').val(data['server_name']);
+                $('#network_bandwidth').val(data['network_bandwidth']);
+                $('#start_time').val(data['start_time']);
+                $('#harddrive').val(data['harddrive']);
+                $('#number').val(data['number']);
+                $('#proposer').val(data['proposer']);
+                $('#reason').val(data['reason']);
+                $('#memory').val(data['memory']);
+                $('#cpu').val(data['cpu']);
+                $('#resource_type').val(data['resource_type']);
+                $('#detail-approve').toggleClass('hide');
+                  for (var i=0;i<data['servers'].length;i++)
+                {
+                    var inputbox = '<input type="text" style="width:100%" class="form-control" value="'+data['servers'][i]+'">'
+                    $("#div-servers-app").append(inputbox);
+                };
+                for (var i=0;i<data['options'].length;i++)
+                {
+                  console.log(data['options'][i][0],data['options'][i][1])
+                  var option = "<li class=\"form-group\"><label class=\"col-md-3 control-label\" for=\"option\">审批意见</label><div class=\"col-md-7\"><textarea class=\"form-control\" disabled=\"true\" type=\"text\">"+data['options'][i][0]+"</textarea></div></li>"+"<li class=\"form-group\"><label class=\"col-md-3 control-label\" for=\"reason\">审批状态</label><div class=\"col-md-7\"><input class=\"form-control\" disabled=\"true\" type=\"text\"value=\""+data['options'][i][1]+"\"></div></li>"
+                  $('#detail-approve').append(option)
+                };
+                $('#detailModal').modal('show');
+              };
+              if (data['form_type'] == "退还流程"){
+                $("#return-name").val(data['name']);
+                $("#return-proposer").val(data['proposer']);
+                $("#return-start_time").val(data['start_time']);
+                // $("#return_server").val(data['return_server']);
+                for (var i=0;i<data['return_server'].length;i++)
+                {
+                    var inputbox = '<input type="text" disabled="true" class="form-control" value="'+data['return_server'][i]+'">'
+                    $("#div-servers").append(inputbox);
+                };
+                $("#project").val(data['project_text']);
+                $('#detail-return').toggleClass('hide');
+                for (var i=0;i<data['options'].length;i++)
+                {
+                  console.log(data['options'][i][0],data['options'][i][1])
+                  var option = "<li class=\"form-group\"><label class=\"col-md-3 control-label\" for=\"option\">审批意见</label><div class=\"col-md-7\"><textarea class=\"form-control\" disabled=\"true\" type=\"text\">"+data['options'][i][0]+"</textarea></div></li>"+"<li class=\"form-group\"><label class=\"col-md-3 control-label\" for=\"reason\">审批状态</label><div class=\"col-md-7\"><input class=\"form-control\" disabled=\"true\" type=\"text\"value=\""+data['options'][i][1]+"\"></div></li>"
+                  $('#detail-return').append(option)
+                };
+                $('#detailModal').modal('show');
+              };
+            }else{
+              alert(data['msg']);
+            }
+          }
+        });
+      };
+
+      $(document).ready(function() {
+          table = $('#mytable').DataTable( {
+              "ajax": "/workflow/table_myapproveflow",
+              "columns": [
+                  // {"data": "wf_name"},
+                  {"data": "form_type"},
+                  {"data": "proposer"},
+                  {"data": "approver"},
+                  {"data": "status"},
+                  {"data": "reach_time"},
+                  {"data": "finish_time"},
+                  {"data": "project"},
+                  {"data": "number"},
+                  {"data": "servers"},
+                  {"data": "ip"},
+                  {"data": "name"},
+                  {"data": null},
+              ],
+              "order": [[5, 'desc']],
+              columnDefs: [
+                      {
+                          targets: 11,
+                          render: function (a, b, c, d) {
+                              var context =
+                              {
+                                  func: [
+                                      {"name": "详细", "fn": "detail(\'" + c.wf_name + "\')", "type": "primary"},
+                                  ]
+                              };
+                              var html = template(context);
+                              return html;
+                          }
+                      }
+              ],
+              "language": {
+                      "url": "/static/js/i18n/Chinese.json"
+              },
+          } );
+           
+      } );
+    </script>
+{%endblock%}

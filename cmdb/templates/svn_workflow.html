@@ -1,0 +1,159 @@
+{% extends 'template.html' %}
+
+{% block username %}
+    {{ head.username }}
+{% endblock %}
+
+{% block content %}
+    <div id="page-wrapper">
+        <div class="row">
+            <div class="col-lg-12">
+                <h1 class="page-header">{{ head.value }}</h1>
+                <h1 class="page-header" id="workflow_id" style="display: none;">{{ head.workflow }}</h1>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <div class="btn-group">
+                            <a class='col-lg-6' href="/myworkflows/svn_perm_scheme">
+                                <button id='bt-add' type="button" class="btn btn-primary">SVN权限方案列表</button>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <div class="container">
+                                    <form role="form" class="form-horizontal">
+                                        <div class="form-group">
+                                            <label class="col-sm-12" for="TextArea">项目</label>
+                                            <div class="col-sm-6">
+                                                <select id="project" style="width: 100%" class='svn_project'>
+                                                    <option value="0" selected="selected">选择项目</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-sm-12" for="TextArea">申请人</label>
+                                            <div class="col-sm-6">
+                                                <select id="applicant" style="width: 100%">
+                                                    <!--<option value="0" selected="selected">选择申请人</option>-->
+                                                    <option value={{ init_user.id }} selected="selected">{{ init_user.username }}</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-sm-12" for="TextArea">标题</label>
+                                            <div class="col-sm-6">
+                                                <input class="form-control" id="title"></input>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-sm-12" for="TextArea">原因</label>
+                                            <div class="col-sm-6">
+                                                <textarea class="form-control" id="reason"></textarea>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-sm-12">流程步骤</label>
+                                            <div class="col-sm-6">
+                                                <p>{{ state_step.value }}</p>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-sm-6">
+                                                <div class="alert alert-success col-sm-12" id="approve_user"
+                                                     role="alert"></div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group" id="insert_svn_scheme">
+                                            <div class="col-sm-12">
+                                                <label>SVN套餐方案</label>
+                                            </div>
+                                            <div class="col-sm-2">
+                                                <select id="svn_scheme" style="width: 100%"
+                                                        class='svn_project form-control'>
+                                                    <option value="0" selected="selected">选择方案</option>
+                                                </select>
+                                            </div>
+                                            <button class="btn btn-danger btn-sm" id='cancle-btn' type='button'>取消
+                                            </button>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-sm-2">
+                                                <label>自定义方案</label>
+                                                <button id='myAdd' type='button'>添加</button>
+                                            </div>
+                                        </div>
+                                        <div class="form-group" id="show_scheme">
+                                            <div class="col-sm-2">
+                                                <label>项目</label>
+                                            </div>
+                                            <div class="col-sm-2">
+                                                <label>仓库</label>
+                                            </div>
+                                            <div class="col-sm-4">
+                                                <label>仓库内子路径</label>
+                                            </div>
+                                            <div class="col-sm-1">
+                                                <label>权限</label>
+                                            </div>
+                                        </div>
+                                        <!--<div class="form-group">
+                                          <div class="col-sm-2">
+                                            <select id="svn_project" style="width: 100%" class='svn_project form-control'>
+                                              <option value="0" selected="selected">选择项目</option>
+                                            </select>
+                                          </div>
+                                          <div class="col-sm-2">
+                                            <select id="svn_repo" style="width: 100%" class='repo form-control'>
+                                              <option value="0" selected="selected">选择仓库</option>
+                                            </select>
+                                          </div>
+                                          <div class="col-sm-2">
+                                            <input type="text" class="form-control path" placeholder="path">
+                                          </div>
+                                          <div class="col-sm-1">
+                                            <select class="permission form-control" style="width: 90%">
+                                              <option value="读" selected="selected">读</option>
+                                              <option value="写">写</option>
+                                              <option value="读写">读写</option>
+                                            </select>
+                                          </div>
+                                          <button class="btn btn-info btn-sm" id='myAdd' type='button'>+</button>
+                                        </div>-->
+                                        <!--<div class="form-group">
+                                          <label class="checkbox-inline col-sm-12">
+                                            <div class="col-sm-6">
+                                              <input type="checkbox" id='sendmail'>邮件通知
+                                            </div>
+                                          </label>
+                                        </div>-->
+                                        <div class="form-group" id='append_before'>
+                                            <div class="col-sm-6">
+                                                <p class="text-danger"><strong>当套餐方案与自定义方案存在冲突时，以自定义方案为准！</strong></p>
+                                            </div>
+                                        </div>
+                                        <div class="form-group" id='append_before'>
+                                            <div class="col-sm-6">
+                                                <button type="button" class="btn btn-primary" id='bt-commit'>提交</button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                    <hr>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block bodyjs %}
+    <script src="/static/js/svn_workflow.js?v=faee78ee2b2e483ghk673cbabe11d8a70"></script>
+{% endblock %}
+{% block css %}
+{% endblock %}

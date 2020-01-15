@@ -1,0 +1,148 @@
+{% extends 'template.html' %}
+
+{% block username %}
+    {{ head.username }}
+{% endblock %}
+
+{% block content %}
+    <div id="page-wrapper">
+        <div class="row">
+            <div class="col-lg-12">
+                <h1 class="page-header">{{ head.value }}</h1>
+                <h1 class="page-header" id="wse_id" style="display: none;">{{ data.id }}</h1>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <div class="container">
+                                    <form role="form" class="form-horizontal">
+                                        <div class="form-group">
+                                            <label class="col-sm-12">申请人</label>
+                                            <div class="col-sm-6">
+                                                <select id="applicant" style="width: 100%" disabled>
+                                                    <option value={{ data.applicant_id }} selected="selected">{{ data.applicant }}</option>
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label class="col-sm-12" for="TextArea">标题</label>
+                                            <div class="col-sm-6">
+                                                {% if data.recommit %}
+                                                    <input class="form-control" id="title"
+                                                           value={{ data.title }}></input>
+                                                {% else %}
+                                                    <input class="form-control" id="title" readonly="readonly"
+                                                           value={{ data.title }}></input>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-sm-12" for="TextArea">申请理由</label>
+                                            <div class="col-sm-6">
+                                                {% if data.recommit %}
+                                                    <textarea class="form-control" rows="5"
+                                                              id="reason">{{ data.reason }}</textarea>
+                                                {% else %}
+                                                    <textarea class="form-control" rows="5" id="reason"
+                                                              readonly="readonly">{{ data.reason }}</textarea>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label class="col-sm-12">审核流程步骤</label>
+                                            <div class="col-sm-6">
+                                                <div class="ystep1"></div>
+                                            </div>
+                                        </div>
+
+
+                                        <div class="form-group" id='append_before'>
+                                            <div class="col-sm-6">
+                                                {% if data.recommit %}
+                                                    <button type="button" class="btn btn-primary" id='bt-commit'>提交
+                                                    </button>
+                                                {% endif %}
+                                                {% if data.can_execute %}
+                                                    <button type="button" class="btn btn-success" id='bt-load'>完成
+                                                    </button>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+
+                                        {% if data.opinion %}
+                                            <div class="form-group">
+                                                <label class="col-sm-12" for="TextArea">审批意见</label>
+                                                <div class="col-sm-6">
+                                                    <textarea class="form-control" rows="3" id="opinion"
+                                                              readonly="readonly">{{ data.opinion }}</textarea>
+                                                </div>
+                                            </div>
+                                        {% else %}
+                                            <div class="form-group">
+                                                <label class="col-sm-12" for="TextArea">审批意见</label>
+                                                <div class="col-sm-6">
+                                                    <textarea class="form-control" rows="3" id="opinion"
+                                                              readonly="readonly">无</textarea>
+                                                </div>
+                                            </div>
+                                        {% endif %}
+
+                                    </form>
+                                    <hr>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal fade" id="myModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title" id="myModalLabel">执行中...请勿关闭或者刷新页面</h4>
+                        </div>
+                        <div class="modal-body">
+                            <form class="form-horizontal" role="form">
+                                {% if data.can_execute %}
+                                    {% if not data.has_approved %}
+                                        <div class="form-group" id='load' style="display: none;">
+                                            <label class="col-sm-12"></label>
+                                            <div class="col-sm-12">
+                                                <div class="ball"></div>
+                                            </div>
+                                        </div>
+                                    {% endif %}
+                                {% endif %}
+                                <div class="form-group" id='show-msg'>
+                                    <label class="col-sm-3 control-label"></label>
+                                    <div class="col-sm-8">
+                                        <p id='load-msg'></p>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="modal-footer" id="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                        </div>
+                    </div><!-- /.modal-content -->
+                </div><!-- /.modal-dialog -->
+            </div>
+
+        </div>
+    </div>
+{% endblock %}
+{% block bodyjs %}
+    <script src="/static/js/computer_parts_myworkflow.js"></script>
+    <script src="/static/js/ystep.js"></script>
+{% endblock %}
+{% block css %}
+    <link href="/static/css/ystep.css" rel="stylesheet" type="text/css">
+    <link href="/static/css/load.css" rel="stylesheet" type="text/css">
+{% endblock %}

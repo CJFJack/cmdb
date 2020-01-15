@@ -1,0 +1,163 @@
+{% extends 'template.html' %}
+
+{% block username %}
+    {{ head.username }}
+{% endblock %}
+
+{% block content %}
+    <div id="page-wrapper">
+        <div class="row">
+            <div class="col-lg-12">
+                <h1 class="page-header">{{ head.value }}</h1>
+                <h1 class="page-header" id="wse_id" style="display: none;">{{ data.id }}</h1>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <div class="container">
+                                    <form role="form" class="form-horizontal">
+                                        <div class="form-group">
+                                            <label class="col-sm-12">申请人</label>
+                                            <div class="col-sm-6">
+                                                <input class="form-control" id="applicant" readonly="readonly"
+                                                       value="{{ data.applicant }}"/>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label class="col-sm-12" for="TextArea">标题</label>
+                                            <div class="col-sm-6">
+                                                {% if data.recommit %}
+                                                    <input class="form-control" id="title"
+                                                           value="{{ data.title }}"/></input>
+                                                {% else %}
+                                                    <input class="form-control" id="title" readonly="readonly"
+                                                           value="{{ data.title }}"/>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label class="col-sm-12" for="TextArea">更新内容</label>
+                                            <div class="col-sm-6">
+                                                <textarea class="form-control" id="content" rows="10"
+                                                          readonly="readonly">{{ data.content }}</textarea>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label class="col-sm-12" for="TextArea">项目</label>
+                                            <div class="col-sm-6">
+                                                <input class="form-control" id="project" readonly="readonly"
+                                                       value="{{ data.project }}"/>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group" id="show_overview_server_list">
+                                            <label class="col-sm-12" for="TextArea">更新的区服</label>
+                                            <div class="col-sm-6">
+                                                <textarea class="form-control" id="server_list" rows="10"
+                                                          readonly="readonly">{{ data.server_list }}</textarea>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label class="col-sm-12" for="TextArea">起止时间(以北京时间为准)</label>
+                                            <div class="col-sm-2">
+                                                <input class="form-control" id="start_time" readonly="readonly"
+                                                       value="{{ data.start_time }}"/>
+                                            </div>
+                                            <div class="col-sm-2">
+                                                <input class="form-control" id="end_time" readonly="readonly"
+                                                       value="{{ data.end_time }}"/>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label class="col-sm-12" for="TextArea">后端版本号</label>
+                                            <div class="col-sm-6">
+                                                <input class="form-control" id="server_version" readonly="readonly"
+                                                       value="{{ data.server_version }}"/>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label class="col-sm-12" for="TextArea">后端注意事项</label>
+                                            <div class="col-sm-6">
+                                                <textarea class="form-control" id="server_attention" rows="6"
+                                                          readonly="readonly">{{ data.server_attention }}</textarea>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label class="col-sm-12" for="TextArea">前端版本号</label>
+                                            <div class="col-sm-6">
+                                                <input class="form-control" id="client_version" readonly="readonly"
+                                                       value="{{ data.client_version }}"/>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label class="col-sm-12" for="TextArea">前端注意事项</label>
+                                            <div class="col-sm-6">
+                                                <textarea class="form-control" id="client_attention" rows="6"
+                                                          readonly="readonly">{{ data.client_attention }}</textarea>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label class="col-sm-12">审核流程步骤</label>
+                                            <div class="col-sm-6">
+                                                <div class="ystep1"></div>
+                                            </div>
+                                        </div>
+
+
+                                        <div class="form-group" id='append_before'>
+                                            <div class="col-sm-6">
+                                                {% if data.recommit %}
+                                                    <button type="button" class="btn btn-primary" id='bt-commit'>提交
+                                                    </button>
+                                                {% endif %}
+{#                                                {% if data.can_execute %}#}
+{#                                                    <button type="button" class="btn btn-success" id='bt-load'>完成#}
+{#                                                    </button>#}
+{#                                                {% endif %}#}
+                                            </div>
+                                        </div>
+
+                                        {% if data.opinion %}
+                                            <div class="form-group">
+                                                <label class="col-sm-12" for="TextArea">审批意见</label>
+                                                <div class="col-sm-6">
+                                                    <textarea class="form-control" rows="3" id="opinion"
+                                                              readonly="readonly">{{ data.opinion }}</textarea>
+                                                </div>
+                                            </div>
+                                        {% endif %}
+
+                                    </form>
+                                    <hr>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+{% endblock %}
+{% block bodyjs %}
+    <script src="/static/js/version_update_myworkflow.js?v=20190830001"></script>
+    <script src="/static/js/ystep.js"></script>
+    <script src="/static/js/jquery.tree-multiselect.js"></script>
+{% endblock %}
+{% block css %}
+    <link href="/static/css/ystep.css" rel="stylesheet" type="text/css">
+    <link href="/static/css/jquery.tree-multiselect.css" rel="stylesheet" type="text/css">
+{% endblock %}

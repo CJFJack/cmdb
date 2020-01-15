@@ -1,0 +1,379 @@
+{% extends 'template.html' %}
+
+{% block username %}
+    {{ request.user.username }}
+{% endblock %}
+
+{% block content %}
+    <div id="page-wrapper">
+        <div class="row">
+            <div class="col-lg-12">
+                <h1 class="page-header">主机初始化</h1>
+            </div>
+        </div>
+        <div class="panel panel-info">
+            <div class="panel-heading">
+                <h5 class="panel-title">
+                    <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne"><strong>点击查看详细流程</strong></a>
+                </h5>
+            </div>
+            <div id="collapseOne" class="panel-collapse collapse">
+                <div class="panel-body">
+                    <ul>
+                        <li>【步骤1】安装 salt-minion</li>
+                        <ul>
+                            <li>test.ping 检测主机连通性</li>
+                            <ul>
+                                <li>成功，则直接跳到【步骤3】</li>
+                                <li>失败，则继续执行</li>
+                            </ul>
+                            <li>发送安装 salt-minion 请求</li>
+                            <li>等待安装结果回调</li>
+                            <ul>
+                                <li>成功，继续下一步</li>
+                                <li>失败，则安装失败，退出</li>
+                            </ul>
+                        </ul>
+                        <li>【步骤2】test.ping 检测主机连通性</li>
+                        <ul>
+                            <li>成功，则安装成功，继续下一步</li>
+                            <li>失败，则安装失败，则退出</li>
+                        </ul>
+                        <li>【步骤3】调用salt-api执行主机初始化模块</li>
+                        <ul>
+                            <li>成功，则继续下一步</li>
+                            <li>失败，则初始化失败，退出</li>
+                        </ul>
+                        <li>【步骤4】调用salt-api执行主机环境检查模块</li>
+                        <ul>
+                            <li>成功，则初始化成功</li>
+                            <li>失败，则初始化失败，退出</li>
+                        </ul>
+                        <li>【步骤5】重启主机</li>
+                        <ul>
+                            <li>调用salt-api发送重启命令</li>
+                            <li>test.ping 检测主机连通性</li>
+                            <ul>
+                                <li>成功，则重启成功</li>
+                                <li>失败，则重启失败，退出</li>
+                            </ul>
+                        </ul>
+                        <li>【步骤6】主机入库</li>
+                        <ul>
+                            <li>发送主机入库请求</li>
+                            <ul>
+                                <li>成功，则入库成功</li>
+                                <li>失败，则入库失败，退出</li>
+                            </ul>
+                        </ul>
+                    </ul>
+                    <p><strong>点击【初始化】按钮，自动运行【步骤1】～【步骤4】，点击【重启】按钮，自动运行【步骤5】</strong></p>
+                    <p><strong>状态为“未初始化”时，才出现【初始化】按钮； 状态为“安装成功”及“初始化成功”时，才出现【重启】按钮</strong></p>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        {% if request.user.is_superuser %}
+                            <div class="btn-group">
+                                <button id='add-initialize-host' type="button" class="btn btn-info">增加初始化主机</button>
+                                <a id='purchase-host' type="button" class="btn btn-success"
+                                   href="/txcloud/purchase_server/">购买腾讯云机器
+                                </a>
+                            </div>
+                            <div class="btn-group">
+                                <button class="btn btn-info" type="button" id="download_template">下载模板</button>
+                                <button class="btn btn-success" type="button" id="import_excel">批量导入</button>
+                                <button class="btn btn-danger" type="button" id="batch_initialize"
+                                        data-text="确定要初始化主机? 0个">批量初始化
+                                </button>
+                            </div>
+                            <div class="btn-group pull-right">
+                                <button class="btn btn-info" type="button" id="sync_pillar" data-text="确定刷新pillar配置?">
+                                    刷新pillar配置
+                                </button>
+                            </div>
+                        {% endif %}
+                    </div>
+                    <div class="panel-body">
+                        <table id="mytable" class="display" width="100%" cellspacing="0">
+                            <thead>
+                            <tr>
+                                <th class="center sorting_disabled">
+                                    <label class="pos-rel">
+                                        <input id='chb-all' type="checkbox"/>
+                                    </label>
+                                </th>
+                                <th>id</th>
+                                <th>实例状态</th>
+                                <th>minion_ip</th>
+                                <th>syndic_ip</th>
+                                <th>端口</th>
+                                <th>用户</th>
+                                <th>业务类型</th>
+                                <th>项目</th>
+                                <th>机房</th>
+                                <th>操作人</th>
+                                <th>创建时间</th>
+                                <th>salt-minion</th>
+                                <th>初始化状态</th>
+                                <th>重启状态</th>
+                                <th>入库状态</th>
+                                <th>操作</th>
+                            </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add or Edit Initialize Host Modal -->
+    <div class="modal fade" id="add_or_edit_host_initialize_modal" role="dialog" aria-labelledby="myModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title" id="add_or_edit_host_initialize_modal_title"></h4>
+                </div>
+                <div class="modal-body">
+                    <div class="alert alert-danger alert-dismissable" id="add_or_edit_host_initialize_notify">
+                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                        <label id='add_or_edit_host_initialize_msg'></label>
+                    </div>
+                    <form class="form-horizontal" role="form">
+                        <div class="form-group" id="div_instance_state" hidden="true">
+                            <label class="col-sm-3 control-label ">实例状态</label>
+                            <div class="col-sm-8">
+                                <select id="instance_state" style="width: 100%">
+                                    {% for state in instance_state %}
+                                        <option value="{{ state.0 }}">{{ state.1 }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">minion_ip</label>
+                            <div class="col-sm-8">
+                                <input type="text" class="form-control " placeholder="请输入minion_ip" id="telecom_ip">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">syndic_ip</label>
+                            <div class="col-sm-8">
+                                <input type="text" class="form-control " placeholder="请输入syndic_ip" id="syndic_ip">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">ssh端口</label>
+                            <div class="col-sm-8">
+                                <input type="text" class="form-control " placeholder="请输入ssh端口" id="sshport">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">ssh帐号</label>
+                            <div class="col-sm-8">
+                                <input type="text" class="form-control " placeholder="请输入ssh帐号" id="sshuser">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">ssh密码</label>
+                            <div class="col-sm-6">
+                                <input type="password" class="form-control " placeholder="请输入ssh密码" id="sshpassword">
+                            </div>
+                            <div class="col-sm-3">
+                                <input type="checkbox" id="dis_pwd">
+                                <label>显示密码</label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label ">业务类型</label>
+                            <div class="col-sm-8">
+                                <select id="business" style="width: 100%">
+                                    <option disabled selected value="0">请选择业务类型</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label ">项目</label>
+                            <div class="col-sm-8">
+                                <select id="project" style="width: 100%">
+                                    <option disabled selected value="0">请选择项目</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label ">机房</label>
+                            <div class="col-sm-8">
+                                <select id="room" style="width: 100%">
+                                    <option disabled selected value="0">请选择机房</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group" id="div_initialize_at_once">
+                            <label class="col-sm-3 control-label ">是否立即初始化</label>
+                            <div class="col-sm-8 checkbox">
+                                <label>
+                                    <input type="checkbox" id="initialize_at_once" value="1">
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group" id="div_saltstack_install_status" hidden="true">
+                            <label class="col-sm-3 control-label ">salt-minion</label>
+                            <div class="col-sm-8">
+                                <select id="saltstack_install_status" style="width: 100%">
+                                    {% for status in install_status %}
+                                        <option value="{{ status.0 }}">{{ status.1 }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group" id="div_initialize_status" hidden="true">
+                            <label class="col-sm-3 control-label ">初始化状态</label>
+                            <div class="col-sm-8">
+                                <select id="initialize_status" style="width: 100%">
+                                    {% for status in initialize_status %}
+                                        <option value="{{ status.0 }}">{{ status.1 }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group" id="div_reboot_status" hidden="true">
+                            <label class="col-sm-3 control-label ">重启状态</label>
+                            <div class="col-sm-8">
+                                <select id="reboot_status" style="width: 100%">
+                                    {% for status in reboot_status %}
+                                        <option value="{{ status.0 }}">{{ status.1 }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group" id="div_import_status" hidden="true">
+                            <label class="col-sm-3 control-label ">入库状态</label>
+                            <div class="col-sm-8">
+                                <select id="import_status" style="width: 100%">
+                                    {% for status in import_status %}
+                                        <option value="{{ status.0 }}">{{ status.1 }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group" id="telecom_ip_notice" hidden="true">
+                            <label class="col-sm-11 control-label text-danger">
+                                <h4><i><strong>注意：请确保电信IP填写正确，点击确定后将立即初始化主机！</strong></i></h4>
+                            </label>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                    <button id='bt-confirm' type="button" class="btn btn-primary">确定</button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+
+
+    <!-- Start Initialize Host Modal -->
+    <div class="modal fade" id="start_initialize" role="dialog" aria-labelledby="myModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title" id="start_initialize_title"></h4>
+                    <input style="display: none;" id="start_initialize_ip">
+                </div>
+                <div class="modal-body">
+                    <div class="alert alert-danger alert-dismissable" id="start_initialize_notify">
+                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                        <label id='start_initialize_msg'></label>
+                    </div>
+                    <form class="form-horizontal" role="form">
+                        <div id="host_initialize_info"></div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                    <button id='bt-start' type="button" class="btn btn-primary">开始</button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+
+
+    <!-- Reboot Host Modal -->
+    <div class="modal fade" id="reboot" role="dialog" aria-labelledby="myModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <span class="text-danger"><b>确定要重启机器（IP: <span id="reboot_ip"></span>）？ 请谨慎操作</b></span>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                    <button id='bt-reboot' type="button" class="btn btn-primary">重启</button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+
+
+    <!-- Import Host Modal -->
+    <div class="modal fade" id="host_import" role="dialog" aria-labelledby="myModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <span class="text-danger"><b>确定要入库机器（IP: <span id="host_import_ip"></span>）？</b></span>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                    <button id='bt-host-import' type="button" class="btn btn-primary">入库</button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+
+
+    <!-- Modal -->
+    <div class="modal fade" id="importModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form>
+                    <div class="modal-body">
+                        <input type="file" id="file" name="myfile"/>
+                        <br/>
+                        <p class="text-danger">注意：只有当所有导入数据都符合要求，数据才会提交插入数据库，否则全部回滚</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                        <button id='bt-import' type="button" class="btn btn-primary">导入</button>
+                    </div>
+                </form>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+
+{% endblock %}
+{% block bodyjs %}
+    <script src="/static/js/jquery.dataTables.js"></script>
+    {{ django_context_varable }}
+    {% verbatim %}
+    <script id="tpl" type="text/x-handlebars-template">
+        {{#each func}}
+        <button type="button" class="btn btn-{{this.type}} btn-sm" onclick="{{this.fn}}">{{this.name}}</button>
+        {{/each}}
+    </script>
+    {% endverbatim %}
+    <script src="/static/js/handlebars-v3.0.1.js"></script>
+    <script src="/static/js/host_initialize.js?v=20191107001"></script>
+    <script src="/static/js/reconnecting-websocket.js"></script>
+{% endblock %}
+{% block css %}
+    <link href="/static/css/jquery.dataTables.css" rel="stylesheet" type="text/css">
+{% endblock %}

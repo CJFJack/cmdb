@@ -1,0 +1,156 @@
+{%extends 'template.html'%}
+{%block css%}
+<link href="/static/css/jquery.dataTables.css" rel="stylesheet" type="text/css">
+
+{%endblock%}
+{%block headjs%}
+<!-- <script type="text/javascript" src="/static/js/en.js"></script> -->
+
+{%endblock%}
+{%block content%}
+<div id="page-wrapper">
+    <div class="row">
+        <div class="col-lg-12">
+            <h1 class="page-header">{{head.value}}</h1>                
+        </div>            
+    </div>
+    <div class="row">
+
+        <div class="col-lg-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <div class="btn-group" style="width: 90px">
+                      <select class="js-data-example-ajax" style="width: 100%">
+                        <option selected="selected">项目名称</option>
+                      </select>
+                    </div>
+                    <div id='div-select2' class="btn-group">
+                    </div>
+                    <div id='div-select3' class="btn-group">
+                    </div>
+                  <div class="pull-right">
+                    <div class="btn-group">
+                      <a href="/project/manage"><button class="btn btn-default">项目管理</button></a>
+                    </div>
+                  </div>
+                </div>
+                <div class="panel-body">
+                      <table id="projectable" class="display" width="100%" cellspacing="0">
+                          <thead>
+                              <tr>
+                                  <th>序列号</th>
+                                  <th>服务器名字</th>
+                                  <th>使用情况</th>
+                                  <th>所属机房</th>
+                                  <th>所属机柜</th>
+                                  <th>服务器IP</th>
+                                  <th>CPU</th>
+                                  <th>内存</th>
+                                  <th>硬盘</th>
+                                  <th>备注</th>
+                                  <th>操作</th>                                
+                              </tr>
+                          </thead>                
+                      </table>
+                </div>
+            </div>
+        </div>
+        
+        <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="editModalLabel">修改设备信息</h4>
+              </div>
+              <div class="modal-body">
+                <div class="alert alert-danger alert-dismissable" id='modal-notify'>
+                  <button type="button" class="close" id="bt-modal-notify">&times;</button>
+                  <label id='lb-msg'></label>
+                </div>
+                <ul id="modal-list">
+                  <li class="form-group">
+                      <label class="col-md-3 control-label">序列号</label>
+                      <div class="col-md-7">
+                      <input type="text" class="form-control " placeholder="序列号" id="edit-series_number" disabled="true">
+                      </div>
+                  </li>
+                  <li class="form-group">
+                      <label class="col-md-3 control-label">服务器名字</label>
+                      <div class="col-md-7">
+                      <input type="text" class="form-control " placeholder="服务器名字" id="edit-series_name">
+                      </div>
+                  </li>
+                  <li class="form-group">
+                      <label class="col-md-3 control-label">使用情况</label>
+                      <div class="col-md-7">
+                      <input type="text" class="form-control" placeholder="使用情况" id="edit-status">
+                      </div>
+                  </li>
+                  <li class="form-group">
+                      <label class="col-md-3 control-label">所属机房</label>
+                      <div class="col-md-7">
+                        <input type="text" class="form-control" placeholder="所属机房" id="edit-belong_mechine_room" disabled="true">
+                      </div>
+                  </li>
+                  <li class="form-group">
+                      <label class="col-md-3 control-label">所属机柜</label>
+                      <div class="col-md-7">
+                        <input type="text" class="form-control" placeholder="所属机柜" id="edit-belong_cabinets" disabled="true">
+                      </div>
+                  </li>
+                  <li class="form-group">
+                      <label class="col-md-3 control-label">服务器IP</label>
+                      <div class="col-md-7">
+                      <input type="text" class="form-control" placeholder="IP" id="edit-ip" disabled="true">
+                      </div>
+                  </li>
+                  <li class="form-group">
+                      <label class="col-md-3 control-label">CPU</label>
+                      <div class="col-md-7">
+                        <input type="text" class="form-control" placeholder="CPU" id="edit-cpu" disabled="true">
+                      </div>
+                  </li>
+                  <li class="form-group">
+                      <label class="col-md-3 control-label">内存</label>
+                      <div class="col-md-7">
+                        <input type="text" class="form-control" placeholder="内存" id="edit-memory" disabled="true">
+                      </div>
+                  </li>
+                  <li class="form-group">
+                      <label class="col-md-3 control-label">硬盘</label>
+                      <div class="col-md-7">
+                        <input type="text" class="form-control" placeholder="硬盘" id="edit-disk" disabled="true">
+                      </div>
+                  </li>
+                  <li class="form-group">
+                      <label class="col-md-3 control-label">备注</label>
+                      <div class="col-md-7">
+                        <input type="text" class="form-control" placeholder="备注" id="edit-note">
+                      </div>
+                  </li>
+                </ul>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button id='bt-save' type="button" class="btn btn-primary">提交</button>
+              </div>
+            </div><!-- /.modal-content -->
+          </div><!-- /.modal-dialog -->
+        </div><!-- /.modal -->
+    </div>    
+</div>
+{%endblock%}
+{%block bodyjs%}
+    <script src="/static/js/jquery.dataTables.js" ></script>
+    {{ django_context_varable }}
+    {% verbatim %}
+    <script id="tpl" type="text/x-handlebars-template">
+          {{#each func}}
+          <button type="button" class="btn btn-{{this.type}} btn-sm" onclick="{{this.fn}}">{{this.name}}</button>
+          {{/each}} 
+    </script>
+    {% endverbatim %}
+    <script src="/static/js/handlebars-v3.0.1.js"></script>
+    <script src="/static/js/projects.js"></script>
+{%endblock%}

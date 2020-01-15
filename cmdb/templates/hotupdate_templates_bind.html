@@ -1,0 +1,174 @@
+{% extends 'template.html' %}
+
+{% block username %}
+    {{ request.user.username }}
+{% endblock %}
+
+{% block content %}
+    <div id="page-wrapper">
+        <div class="row">
+            <div class="col-lg-12">
+                <h1 class="page-header">
+                    {{ project_name }} - 选择页面模板
+                    <small>&nbsp;<a href="/admin/myworkflows/hotupdatetemplate/" target="_blank">编辑模板图片</a></small>
+                </h1>
+                <input class="hidden" value="{{ project_id }}" id="project">
+                <input class="hidden" value="{{ project_client_template_id }}" id="project_client_template_id">
+                <input class="hidden" value="{{ project_server_template_id }}" id="project_server_template_id">
+            </div>
+        </div>
+
+        <!-- Nav tabs -->
+        <ul class="nav nav-pills">
+            <li class="active"><a href="#client-pills" data-toggle="tab">前端热更新</a>
+            </li>
+            <li><a href="#server-pills" data-toggle="tab">后端热更新</a>
+            </li>
+        </ul>
+        <hr>
+        <!-- Tab panes -->
+        <div class="tab-content col-lg-10">
+            <div class="tab-pane fade in active" id="client-pills">
+                <div class="row panel panel-green" style="height:600px; overflow:auto">
+                    <br>
+                    <div class="form-group col-sm-12">
+                        <label class="control-label col-sm-1">不使用模板</label>
+                        <div class="col-sm-1">
+                            <input name="client_hotupdate_template" type="radio" value="991"/>
+                        </div>
+                    </div>
+                    {% for template in client_templates %}
+                        <div class="col-sm-7">
+                            <div class="panel panel-default">
+                                <div class="panel-body">
+                                    <div id="{{ template.name }}" class="carousel slide">
+                                        <!-- 轮播（carousel）指标 -->
+                                        <ol class="carousel-indicators">
+                                            {% for li in template.hotupdatetemplateitems_set.all %}
+                                                <li data-target="#{{ template.name }}"
+                                                    data-slide-to="{{ forloop.counter0 }}"
+                                                    {% if forloop.counter0 == 0 %}class="active"{% endif %}></li>
+                                            {% endfor %}
+                                        </ol>
+                                        <!-- 轮播（carousel）项目 -->
+                                        <div class="carousel-inner">
+                                            {% for item in template.hotupdatetemplateitems_set.all %}
+                                                <div class="item {% if forloop.counter0 == 0 %}active{% endif %}">
+                                                    <img style="width: 100%;" src="{{ item.get_image_url }}"
+                                                         alt="{{ item.id }} slide">
+                                                </div>
+                                            {% endfor %}
+                                        </div>
+                                        <!-- 轮播（carousel）导航 -->
+                                        <a class="left carousel-control" href="#{{ template.name }}" role="button"
+                                           data-slide="prev">
+                                            <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+                                            <span class="sr-only">Previous</span>
+                                        </a>
+                                        <a class="right carousel-control" href="#{{ template.name }}" role="button"
+                                           data-slide="next">
+                                            <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+                                            <span class="sr-only">Next</span>
+                                        </a>
+                                    </div>
+                                    <!-- 控制按钮 -->
+                                    <div style="text-align:center;">
+                                        <label>
+                                            <input type="radio" name="client_hotupdate_template"
+                                                   value="{{ template.id }}"> {{ template.name }}
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <textarea class="form-control" readonly
+                                      style="background: transparent; border-style: none; font-size: 15px"
+                                      rows="15">{{ template.remark }}</textarea>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="tab-pane fade" id="server-pills">
+                <div class="row panel panel-green" style="height:600px; overflow:auto">
+                    <br>
+                    <div class="form-group col-sm-12">
+                        <label class="control-label col-sm-1">不使用模板</label>
+                        <div class="col-sm-1">
+                            <input name="server_hotupdate_template" type="radio" value="992"/>
+                        </div>
+                    </div>
+                    {% for template in server_templates %}
+                        <div class="col-sm-7">
+                            <div class="panel panel-default">
+                                <div class="panel-body">
+                                    <div id="{{ template.name }}" class="carousel slide">
+                                        <!-- 轮播（carousel）指标 -->
+                                        <ol class="carousel-indicators">
+                                            {% for li in template.hotupdatetemplateitems_set.all %}
+                                                <li data-target="#{{ template.name }}"
+                                                    data-slide-to="{{ forloop.counter0 }}"
+                                                    {% if forloop.counter0 == 0 %}class="active"{% endif %}></li>
+                                            {% endfor %}
+                                        </ol>
+                                        <!-- 轮播（carousel）项目 -->
+                                        <div class="carousel-inner">
+                                            {% for item in template.hotupdatetemplateitems_set.all %}
+                                                <div class="item {% if forloop.counter0 == 0 %}active{% endif %}">
+                                                    <img style="width: 100%;" src="{{ item.get_image_url }}"
+                                                         alt="{{ item.id }} slide">
+                                                </div>
+                                            {% endfor %}
+                                        </div>
+                                        <!-- 轮播（carousel）导航 -->
+                                        <a class="left carousel-control" href="#{{ template.name }}" role="button"
+                                           data-slide="prev">
+                                            <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+                                            <span class="sr-only">Previous</span>
+                                        </a>
+                                        <a class="right carousel-control" href="#{{ template.name }}" role="button"
+                                           data-slide="next">
+                                            <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+                                            <span class="sr-only">Next</span>
+                                        </a>
+                                    </div>
+                                    <!-- 控制按钮 -->
+                                    <div style="text-align:center;">
+                                        <label>
+                                            <input type="radio" name="server_hotupdate_template"
+                                                   value="{{ template.id }}"> {{ template.name }}
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <textarea class="form-control" readonly
+                                      style="background: transparent; border-style: none; font-size: 15px"
+                                      rows="15">{{ template.remark }}</textarea>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+
+        <hr>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="form-group">
+                    <button class="btn btn-primary" id="bt-save">保存</button>
+                    <button class="btn btn-default" onclick="javascript: history.back(-1);">返回</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+
+{% endblock %}
+{% block bodyjs %}
+    <script src="/static/js/hotupdate_templates_bind.js?v=20190829001"></script>
+{% endblock %}
+{% block css %}
+    <link href="/static/css/hotupdate_templates_bind.css?v=20190820001" rel="stylesheet" type="text/css">
+{% endblock %}

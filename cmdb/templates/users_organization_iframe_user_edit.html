@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>原力互娱运维管理系统</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="/static/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- MetisMenu CSS -->
+    <link href="/static/css/metisMenu.min.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link href="/static/css/sb-admin-2.css" rel="stylesheet">
+
+    <!-- 公司logo -->
+    <link rel="shortcut icon" href="/static/img/logo.png?v=c2b4b0669d2669211fbddaf825655942aa8cb33e"
+          type="image/x-icon">
+
+    <!-- Custom Fonts -->
+    <link href="/static/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href="/static/css/select2.css" rel="stylesheet" type="text/css">
+    <script src="/static/js/jquery.js"></script>
+    <script type="text/javascript" src="/static/js/select2.min.js"></script>
+</head>
+<body id="org_edit_body">
+{% load staticfiles %}
+{% load mptt_tags %}
+
+<!-- 编辑用户区域 -->
+<div class="col-lg-8">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <span style="font-size: 18px"><b> 编辑用户 - {{ org.name }}</b></span>
+            <button type="button" class="btn btn-success pull-right" id="bt_share_user_info">分享</button>
+        </div>
+        <div class="panel-body">
+            <form class="form-horizontal" role="form" action="{% url 'organization_edit' org.id %}"
+                  method="post">
+                {% csrf_token %}
+                <div class="modal-body">
+                    <div class="form-group row" style="display: none">
+                        <label class="control-label col-md-3">用户id</label>
+                        <div class="col-md-8">
+                            <input class="form-control" type="text" name="user_id"
+                                   value="{{ user.id }}">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="control-label col-md-3">用户名</label>
+                        <div class="col-md-8">
+                            <input class="form-control" type="text" name="edit_username" id="edit_username"
+                                   placeholder="请输出中文姓名" value="{{ user.username }}">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="control-label col-md-3">用户拼音（登录名）</label>
+                        <div class="col-md-8">
+                            <input class="form-control" type="text" name="first_name" id="id_first_name"
+                                   placeholder="请输入用户姓名拼音，作为系统登录名" value="{{ user.first_name }}">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="control-label col-md-3">用户邮箱</label>
+                        <div class="col-md-8">
+                            <input class="form-control" type="text" name="email" id="email"
+                                   placeholder="请输入用户姓名拼音，作为系统登录名" value="{{ user.email }}">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="control-label col-md-3">用户密码</label>
+                        <div class="col-md-8">
+                            <input class="form-control" type="password" name="edit_password"
+                                   placeholder="请输入用户密码">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="control-label col-md-3">员工职位</label>
+                        <div class="col-md-8">
+                            <input class="form-control" type="text" name="title"
+                                   placeholder="请输入员工职位"
+                                   value="{% if not org.title %}{% else %}{{ org.title }}{% endif %}">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="control-label col-md-3">企业QQ开通结果</label>
+                        <div class="col-md-5">
+                            <input id="ent_qq" style="display: none"
+                                   value="{% if org.ent_qq %}{{ org.ent_qq }}{% endif %}">
+                            <input class="form-control" type="text" name="ent_qq"
+                                   value="{% if org.ent_qq %}{{ org.ent_qq }}{% endif %}">
+                        </div>
+                        {% if request.user.is_superuser %}
+                            <div class="col-md-4">
+                                <button type="button" id="edit-ent-qq" class="btn btn-sm btn-success">修改企业qq信息</button>
+                                <button type="button" id="bt-open-ent-qq" class="btn btn-sm btn-primary">开通企业qq
+                                </button>
+                            </div>
+                        {% endif %}
+                    </div>
+                    <div class="form-group row">
+                        <label class="control-label col-md-3">企业邮箱开通结果</label>
+                        <div class="col-md-5">
+                            <input class="form-control" type="text" name="ent_email" id="ent_email"
+                                   value="{% if org.ent_email %}{{ org.ent_email }}{% endif %}">
+                        </div>
+                        {% if request.user.is_superuser %}
+                            <div class="col-md-4">
+                                <button type="button" id="edit-ent-email" class="btn btn-sm btn-success">修改企业邮箱信息
+                                </button>
+                                <button type="button" id="bt-open-ent-email" class="btn btn-sm btn-primary">开通企业邮箱
+                                </button>
+                            </div>
+                        {% endif %}
+                    </div>
+                    <div class="form-group row">
+                        <label class="control-label col-md-3">所属部门</label>
+                        <div class="col-md-8">
+                            <select class="form-control" id="ancestors-user-edit" name="ancestors-user-edit">
+                                <optgroup label="选择所属部门">
+                                    <option id="parent-option" selected="selected"
+                                            value="{{ org.parent_id }}">
+                                        {% if org.parent %}
+                                            {{ org.get_ancestors_except_self }}{% else %}{% endif %}</option>
+                                </optgroup>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="control-label col-md-3">性别</label>
+                        <div class="form-check">
+                            <label class="form-check-label">
+                                &nbsp;&nbsp;&nbsp;&nbsp;<input name="sex" value="1"
+                                                               class="form-check-input" type="radio"
+                                                               {% if org.sex == 1 %}checked{% endif %}>
+                                男
+                            </label>&nbsp;&nbsp;&nbsp;
+                            <label class="form-check-label">
+                                <input name="sex" value="2" class="form-check-input" type="radio"
+                                       {% if org.sex == 2 %}checked{% endif %}>
+                                女
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="control-label col-md-3">用户类型</label>
+                        <div class="form-check">
+                            <label class="form-check-label">
+                                &nbsp;&nbsp;&nbsp;&nbsp;<input name="is_superuser" value="0"
+                                                               class="form-check-input" type="radio"
+                                                               {% if not user.is_superuser %}checked{% endif %}>
+                                普通用户
+                            </label>&nbsp;&nbsp;&nbsp;
+                            <label class="form-check-label">
+                                <input name="is_superuser" value="1" class="form-check-input" type="radio"
+                                       {% if user.is_superuser %}checked{% endif %}>
+                                管理员
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="control-label col-md-3">是否在职</label>
+                        <div class="form-check">
+                            <label class="form-check-label">
+                                &nbsp;&nbsp;&nbsp;&nbsp;<input name="is_active" value="1"
+                                                               class="form-check-input" type="radio"
+                                                               {% if user.is_active %}checked{% endif %}>
+                                在职
+                            </label>&nbsp;&nbsp;&nbsp;
+                            <label class="form-check-label">
+                                <input name="is_active" value="0" class="form-check-input" type="radio"
+                                       {% if not user.is_active %}checked{% endif %}>
+                                离职
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="control-label col-md-3">是否确认入职</label>
+                        <div class="form-check">
+                            <label class="form-check-label">
+                                &nbsp;&nbsp;&nbsp;&nbsp;<input name="is_register" value="1"
+                                                               class="form-check-input" type="radio"
+                                                               {% if org.is_register %}checked{% endif %}>
+                                是
+                            </label>&nbsp;&nbsp;&nbsp;
+                            <label class="form-check-label">
+                                <input name="is_register" value="0" class="form-check-input" type="radio"
+                                       {% if not org.is_register %}checked{% endif %}>
+                                否
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="control-label col-md-3">openVPN</label>
+                        <div class="col-md-5">
+                            <input class="form-control" type="text" name="openvpn" readonly
+                                   value="{{ org.get_openvpn_display }}">
+                        </div>
+                        {% if request.user.is_superuser %}
+                            <div class="col-md-3">
+                                {% if org.openvpn == 0 %}
+                                    <button type="button" id="create_openvpn" class="btn btn-sm btn-success">开通帐号
+                                    </button>
+                                {% endif %}
+                                <button type="button" id="modify_openvpn" class="btn btn-sm btn-primary">修改密码</button>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+                {% if request.user.is_superuser %}
+                    <div class="modal-footer">
+                        <button id='bt-save-user-edit' type="submit" class="btn btn-primary" name="org_user_save">保存
+                        </button>
+                        <button id="org-delete" type="button" class="btn btn-danger" data-dismiss="modal"
+                                name="org_delete">删除
+                        </button>
+                        <button id="org-desire" type="button" class="btn btn-info" data-dismiss="modal"
+                                name="org_desire">离职
+                        </button>
+                        <button id="org-clean" type="button" class="btn btn-warning" data-dismiss="modal"
+                                name="org_clean">清除权限
+                        </button>
+                        <input style="display: none" value="{{ org.user.id }}" id="user_id">
+                    </div>
+                {% endif %}
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- 修改企业QQ信息弹出框 -->
+<div class="modal fade" id="myModal-ent-qq" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <form class="form-horizontal" role="form">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title" id="myModalLabel-ent-qq"></h4>
+                </div>
+                <div class="modal-body">
+                    <div class="alert alert-danger alert-dismissable" id='modal-notify-ent-qq'>
+                        <button type="button" class="close" id="bt-modal-notify-ent-qq">&times;</button>
+                        <label id='lb-msg-ent-qq'></label>
+                    </div>
+                    <input id="account-ent-qq" style="display: none" value="{{ user.first_name }}">
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">用户中文名</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" id="name-ent-qq" name="name-ent-qq"
+                                   placeholder="（选填）请输入用户中文名">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">员工职位</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" id="title-ent-qq" name="title-ent-qq"
+                                   placeholder="（选填）请输入员工职位">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">登录密码</label>
+                        <div class="col-sm-8">
+                            <input type="password" class="form-control" id="password-ent-qq" name="password-ent-qq"
+                                   placeholder="（选填）请输入登录密码">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-3">性别（选填）</label>
+                        <div class="form-check">
+                            <label class="form-check-label">
+                                &nbsp;&nbsp;&nbsp;&nbsp;<input name="sex-ent-qq" value="1" class="form-check-input"
+                                                               type="radio">
+                                男
+                            </label>&nbsp;&nbsp;&nbsp;
+                            <label class="form-check-label">
+                                <input name="sex-ent-qq" value="2" class="form-check-input" type="radio">
+                                女
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button id='save-ent-qq' type="button" class="btn btn-primary">保存</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">返回</button>
+                </div>
+            </div>
+        </form>
+    </div><!-- /.modal-content -->
+</div><!-- /.modal-dialog -->
+
+
+<!-- 修改企业邮箱信息弹出框 -->
+<div class="modal fade" id="myModal-ent-email" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <form class="form-horizontal" role="form">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title" id="myModalLabel-ent-email"></h4>
+                </div>
+                <div class="modal-body">
+                    <div class="alert alert-danger alert-dismissable" id='modal-notify-ent-email'>
+                        <button type="button" class="close" id="bt-modal-notify-ent-email">&times;</button>
+                        <label id='lb-msg-ent-email'></label>
+                    </div>
+                    <input id="account-ent-email" style="display: none" value="{{ user.first_name }}">
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">选择修改邮箱</label>
+                        <div class="col-sm-8">
+                            <select class="form-control" style="width: 100%" id="edit_email_account">
+                                <option value="0" disabled selected>请选择修改邮箱</option>
+                                {% for e in email %}
+                                    <option value="{{ e }}">{{ e }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">用户中文名</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" id="name-ent-email" name="name-ent-email"
+                                   placeholder="（选填）请输入用户中文名">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">登录密码</label>
+                        <div class="col-sm-8">
+                            <input type="password" class="form-control" id="password-ent-email"
+                                   name="password-ent-email"
+                                   placeholder="（选填）请输入登录密码">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">职位</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" id="position-ent-email" name="position-ent-email"
+                                   placeholder="（选填）请输入职位">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">所属部门</label>
+                        <div class="col-sm-8">
+                            <select class="form-control" id="department-ent-email" name="department-ent-email"
+                                    style="width: 100%">
+                                <option selected="selected" value="0">无</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-3">性别（选填）</label>
+                        <div class="form-check">
+                            <label class="form-check-label">
+                                &nbsp;&nbsp;&nbsp;&nbsp;<input name="sex-ent-email" value="1" class="form-check-input"
+                                                               type="radio">
+                                男
+                            </label>&nbsp;&nbsp;&nbsp;
+                            <label class="form-check-label">
+                                <input name="sex-ent-email" value="2" class="form-check-input" type="radio">
+                                女
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-3">是否启用（选填）</label>
+                        <div class="form-check">
+                            <label class="form-check-label">
+                                &nbsp;&nbsp;&nbsp;&nbsp;<input name="enable-ent-email" value="1"
+                                                               class="form-check-input"
+                                                               type="radio">
+                                是
+                            </label>&nbsp;&nbsp;&nbsp;
+                            <label class="form-check-label">
+                                <input name="enable-ent-email" value="0" class="form-check-input" type="radio">
+                                否
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button id='save-ent-email' type="button" class="btn btn-primary">保存</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">返回</button>
+                </div>
+            </div>
+        </form>
+    </div><!-- /.modal-content -->
+</div><!-- /.modal-dialog -->
+
+
+<!-- 生成用户信息分享文本模太框 -->
+<div class="modal fade" id="modal_share_user_info" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog" style="width: 1000px;">
+        <form class="form-horizontal" role="form">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">用户信息分享</h4>
+                </div>
+                <div class="modal-body">
+                    {#                    <h3 class="share_text">温馨提示:</h3>#}
+                    {#                    <p align="center" class="share_text">cmdb账号:(<span id="share_first_name"></span>(或者 <span#}
+                    {#                            id="share_username"></span>)) 密码:redhat(首次登录后会提示强制修改)</p>#}
+                    {#                    <p align="center" class="share_text">企业QQ:<span id="share_ent_qq"></span>#}
+                    {#                        密码:Ylhy@20181211(首次登录后会提示强制修改密码)</p>#}
+                    {#                    <p align="center" class="share_text">企业邮箱账号:<span id="share_email"></span>#}
+                    {#                        密码:Ylhy@20181211(首次登录后会提示强制修改密码)</p>#}
+                    {#                    <p align="center" class="share_text">其中公司WiFi:Cy-public 账号密码已经发送到你的企业邮箱</p>#}
+                    {#                    <p align="center" class="share_text">当前cmdb系统支持修改企业QQ密码、企业邮箱密码、SVN密码</p>#}
+                    {#                    <p align="center" class="share_text">如有疑问请联系运维网络组!!!</p>#}
+                    {#                    <p align="center" class="share_text">【备注:如果是创畅、海南创娱、广州创娱、广州起源新入职员工请打开OpenVPN（账号已发至企业邮箱）后再访问以下网址】</p>#}
+                    {#                    <p align="center-left" class="share_text">1.进入cmdb原力互娱运维管理系统:<a#}
+                    {#                            href="https://cmdb.cy666.com/user_login/" target="_blank">https://cmdb.cy666.com/user_login/</a></p>#}
+                    {#                    <p align="center-left" class="share_text">2.电脑故障申报以及办公电脑和配件申请的方法:<a#}
+                    {#                            href="http://192.168.100.100:8090/pages/viewpage.action?pageId=2818112" target="_blank">http://192.168.100.100:8090/pages/viewpage.action?pageId=2818112</a>#}
+                    {#                    </p>#}
+                    {#                    <p align="center-left" class="share_text">3.企业邮箱登录网址:<a#}
+                    {#                            href="https://exmail.qq.com/cgi-bin/loginpage" target="_blank">https://exmail.qq.com/cgi-bin/loginpage</a>#}
+                    {#                    </p>#}
+                    {#                    <p align="center-left" class="share_text">4.修改企业QQ密码、企业邮箱密码、SVN密码:<a#}
+                    {#                            href="http://192.168.100.100:8090/pages/viewpage.action?pageId=2818091" target="_blank">http://192.168.100.100:8090/pages/viewpage.action?pageId=2818091</a>#}
+                    {#                    </p>#}
+                    <textarea style="width: 100%;border:none;font-size: large" rows="18"
+                              id="share_info_text" readonly>{{ share_info }}</textarea>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-success" onclick="copyShareText()">复制</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                </div>
+            </div>
+        </form>
+    </div><!-- /.modal-content -->
+</div><!-- /.modal-dialog -->
+
+
+<!-- 修改openVPN密码模太框 -->
+<div class="modal fade" id="modal_modify_vpn" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <form class="form-horizontal" role="form">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">修改openVPN密码</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">输入密码</label>
+                        <div class="col-sm-8">
+                            <input class="form-control" id="id_vpn_passwd" type="password">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">确认密码</label>
+                        <div class="col-sm-8">
+                            <input class="form-control" id="id_vpn_passwd_twice" type="password">
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                    <button type="button" id="modify_passwd" class="btn btn-primary" data-dismiss="modal">确定</button>
+                </div>
+            </div>
+        </form>
+    </div><!-- /.modal-content -->
+</div><!-- /.modal-dialog -->
+
+
+<!-- 开通企业QQ信息弹出框 -->
+<div class="modal fade" id="myModal-open-ent-qq" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <form class="form-horizontal" role="form">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title" id="myModalLabel-open-ent-qq"></h4>
+                </div>
+                <div class="modal-body">
+                    <div class="alert alert-danger alert-dismissable" id='modal-notify-open-ent-qq'>
+                        <button type="button" class="close" id="bt-modal-notify-open-ent-qq">&times;</button>
+                        <label id='lb-msg-open-ent-qq'></label>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">用户英文名</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" id="account-open-ent-qq" name="account-open-ent-qq"
+                                   value="{{ user.first_name }}" readonly>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">用户中文名</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" id="name-open-ent-qq" name="name-open-ent-qq"
+                                   value="{{ user.username }}" readonly>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">员工职位</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" id="title-open-ent-qq" name="title-open-ent-qq"
+                                   value="{{ org.title }}" readonly>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">部门</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" id="department-open-ent-qq"
+                                   name="department-open-ent-qq"
+                                   value="{{ org.get_ancestors_except_self_by_slash }}" readonly>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-3">性别</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" id="gender-open-ent-qq" name="gender-open-ent-qq"
+                                   value="{{ org.get_sex_display }}" data-gender="{{ org.sex }}" readonly>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button id='save-open-ent-qq' type="button" class="btn btn-primary">开通</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">返回</button>
+                </div>
+            </div>
+        </form>
+    </div><!-- /.modal-content -->
+</div><!-- /.modal-dialog -->
+
+
+<!-- 开通企业邮箱信息弹出框 -->
+<div class="modal fade" id="myModal-open-ent-email" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <form class="form-horizontal" role="form">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title" id="myModalLabel-open-ent-email"></h4>
+                </div>
+                <div class="modal-body">
+                    <div class="alert alert-danger alert-dismissable" id='modal-notify-open-ent-email'>
+                        <button type="button" class="close" id="bt-modal-notify-open-ent-email">&times;</button>
+                        <label id='lb-msg-open-ent-email'></label>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">用户英文名</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" id="account-open-ent-email"
+                                   name="account-open-ent-email"
+                                   value="{{ user.first_name }}" readonly>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">邮箱后缀</label>
+                        <div class="col-sm-8">
+                            <select id="suffix-open-ent-email" multiple style="width: 100%">
+                                <option value="@forcegames.cn">@forcegames.cn</option>
+                                <option value="@chuangyunet.com">@chuangyunet.com</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">用户中文名</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" id="name-open-ent-email" name="name-open-ent-email"
+                                   value="{{ user.username }}" readonly>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">员工职位</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" id="title-open-ent-email"
+                                   name="title-open-ent-email"
+                                   value="{{ org.title }}" readonly>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">部门</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" id="department-open-ent-email"
+                                   name="department-open-ent-email"
+                                   value="{{ org.get_ancestors_except_self_by_slash }}" readonly>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-3">性别</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" id="gender-open-ent-email"
+                                   name="gender-open-ent-email"
+                                   value="{{ org.get_sex_display }}" data-gender="{{ org.sex }}" readonly>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button id='save-open-ent-email' type="button" class="btn btn-primary">开通</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">返回</button>
+                </div>
+            </div>
+        </form>
+    </div><!-- /.modal-content -->
+</div><!-- /.modal-dialog -->
+
+
+<!--树状主要样式-->
+<link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap-treeview.css' %}"/>
+
+<script src="/static/js/jquery.json.min.js"></script>
+<script src="/static/js/bootstrap.min.js"></script>
+<script src="/static/js/metisMenu.min.js"></script>
+<script src="/static/js/sb-admin-2.js"></script>
+<script src="/static/js/jquery.confirm.js"></script>
+<script src="/static/js/common.js"></script>
+<script type="text/javascript" src="{% static 'js/bootstrap-treeview.js' %}"></script>
+<!-- 所属部门下拉选择-->
+<script type="text/javascript" src="{% static 'js/select2.min.js' %}"></script>
+<script type="text/javascript"
+        src="/static/js/users_organization_iframe_user_edit.js?v=20191022001"></script>
+<script>
+
+    //删除节点
+    $("#org-delete").confirm({
+        //text:"确定删除所选的?",
+        confirm: function () {
+            let url = "{% url 'organization_delete' org.id %}";
+            $.ajax({
+                type: "POST",
+                url: url,
+                contentType: "application/json; charset=utf-8",
+                data: '',
+                success: function (data) {
+                    if (data.success) {
+                        window.location.href = '/users/org_edit_href/'
+                    }
+                    else {
+                        alert(data.msg)
+                    }
+                },
+                error: function (data) {
+                    alert('内部错误')
+                }
+            });
+        },
+        cancel: function (button) {
+        },
+        text: '确定要删除\"' + '{{ org.name }}' + '\"吗?',
+        confirmButton: "确定",
+        cancelButton: "取消",
+    });
+
+    $('#bt-save-user-edit').click(function () {
+        jQuery('#org_edit_body').showLoading();
+    })
+
+</script>
+<!-- showloading.js-->
+<script src="/static/js/showloading.min.js"></script>
+<!-- showloading.css-->
+<link href="/static/css/showloading.css" rel="stylesheet" media="screen">
+<link href="/static/css/select2-bootstrap.css" rel="stylesheet" type="text/css">
+
+</body>
+</html>

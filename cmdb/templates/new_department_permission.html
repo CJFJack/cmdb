@@ -1,0 +1,291 @@
+{% extends 'template.html' %}
+{% load staticfiles %}
+{% load mptt_tags %}
+
+{% block username %}
+    {{ request.user.username }}
+{% endblock %}
+
+{% block content %}
+    <div id="page-wrapper">
+        <div class="row">
+            <div class="col-lg-12">
+                <h1 class="page-header">部门权限管理</h1>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-4">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <!-- 组织架构图主体 -->
+                        <span id="tree"></span>
+                    </div>
+                </div>
+            </div>
+            <!-- 部门权限编辑方法提示区域 -->
+            <div class="col-lg-8" id="permission-edit-notice" style="display: block;">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <h3 class="text-center">请选中左侧树状菜单相应节点进行编辑<br>
+                            <small>点击左侧树状菜单 “+” “-” 可进行伸缩</small>
+                        </h3>
+                        <h5 class="text-center text-danger">
+                            <p>注意：选择父级节点进行编辑，则其下面所有子节点均为会一起修改，若想差异化赋权限，请单独对子节点进行编辑！</p>
+                            <p>若需要针对个人进行权限编辑，请点击<a href="/users/user_permission/">用户权限</a></p>
+                        </h5>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-8" id="permission-edit" style="display: none;">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4 id="section-head"></h4>
+                    </div>
+                    <div class="panel-body">
+                        <div class="form-group row">
+                            <label class="col-sm-2 control-label">机房</label>
+                            <label class="checkbox-inline">
+                                <input type="checkbox" id="view_room_obj">查看
+                            </label>
+                            <label class="checkbox-inline">
+                                <input type="checkbox" id="edit_room_obj">修改
+                            </label>
+                            <label class="checkbox-inline">
+                                <input type="checkbox" id="add_room_obj">新增
+                            </label>
+                            <label class="checkbox-inline">
+                                <input type="checkbox" id="del_room_obj">删除
+                            </label>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-2 control-label">主机</label>
+                            <label class="checkbox-inline">
+                                <input type="checkbox" id="view_host_obj">查看负责项目主机
+                            </label>
+                            <label class="checkbox-inline">
+                                <input type="checkbox" id="view_all_host_obj">查看所有主机
+                            </label>
+                            <label class="checkbox-inline">
+                                <input type="checkbox" id="edit_host_obj">修改
+                            </label>
+                            <label class="checkbox-inline">
+                                <input type="checkbox" id="add_host_obj">新增
+                            </label>
+                            <label class="checkbox-inline">
+                                <input type="checkbox" id="del_host_obj">删除
+                            </label>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-2 control-label">主机使用率</label>
+                            <label class="checkbox-inline">
+                                <input type="checkbox" id="view_host_usage">查看
+                            </label>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-2 control-label">主机迁服回收</label>
+                            <label class="checkbox-inline">
+                                <input type="checkbox" id="view_host_compression">查看
+                            </label>
+                            <label class="checkbox-inline">
+                                <input type="checkbox" id="host_compression_apply">申请
+                            </label>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-2 control-label">业务类型</label>
+                            <label class="checkbox-inline">
+                                <input type="checkbox" id="view_business_obj">查看
+                            </label>
+                            <label class="checkbox-inline">
+                                <input type="checkbox" id="edit_business_obj">修改
+                            </label>
+                            <label class="checkbox-inline">
+                                <input type="checkbox" id="add_business_obj">新增
+                            </label>
+                            <label class="checkbox-inline">
+                                <input type="checkbox" id="del_business_obj">删除
+                            </label>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-2 control-label">数据库实例</label>
+                            <label class="checkbox-inline">
+                                <input type="checkbox" id="view_mysql_instance">查看
+                            </label>
+                            <label class="checkbox-inline">
+                                <input type="checkbox" id="view_mysql_password">查看密码
+                            </label>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-2 control-label">游戏项目</label>
+                            <label class="checkbox-inline">
+                                <input type="checkbox" id="view_game_project_obj">查看
+                            </label>
+                            <label class="checkbox-inline">
+                                <input type="checkbox" id="edit_game_project_obj">修改
+                            </label>
+                            <label class="checkbox-inline">
+                                <input type="checkbox" id="add_game_project_obj">新增
+                            </label>
+                            <label class="checkbox-inline">
+                                <input type="checkbox" id="del_game_project_obj">删除
+                            </label>
+                        </div>
+                        <!--<div class="form-group">
+                            <label class="col-sm-2 control-label">开服计划</label>
+                            <label class="checkbox-inline">
+                                <input type="checkbox" id="api_view_installgameserver_obj">查看
+                            </label>
+                            <label class="checkbox-inline">
+                                <input type="checkbox" id="api_edit_installgameserver_obj">执行
+                            </label>
+                        </div>-->
+                        <div class="form-group row">
+                            <label class="col-sm-2 control-label">修改开服时间计划</label>
+                            <label class="checkbox-inline">
+                                <input type="checkbox" id="api_view_modify_srv_opentime_schedule">查看
+                            </label>
+                            <label class="checkbox-inline">
+                                <input type="checkbox" id="api_create_modify_srv_opentime_schedule">新增
+                            </label>
+                            <label class="checkbox-inline">
+                                <input type="checkbox" id="api_edit_modify_srv_opentime_schedule">修改
+                            </label>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-2 control-label">项目下架计划</label>
+                            <label class="checkbox-inline">
+                                <input type="checkbox" id="api_view_gameserveroff_schedule">查看
+                            </label>
+                            <label class="checkbox-inline">
+                                <input type="checkbox" id="api_add_gameserveroff_schedule">新增
+                            </label>
+                            <label class="checkbox-inline">
+                                <input type="checkbox" id="api_edit_gameserveroff_schedule">修改
+                            </label>
+                            <label class="checkbox-inline">
+                                <input type="checkbox" id="api_delete_gameserveroff_schedule">删除
+                            </label>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-2 control-label">合服计划</label>
+                            <label class="checkbox-inline">
+                                <input type="checkbox" id="api_view_game_srv_merge_schedule">查看
+                            </label>
+                            <label class="checkbox-inline">
+                                <input type="checkbox" id="api_create_game_srv_merge_schedule">新增
+                            </label>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-2 control-label">svn套餐权限</label>
+                            <label class="checkbox-inline">
+                                <input type="checkbox" id="view_svn_scheme">查看
+                            </label>
+                            <label class="checkbox-inline">
+                                <input type="checkbox" id="edit_svn_scheme">修改
+                            </label>
+                            <label class="checkbox-inline">
+                                <input type="checkbox" id="add_svn_scheme">新增
+                            </label>
+                            <label class="checkbox-inline">
+                                <input type="checkbox" id="del_svn_scheme">删除
+                            </label>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-2 control-label">IT资产</label>
+                            <label class="checkbox-inline">
+                                <input type="checkbox" id="view_it_assets">查看
+                            </label>
+                            <label class="checkbox-inline">
+                                <input type="checkbox" id="edit_it_assets">修改所有属性
+                            </label>
+                            <label class="checkbox-inline">
+                                <input type="checkbox" id="change_assets_company">修改公司主体
+                            </label>
+                            <label class="checkbox-inline">
+                                <input type="checkbox" id="add_it_assets">新增
+                            </label>
+                            <label class="checkbox-inline">
+                                <input type="checkbox" id="del_it_assets">删除
+                            </label>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-2 control-label">CDN刷新</label>
+                            <label class="checkbox-inline">
+                                <input type="checkbox" id="view_cdn_api_info">执行
+                            </label>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-2 control-label">用户管理</label>
+                            <label class="checkbox-inline">
+                                <input type="checkbox" id="view_user_info">查看
+                            </label>
+                            <label class="checkbox-inline">
+                                <input type="checkbox" id="download_users_info_list">导出用户
+                            </label>
+                            <label class="checkbox-inline">
+                                <input type="checkbox" id="api_cmdb_user_add">API新增
+                            </label>
+                            <label class="checkbox-inline">
+                                <input type="checkbox" id="api_cmdb_confirm_register">API确认入职
+                            </label>
+                            <label class="checkbox-inline">
+                                <input type="checkbox" id="api_cmdb_user_delete">API删除
+                            </label>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-2 control-label">web挂维护通知</label>
+                            <label class="checkbox-inline">
+                                <input type="checkbox" id="api_web_maintenance_info">新增
+                            </label>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-2 control-label">API文档</label>
+                            <label class="checkbox-inline">
+                                <input type="checkbox" id="api_doc">查看
+                            </label>
+                        </div>
+                    </div>
+                    <div class="panel-footer">
+                        <input id="org-id" style="display: none;">
+                        <button id="bt-save" class="btn btn-primary" type="button">保存</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+
+{% block bodyjs %}
+
+    <script type="text/javascript" src="{% static 'js/bootstrap-treeview.js' %}"></script>
+    <script type="text/javascript">
+
+        //获取树状列表数据
+        function getTree() {
+            //节点上的数据遵循如下的格式：
+            let tree = [{% recursetree all_sections %}{
+                    text: "{{ node.name }}   {{ node.user.email }}",
+                    dataId: {{ node.id }},
+                    {% if not node.is_leaf_node %}
+                        nodes: [{{ children }}]
+                    {% endif %}
+                    },{% endrecursetree %}];
+            return tree;
+        }
+
+    </script>
+    <script src="/static/js/new_department_permission.js?v=ds6fsh456f782ss8fsdf"></script>
+    <!-- showloading.js-->
+    <script src="/static/js/showloading.min.js"></script>
+
+{% endblock %}
+
+
+{% block css %}
+
+    <!--树状主要样式-->
+    <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap-treeview.css' %}"/>
+    <!-- showloading.css-->
+    <link href="/static/css/showloading.css" rel="stylesheet" media="screen">
+
+{% endblock %}

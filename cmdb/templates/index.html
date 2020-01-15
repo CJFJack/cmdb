@@ -1,0 +1,235 @@
+{%extends 'template.html'%}
+
+{%block content%}
+<div id="page-wrapper">
+    <div class="row">
+        <div class="col-lg-12">
+            <h1 class="page-header">{{head.value}}</h1>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <div class="btn-group">
+                        <!--<a><button id='bt-add' type="button" class="btn btn-primary">增加</button></a>
+                        <a><button id='bt-del' type="button" class="btn btn-danger">删除</button></a>-->
+                        <button id='bt-search' type="button" class="btn btn-danger">高级搜索</button>
+                          
+                    </div>
+                    <div class="pull-right">
+                      <div class="btn-group">
+                        <!--<a><button id='bt-upload' type="button" class="btn btn-primary" >导入</button></a>
+                        <a href="/assets/export_devices"><button id='bt-export' type="button" class="btn btn-primary" >导出</button></a>-->
+                      </div>
+                    </div>
+                </div>
+                <div class="panel-body">
+                    <div id="div-search" class="hide">
+                      <table id="high-search" style="width: 67%; margin: 0 auto 2em auto;" border="0" cellpadding="3" cellspacing="0">
+                        <thead>
+                            <tr>
+                                <th>目标</th>
+                                <th>内容</th>
+                                <th>正则表达式</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr id="filter_global">
+                                <td>全局搜索</td>
+                                <td align="center"><input style="width:60%" class="global_filter" id="global_filter" type="text"></td>
+                                <td align="center"><input type="checkbox" class="global_filter" id="global_regex"></td>
+                            </tr>
+                            <tr id="filter_col2" data-column="1">
+                                <td>平台名</td>
+                                <td align="center"><input style="width:60%" class="column_filter" id="col1_filter" type="text"></td>
+                                <td align="center"><input type="checkbox" class="column_filter" id="col1_regex"></td>
+                            </tr>
+                            <tr id="filter_col3" data-column="2">
+                                <td>主机名</td>
+                                <td align="center"><input style="width:60%" class="column_filter" id="col2_filter" type="text"></td>
+                                <td align="center"><input type="checkbox" class="column_filter" id="col2_regex"></td>
+                            </tr>
+                            <tr id="filter_col4" data-column="3">
+                                <td>平台类型</td>
+                                <td align="center"><input style="width:60%" class="column_filter" id="col3_filter" type="text"></td>
+                                <td align="center"><input type="checkbox" class="column_filter" id="col3_regex"></td>
+                            </tr>
+                            <tr id="filter_col5" data-column="4">
+                                <td>vip</td>
+                                <td align="center"><input style="width:60%" class="column_filter" id="col4_filter" type="text"></td>
+                                <td align="center"><input type="checkbox" class="column_filter" id="col4_regex"></td>
+                            </tr>
+                            <tr id="filter_col6" data-column="5">
+                                <td>主机ip</td>
+                                <td align="center"><input style="width:60%" class="column_filter" id="col5_filter" type="text"></td>
+                                <td align="center"><input type="checkbox" class="column_filter" id="col5_regex"></td>
+                            </tr>
+                            <tr id="filter_col7" data-column="6">
+                                <td>公网负载ip</td>
+                                <td align="center"><input style="width:60%" class="column_filter" id="col6_filter" type="text"></td>
+                                <td align="center"><input type="checkbox" class="column_filter" id="col6_regex"></td>
+                            </tr>
+                            <tr id="filter_col8" data-column="7">
+                                <td>应用类型</td>
+                                <td align="center"><input style="width:60%" class="column_filter" id="col7_filter" type="text"></td>
+                                <td align="center"><input type="checkbox" class="column_filter" id="col7_regex"></td>
+                            </tr>
+                            <tr id="filter_col9" data-column="8">
+                                <td>服务名</td>
+                                <td align="center"><input style="width:60%" class="column_filter" id="col8_filter" type="text"></td>
+                                <td align="center"><input type="checkbox" class="column_filter" id="col8_regex"></td>
+                            </tr>
+                            <tr id="filter_col10" data-column="9">
+                                <td>操作系统</td>
+                                <td align="center"><input style="width:60%" class="column_filter" id="col9_filter" type="text"></td>
+                                <td align="center"><input type="checkbox" class="column_filter" id="col9_regex"></td>
+                            </tr>
+                            <tr id="filter_col11" data-column="10">
+                                <td>主机状态</td>
+                                <td align="center"><input style="width:60%" class="column_filter" id="col10_filter" type="text"></td>
+                                <td align="center"><input type="checkbox" class="column_filter" id="col10_regex"></td>
+                            </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                    <div class="form-group">
+                      <a class="toggle-vis" href="#" data-column="4"><span class="is_display">隐藏</span>VIP</a>
+                      -
+                      <a class="toggle-vis" href="#" data-column="8"><span class="is_display">隐藏</span>服务名</a>
+                      -
+                      <a class="toggle-vis" href="#" data-column="9"><span class="is_display">显示</span>操作系统</a>
+                      -
+                      <a class="toggle-vis" href="#" data-column="10"><span class="is_display">隐藏</span>主机状态</a>
+                    </div>
+                      <table id="mytable" class="display" width="100%" cellspacing="0">
+                          <thead>
+                              <tr>
+                                  <!--<th class="center sorting_disabled">
+                                    <label class="pos-rel">
+                                      <input id='chb-all' type="checkbox"/>
+                                    </label>
+                                  </th>-->
+                                  <th>id</th>
+                                  <th>平台</th>
+                                  <th>主机名</th>
+                                  <th>平台类型</th>
+                                  <th>VIP</th>
+                                  <th>主机ip</th>
+                                  <th>公网负载ip</th>
+                                  <th>应用类型</th>
+                                  <th>服务名称</th>
+                                  <th>操作系统</th>
+                                  <th>主机状态</th>
+                                  <!--<th>备注</th>-->
+                                  <!--<th>操作</th>-->
+                              </tr>
+                          </thead>
+                      </table>
+                </div>
+            </div>
+        </div>
+        <!-- Modal -->
+        <div class="modal fade" id="myModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel"></h4>
+              </div>
+              <div class="modal-body">
+                <div class="alert alert-danger alert-dismissable" id='modal-notify'>
+                  <button type="button" class="close" id="bt-modal-notify">&times;</button>
+                  <label id='lb-msg'></label>
+                </div>
+                <ul id="modal-list">
+                  <li class="form-group">
+                      <label class="col-sm-3 control-label">平台名称</label>
+                      <div class="col-sm-7">
+                        <input type="text" class="form-control " placeholder="招商银行" id="platform_name">
+                      </div>
+                  </li>
+                  <li class="form-group">
+                      <label class="col-sm-3 control-label">项目经理</label>
+                      <div class="col-sm-7">
+                        <input type="text" class="form-control " placeholder="黄总" id="manager">
+                      </div>
+                  </li>
+                  <li class="form-group">
+                      <label class="col-sm-3 control-label">项目经理电话</label>
+                      <div class="col-sm-7">
+                        <input type="text" class="form-control" placeholder="189xxxx2345" id="manager_tel">
+                      </div>
+                  </li>
+                  <li class="form-group">
+                      <label class="col-sm-3 control-label">研发负责人</label>
+                      <div class="col-sm-7">
+                        <input type="text" class="form-control" placeholder="" id="developer">
+                      </div>
+                  </li>
+                  <li class="form-group">
+                      <label class="col-sm-3 control-label">研发负责人电话</label>
+                      <div class="col-sm-7">
+                        <input type="text" class="form-control" placeholder="189xxxx2345" id="developer_tel">
+                      </div>
+                  </li>
+                </ul>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button id='bt-save' type="button" class="btn btn-primary">保存</button>
+              </div>
+            </div><!-- /.modal-content -->
+          </div><!-- /.modal-dialog -->
+        </div><!-- /.modal -->
+        <div class="modal fade" id="Modal-file" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">导入/导出</h4>
+              </div>
+              <div class="modal-body">
+                <div class="alert alert-dismissable" id='upload-notify'>
+                    <button type="button" class="close" id="bt-upload-notify">&times;</button>
+                    <label id='lb-msg-upload'></label>
+                </div>
+                <form id="submit-file-form" enctype="multipart/form-data" action="/assets/upload_devices" method="post">
+                  <!-- {% csrf_token %} -->
+                <div class="form-group">
+                  {{form}}
+                  <p class="help-block">Example block-level help text here.</p>
+                </div>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button type="submit" class="btn btn-primary" name='action'>保存</button>
+              </div>
+              </form>
+            </div><!-- /.modal-content -->
+          </div><!-- /.modal-dialog -->
+        </div>
+    </div>
+</div>
+{%endblock%}
+{%block bodyjs%}
+    <script src="/static/js/jquery.dataTables.js" ></script>
+    {{ django_context_varable }}
+    <!--{% verbatim %}
+    <script id="tpl" type="text/x-handlebars-template">
+          {{#each func}}
+          <button type="button" class="btn btn-{{this.type}} btn-sm" onclick="{{this.fn}}">{{this.name}}</button>
+          {{/each}}
+    </script>
+    {% endverbatim %}-->
+    <script src="/static/js/handlebars-v3.0.1.js"></script>
+      <script src="/static/js/index.js"></script>
+    <script src="/static/js/dataTables.colVis.js"></script>
+    <script type="text/javascript" src="/static/js/zebra_datepicker.js"></script>
+{%endblock%}
+{%block css%}
+<link href="/static/css/jquery.dataTables.css" rel="stylesheet" type="text/css">
+<link href="/static/css/mycss.css" rel="stylesheet" type="text/css">
+<link href="/static/css/dataTables.colVis.css" rel="stylesheet" type="text/css">
+<link rel="stylesheet" type="text/css" href="/static/css/datetimepicker.css">
+{%endblock%}

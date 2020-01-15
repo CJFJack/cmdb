@@ -1,0 +1,144 @@
+{% extends 'template.html' %}
+{% load staticfiles %}
+
+{% block username %}
+    {{ request.user.username }}
+{% endblock %}
+
+{% block content %}
+    <div id="page-wrapper">
+        <div class="row">
+            <div class="col-lg-12">
+                <h2 class="page-header">项目与 celery 队列关系</h2>
+            </div>
+        </div>
+        <div class="alert alert-info">
+            <p><i class="fa fa-check"></i> 维护热更新中拉取更新文件，及rsync推送更新文件时，不同游戏项目与 celery 队列名称(task.py中的函数名)之间的关系</p>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <div class="btn-group">
+                            <a>
+                                <button type="button" class="btn btn-success" onclick="bt_add()">新增celery队列
+                                </button>
+                            </a>
+                            <a>
+                                <button id='bt-del' data-text="确定删除队列? 0个" type="button"
+                                        class="btn btn-danger">删除
+                                </button>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="panel-body">
+                        {% if all_map %}
+                            <table id="mytable" width="100%" cellspacing="0"
+                                   class="table table-striped table-hover">
+                                <thead>
+                                <tr>
+                                    <th class="center sorting_disabled">
+                                        <label class="pos-rel">
+                                            <input id='chb-all' type="checkbox"/>
+                                        </label>
+                                    </th>
+                                    <th style="display: none;">id</th>
+                                    <th>项目中文名</th>
+                                    <th>项目英文名</th>
+                                    <th>所属celery worker</th>
+                                    <th>celery队列(task.py中的函数名)</th>
+                                    <th>用途</th>
+                                    <th>操作</th>
+                                </tr>
+                                </thead>
+                            </table>
+                        {% else %}
+                            <p>还没有队列信息，请先添加！</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Add or Edit Modal-->
+            <div class="modal fade" id="Modal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                            <h4 class="modal-title" id="myModalLabel"></h4>
+                        </div>
+                        <form class="form-horizontal">
+                            <div class="modal-body">
+                                <input id="id_map_id" style="display: none" value="">
+                                <div class="alert alert-danger alert-dismissable" id='modal-notify'>
+                                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                                    <label id='lb-msg'></label>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-md-3">项目</label>
+                                    <div class="col-md-8">
+                                        <select id="id_project" class="form-control" style="width: 100%">
+                                            <option></option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-md-3">所属worker</label>
+                                    <div class="col-md-8">
+                                        <select id="id_worker" class="form-control" style="width: 100%">
+                                            <option></option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-md-3">celery队列名</label>
+                                    <div class="col-md-8">
+                                        <select id="id_celery_queue" class="form-control" style="width: 100%">
+                                            <option></option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-md-3">用途</label>
+                                    <div class="col-md-8">
+                                        {% for u in use %}
+                                            <input type="radio" name="use" class="form-check-input" value="{{ u.0 }}">
+                                            {{ u.1 }}
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                                <button type="button" class="btn btn-primary" name='action'
+                                        id="bt-save">保存
+                                </button>
+                            </div>
+                        </form>
+                    </div><!-- /.modal-content -->
+                </div><!-- /.modal-dialog -->
+            </div>
+
+        </div>
+    </div>
+{% endblock %}
+{% block bodyjs %}
+    {{ django_context_varable }}
+    {% verbatim %}
+    <script id="tpl" type="text/x-handlebars-template">
+        {{#each func}}
+        <button type="button" class="btn btn-{{this.type}} btn-sm" onclick="{{this.fn}}">{{this.name}}</button>
+        {{/each}}
+    </script>
+    {% endverbatim %}
+    <script src="/static/js/handlebars-v3.0.1.js"></script>
+    <script src="/static/js/select2.min.js"></script>
+    <script src="/static/js/jquery.dataTables.min.js"></script>
+    <script src="/static/js/dataTables.colVis.js"></script>
+    <script src="/static/js/project_celery_queue_map.js?v=20180611001"></script>
+{% endblock %}
+{% block css %}
+    <link href="/static/css/jquery.dataTables.css" rel="stylesheet" type="text/css">
+    <link href="/static/css/dataTables.colVis.css" rel="stylesheet" type="text/css">
+    <link href="/static/css/select2-bootstrap.css" rel="stylesheet" type="text/css">
+{% endblock %}

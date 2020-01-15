@@ -1,0 +1,675 @@
+{% extends 'template.html' %}
+
+{% block username %}
+    {{ request.user.username }}
+{% endblock %}
+
+{% block content %}
+    <div id="page-wrapper">
+        <div class="row">
+            <div class="col-lg-12">
+                <h1 class="page-header">购买腾讯云服务器</h1>
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <form class="form-horizontal">
+
+                    <!-- Nav tabs -->
+                    <ul class="nav nav-tabs">
+                        <li class="active"><a href="#step0" data-toggle="tab">0.选择项目 / 业务类型 / 机房</a>
+                        </li>
+                        <li><a href="#step1" class="disabled" data-toggle="tab">1.选择地域与机型</a>
+                        </li>
+                        <li><a href="#step2" class="disabled" data-toggle="tab">2.选择镜像</a>
+                        </li>
+                        <li><a href="#step3" class="disabled" data-toggle="tab">3.选择存储和带宽</a>
+                        </li>
+                        <li><a href="#step4" class="disabled" data-toggle="tab">4.设置安全组和主机</a>
+                        </li>
+                        <li><a href="#step5" class="disabled" data-toggle="tab">5.确认配置信息</a>
+                        </li>
+                    </ul>
+
+                    <!-- Tab panes -->
+                    <div class="tab-content">
+                        <!--step0-->
+                        <div class="tab-pane fade in active" id="step0">
+                            <!--alert-->
+                            <div class="alert alert-danger alert-dismissable" style="display: none;">
+                                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;
+                                </button>
+                                <span class="alert_text"></span>
+                            </div>
+                            <hr>
+                            <div class="form-group">
+                                <label class="control-label col-sm-1">项目</label>
+                                <div class="col-sm-3">
+                                    <select id="project" style="width: 100%;">
+                                        <option value="0" disabled selected>请选择项目</option>
+                                        {% for p in projects %}
+                                            <option title="{{ p.cloud_account }}"
+                                                    value="{{ p.id }}">{{ p.text }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-sm-1">机房</label>
+                                <div class="col-sm-3">
+                                    <select id="room" style="width: 100%;">
+                                        <option value="0" disabled selected>请选择机房</option>
+                                        {% for r in rooms %}
+                                            <option value="{{ r.id }}">{{ r.text }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-sm-1">业务类型</label>
+                                <div class="col-sm-3">
+                                    <select id="business" style="width: 100%;">
+                                        <option value="0" disabled selected>请选择业务类型</option>
+                                        {% for b in business %}
+                                            <option value="{{ b.id }}">{{ b.text }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                            <hr>
+                            <div>
+                                <button type="button" class="btn btn-primary" onclick="getnext('step0', 'step1')">
+                                    下一步：选择地域和机型
+                                </button>
+                            </div>
+                        </div>
+                        <!--step1-->
+                        <div class="tab-pane fade" id="step1">
+                            <!--alert-->
+                            <div class="alert alert-danger alert-dismissable" style="display: none;">
+                                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;
+                                </button>
+                                <span class="alert_text"></span>
+                            </div>
+                            <hr>
+                            <div class="form-group">
+                                <label class="control-label col-sm-1">计费模式</label>
+                                <div class="col-sm-11">
+                                    <span class="donate-now">
+                                        <li>
+                                            <input checked type="radio" name="charge_mode" id="PREPAID"
+                                                   value="PREPAID"/>
+                                            <label for="PREPAID">包年包月</label>
+                                        </li>
+                                        <li>
+                                            <input type="radio" name="charge_mode" id="POSTPAID_BY_HOUR"
+                                                   value="POSTPAID_BY_HOUR"/>
+                                            <label for="POSTPAID_BY_HOUR">按量计费</label>
+                                        </li>
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-sm-1">地域</label>
+                                <div class="col-sm-11">
+                                    <span class="donate-now" id="region">
+
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-sm-1">可用区</label>
+                                <div class="col-sm-11">
+                                    <span class="donate-now" id="zone">
+
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-sm-1">网络类型</label>
+                                <div class="col-sm-11">
+                                    <span class="donate-now" id="basic_network">
+                                        <li>
+                                            <input checked type="radio" name="network_type" id="basic"
+                                                   value="basic"/>
+                                            <label for="basic">基础网络</label>
+                                        </li>
+                                        <li>
+                                            <input disabled type="radio" name="network_type" id="private"
+                                                   value="private"/>
+                                            <label for="private" class="disabled">私有网络</label>
+                                        </li>
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-sm-1">CPU</label>
+                                <div class="col-sm-1">
+                                    <select id="instance_cpu" style="width: 100%">
+                                        <option value="0">全部</option>
+                                        <option value="1">1</option>
+                                        <option value="2">2</option>
+                                        <option value="4">4</option>
+                                        <option value="8">8</option>
+                                        <option value="16">16</option>
+                                        <option value="32">32</option>
+                                        <option value="64">64</option>
+                                        <option value="128">128</option>
+                                    </select>
+                                </div>
+                                <label class="control-label col-sm-1">内存</label>
+                                <div class="col-sm-1">
+                                    <select id="instance_memory" style="width: 100%">
+                                        <option value="0">全部</option>
+                                        <option value="1">1</option>
+                                        <option value="2">2</option>
+                                        <option value="4">4</option>
+                                        <option value="8">8</option>
+                                        <option value="16">16</option>
+                                        <option value="32">32</option>
+                                        <option value="64">64</option>
+                                        <option value="128">128</option>
+                                        <option value="256">256</option>
+                                    </select>
+                                </div>
+                                <label class="control-label col-sm-1">实例</label>
+                                <div class="col-sm-7">
+                                    <select id="instance_type" style="width: 100%">
+
+                                    </select>
+                                </div>
+                            </div>
+                            <hr>
+                            <div>
+                                <button type="button" class="btn btn-default" onclick="getnext('step1', 'step0')">上一步
+                                </button>
+                                <button type="button" class="btn btn-primary" onclick="getnext('step1', 'step2')">
+                                    下一步：选择镜像
+                                </button>
+                            </div>
+                        </div>
+
+                        <!--step2-->
+                        <div class="tab-pane fade" id="step2">
+                            <!--alert-->
+                            <div class="alert alert-danger alert-dismissable" style="display: none;">
+                                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;
+                                </button>
+                                <span class="alert_text"></span>
+                            </div>
+                            <hr>
+                            <div class="form-group">
+                                <label class="control-label col-sm-1">镜像</label>
+                                <div class="col-sm-11">
+                                    <span class="donate-now" id="image_type">
+                                        <li>
+                                            <input type="radio" name="image_type" id="PUBLIC_IMAGE" value="PUBLIC_IMAGE"
+                                                   checked/>
+                                            <label for="PUBLIC_IMAGE">公共镜像</label>
+                                        </li>
+                                        <li>
+                                            <input type="radio" name="image_type" id="PRIVATE_IMAGE"
+                                                   value="PRIVATE_IMAGE"/>
+                                            <label for="PRIVATE_IMAGE">自定义镜像</label>
+                                        </li>
+                                        <li>
+                                            <input type="radio" name="image_type" id="SHARED_IMAGE"
+                                                   value="SHARED_IMAGE"/>
+                                            <label for="SHARED_IMAGE">共享镜像</label>
+                                        </li>
+                                        <li>
+                                            <input type="radio" name="image_type" id="MARKET_IMAGE"
+                                                   value="MARKET_IMAGE"/>
+                                            <label for="MARKET_IMAGE">镜像市场</label>
+                                        </li>
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-sm-1">操作系统</label>
+                                <div class="col-sm-11">
+                                    <span class="donate-now" id="operation_system">
+                                        <li>
+                                            <input type="radio" name="operation_system" id="CentOS" value="CentOS"
+                                                   checked/>
+                                            <label for="CentOS">CentOS</label>
+                                        </li>
+                                        <li>
+                                            <input type="radio" name="operation_system" id="CoreOS"
+                                                   value="CoreOS"/>
+                                            <label for="CoreOS">CoreOS</label>
+                                        </li>
+                                        <li>
+                                            <input type="radio" name="operation_system" id="Debian"
+                                                   value="Debian"/>
+                                            <label for="Debian">Debian</label>
+                                        </li>
+                                        <li>
+                                            <input type="radio" name="operation_system" id="FreeBSD"
+                                                   value="FreeBSD"/>
+                                            <label for="FreeBSD">FreeBSD</label>
+                                        </li>
+                                        <li>
+                                            <input type="radio" name="operation_system" id="openSUSE"
+                                                   value="openSUSE"/>
+                                            <label for="openSUSE">openSUSE</label>
+                                        </li>
+                                        <li>
+                                            <input type="radio" name="operation_system" id="Ubuntu"
+                                                   value="Ubuntu"/>
+                                            <label for="Ubuntu">Ubuntu</label>
+                                        </li>
+                                        <li>
+                                            <input type="radio" name="operation_system" id="Windows"
+                                                   value="Windows"/>
+                                            <label for="Windows">Windows</label>
+                                        </li>
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-sm-1">系统架构</label>
+                                <div class="col-sm-11">
+                                    <span class="donate-now" id="system_framework">
+                                        <li>
+                                            <input type="radio" name="system_framework" id="64" value="64" checked/>
+                                            <label for="64">64位</label>
+                                        </li>
+                                        <li>
+                                            <input type="radio" name="system_framework" id="32" value="32"/>
+                                            <label for="32">32位</label>
+                                        </li>
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-sm-1">镜像版本</label>
+                                <div class="col-sm-11">
+                                    <select style="width: 40%;" id="image_version">
+
+                                    </select>
+                                </div>
+                            </div>
+                            <hr>
+                            <div>
+                                <button type="button" class="btn btn-default" onclick="getnext('step2', 'step1')">上一步
+                                </button>
+                                <button type="button" class="btn btn-primary" onclick="getnext('step2', 'step3')">
+                                    下一步：选择存储和带宽
+                                </button>
+                            </div>
+                        </div>
+
+                        <!--step3-->
+                        <div class="tab-pane fade" id="step3">
+                            <!--alert-->
+                            <div class="alert alert-danger alert-dismissable" style="display: none;">
+                                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;
+                                </button>
+                                <span class="alert_text"></span>
+                            </div>
+                            <hr>
+                            <div class="form-group">
+                                <label class="control-label col-sm-1">系统盘</label>
+                                <div class="col-sm-8 inline">
+                                    <div class="col-sm-3">
+                                    <span class="donate-now" id="system_disk">
+                                        <li>
+                                            <input type="radio" name="system_disk" id="CLOUD_PREMIUM"
+                                                   value="CLOUD_PREMIUM" checked/>
+                                            <label for="CLOUD_PREMIUM">高性能云硬盘</label>
+                                        </li>
+                                        <li>
+                                            <input type="radio" name="system_disk" id="CLOUD_SSD" value="CLOUD_SSD"/>
+                                            <label for="CLOUD_SSD">SSD云硬盘</label>
+                                        </li>
+                                    </span>
+                                    </div>
+                                    <div class="col-sm-2 input-group">
+                                        <input type="number" class="form-control" id="SystemDiskSize" value="50"/>
+                                        <span class="input-group-addon">GB</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-sm-1">数据盘</label>
+                                <div class="col-sm-6 inline" id="data_disk">
+                                    <a id="a_data_disk" href="javascript:void(0);" onclick="add_data_disk()"><i
+                                            class="fa fa-plus-circle"></i> 新建云硬盘数据盘</a>
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="form-group">
+                                <label class="control-label col-sm-1">网络计费模式</label>
+                                <div class="col-sm-3">
+                                    <span class="donate-now" id="network_charge_mode">
+
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-sm-1">带宽</label>
+                                <div class="col-sm-6 inline">
+                                    <div class="col-sm-3 checkbox">
+                                        <input type="checkbox" id="PublicIpAssigned" checked/> 分配免费公网IP
+                                    </div>
+                                    <div class="col-sm-3 input-group">
+                                        <input type="number" class="form-control" id="InternetMaxBandwidthOut"
+                                               value="100"/>
+                                        <span class="input-group-addon">Mbps</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <hr>
+                            <div>
+                                <button type="button" class="btn btn-default" onclick="getnext('step3', 'step2')">上一步
+                                </button>
+                                <button type="button" class="btn btn-primary" onclick="getnext('step3', 'step4')">
+                                    下一步：设置安全组和主机
+                                </button>
+                            </div>
+                        </div>
+
+                        <!--step4-->
+                        <div class="tab-pane fade" id="step4">
+                            <!--alert-->
+                            <div class="alert alert-danger alert-dismissable" style="display: none;">
+                                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;
+                                </button>
+                                <span class="alert_text"></span>
+                            </div>
+                            <hr>
+                            <div class="form-group">
+                                <label class="control-label col-sm-1">所属项目</label>
+                                <div class="col-sm-11">
+                                    <select style="width: 30%;" id="ProjectId">
+
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-sm-1">安全组</label>
+                                <div class="col-sm-11">
+                                    <select style="width: 50%;" id="SecurityGroupId">
+
+                                    </select>
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="form-group">
+                                <label class="control-label col-sm-1">实例名称</label>
+                                <div class="col-sm-3">
+                                    <input class="form-control" id="InstanceName" placeholder="可选，不填默认未命名">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-sm-1">登录方式</label>
+                                <div class="col-sm-2 control-label">
+                                    <p id="login_mode">cmdb随机生成初始密码，并发送邮件</p>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-sm-1">安全加固</label>
+                                <div class="col-sm-3 checkbox">
+                                    <input id="security_enhance" type="checkbox" checked> 免费开通
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-sm-1">云监控</label>
+                                <div class="col-sm-3 checkbox">
+                                    <input id="cloud_monitor" type="checkbox" checked> 免费开通
+                                </div>
+                            </div>
+
+                            <hr>
+                            <div>
+                                <button type="button" class="btn btn-default" onclick="getnext('step4', 'step3')">上一步
+                                </button>
+                                <button type="button" class="btn btn-primary" onclick="getnext('step4', 'step5')">
+                                    下一步：确认配置信息
+                                </button>
+                            </div>
+                        </div>
+
+                        <!--step5-->
+                        <div class="tab-pane fade" id="step5">
+                            <!--alert-->
+                            <div class="alert alert-danger alert-dismissable" style="display: none;">
+                                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;
+                                </button>
+                                <span class="alert_text"></span>
+                            </div>
+
+                            <h5><strong>地域和机型</strong></h5>
+                            <pre>
+                                <table>
+                                    <tr>
+                                        <td>主机计费模式</td>
+                                        <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                                        <td id="confirm_charge_mode"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>地域</td>
+                                        <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                                        <td id="confirm_region"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>可用区</td>
+                                        <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                                        <td id="confirm_zone"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>网络类型</td>
+                                        <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                                        <td id="confirm_network_type"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>机型</td>
+                                        <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                                        <td id="confirm_instance_type"></td>
+                                    </tr>
+                                </table>
+                            </pre>
+
+                            <h5><strong>镜像</strong></h5>
+                            <pre>
+                                <table>
+                                    <tr>
+                                        <td>镜像</td>
+                                        <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                                        <td id="confirm_image_type"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>镜像信息</td>
+                                        <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                                        <td id="confirm_image_version"></td>
+                                    </tr>
+                                </table>
+                            </pre>
+
+                            <h5><strong>存储和带宽</strong></h5>
+                            <pre>
+                                <table>
+                                    <tr>
+                                        <td>系统盘</td>
+                                        <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                                        <td id="confirm_system_disk"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>数据盘</td>
+                                        <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                                        <td id="confirm_data_disk"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>公网IP</td>
+                                        <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                                        <td id="confirm_PublicIpAssigned"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>网络计费模式</td>
+                                        <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                                        <td id="confirm_InternetChargeType"></td>
+                                    </tr>
+                                </table>
+                            </pre>
+
+                            <h5><strong>安全组</strong></h5>
+                            <pre>
+                                <table>
+                                    <tr>
+                                        <td>安全组名称</td>
+                                        <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                                        <td id="confirm_security_group"></td>
+                                    </tr>
+                                </table>
+                            </pre>
+
+                            <h5><strong>设置信息</strong></h5>
+                            <pre>
+                                <table>
+                                    <tr>
+                                        <td>所属项目</td>
+                                        <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                                        <td id="confirm_ProjectId"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>实例名称</td>
+                                        <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                                        <td id="confirm_InstanceName"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>登录方式</td>
+                                        <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                                        <td id="confirm_login_mode"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>安全加固</td>
+                                        <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                                        <td id="confirm_security_enhance"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>云监控</td>
+                                        <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                                        <td id="confirm_cloud_monitor"></td>
+                                    </tr>
+                                </table>
+                            </pre>
+                            <hr>
+                            <div class="form-group">
+                                <label class="control-label col-sm-1">购买数量</label>
+                                <div class="col-sm-1">
+                                    <input type="number" class="form-control" id="InstanceCount" value="1"/>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-sm-1">购买时长</label>
+                                <div class="col-sm-11">
+                                    <span class="donate-now" id="Period">
+                                        {% for p in period %}
+                                            <li>
+                                                <input type="radio" name="period" id="{{ p.0 }}" value="{{ p.0 }}"
+                                                       {% if p.0 == 1 %}checked{% endif %}/>
+                                                <label for="{{ p.0 }}">{{ p.1 }}</label>
+                                            </li>
+                                        {% endfor %}
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-sm-1">自动续费</label>
+                                <div class="col-sm-11 checkbox">
+                                    <input checked type="checkbox" id="RenewFlag" value="NOTIFY_AND_AUTO_RENEW"/>账户余额足够时，设备到期后按月自动付费
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="form-group">
+                                <label class="control-label col-sm-1">费用</label>
+                                <div class="col-sm-2 control-label text-danger" style="text-align:left; float:left;">
+                                    <h4>宽带费用：</h4>
+                                    <ul>
+                                        <li>原价：<span id="bw_orginprice">0</span>元</li>
+                                        <li>折扣：<span id="bw_discount">0</span>%</li>
+                                        <li>折后价：<span class="bw_discountprice">0</span>元</li>
+                                    </ul>
+                                    <h4>机器费用：</h4>
+                                    <ul>
+                                        <li>原价：<span id="in_orginprice">0</span>元</li>
+                                        <li>折扣：<span id="in_discount">0</span>%</li>
+                                        <li>折后价：<span class="in_discountprice">0</span>元</li>
+                                    </ul>
+                                    <h4>总费用：</h4>
+                                    <ul>
+                                        <li>
+                                            <span id="total_cost">0</span>元
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div>
+                                <button type="button" class="btn btn-default" onclick="getnext('step5', 'step4')">上一步
+                                </button>
+                                <button type="button" class="btn btn-warning" onclick="confirm_modal()">立即购买</button>
+                            </div>
+                        </div>
+
+                        <!--stepN-->
+                        <div class="tab-pane fade" id="stepN">
+                            <!--alert-->
+                            <div class="alert alert-danger alert-dismissable" style="display: none;">
+                                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;
+                                </button>
+                                <span class="alert_text"></span>
+                            </div>
+                            <hr>
+
+                            <hr>
+                            <div>
+                                <button type="button" class="btn btn-default" onclick="getnext('step0')">上一步
+                                </button>
+                                <button type="button" class="btn btn-primary" onclick="getnext('step2')">下一步</button>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- 立即购买确认狂-->
+    <!-- Modal -->
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                </div>
+                <div class="modal-body">
+                    <label class="control-label" id="modal_text"></label>
+                </div>
+                <div class="modal-footer">
+                    <button id="purchase_button" hidden type="button" class="btn btn-primary" onclick="purchase()">确定
+                    </button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+    <!-- /.modal -->
+
+
+{% endblock %}
+{% block bodyjs %}
+    <script src="/static/js/purchase_txcloud_server.js?v=20190923001"></script>
+    <!-- showloading.js-->
+    <script src="/static/js/showloading.min.js"></script>
+{% endblock %}
+{% block css %}
+    <link href="/static/css/purchase_txcloud_server.css" rel="stylesheet" type="text/css">
+    <link href="/static/css/select2-bootstrap.css" rel="stylesheet" type="text/css">
+    <!-- showloading.css-->
+    <link href="/static/css/showloading.css" rel="stylesheet" media="screen">
+{% endblock %}

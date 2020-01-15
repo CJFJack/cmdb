@@ -1,0 +1,120 @@
+{%extends 'template_devops.html'%}
+
+{%block content%}
+<div id="page-wrapper">
+    <div class="row">
+        <div class="col-lg-12">
+            <h1 class="page-header">{{head.value}}</h1>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div id="div-search" class="hide">
+                    </div>
+                      <div id='calendar'></div>
+                </div>
+            </div>
+        </div>
+        <!-- Modal -->
+        <div class="modal fade" id="myModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel"></h4>
+              </div>
+              <div class="modal-body">
+                <div class="alert alert-danger alert-dismissable" id='modal-notify'>
+                  <button type="button" class="close" id="bt-modal-notify">&times;</button>
+                  <label id='lb-msg'></label>
+                </div>
+                
+                <form role="form" class="form-horizontal">
+                  <div class="form-group" id='show_id'>
+                      <label class="col-lg-3 col-sm-3 control-label">id</label>
+                      <div class="col-lg-8">
+                        <input type="text" class="form-control " placeholder="mysql instance" id="id">
+                      </div>
+                  </div>
+                  <div class="form-group">
+                      <label class="col-sm-3 control-label">所属项目</label>
+                        <div class="col-sm-8">
+                          <select id="belongs_to_game_project" style="width: 100%">
+                            <option selected="selected" value="0">选择项目</option>
+                          </select>
+                        </div>
+                  </div>
+                  <div class="form-group">
+                      <label class="col-sm-3 control-label">负责人</label>
+                        <div class="col-sm-8">
+                          <select id="related_user" class="game_project_person" style="width: 100%">
+                            <option selected="selected" value="0">选择负责人</option>
+                          </select>
+                        </div>
+                  </div>
+                  <div class="form-group">
+                      <label class="col-sm-3 control-label">开始时间</label>
+                      <div class="col-sm-8">
+                        <input type="text" class="form-control" placeholder="" id="start">
+                      </div>
+                  </div>
+                  <div class="form-group">
+                      <label class="col-sm-3 control-label">结束时间</label>
+                      <div class="col-sm-8">
+                        <input type="text" class="form-control" placeholder="" id="end">
+                      </div>
+                  </div>
+                </form>
+
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button id='bt-save' type="button" class="btn btn-primary">保存</button>
+                <button id='bt-del' type="button" class="btn btn-danger">删除</button>
+              </div>
+            </div><!-- /.modal-content -->
+          </div><!-- /.modal-dialog -->
+        </div><!-- /.modal -->
+        <div class="modal fade" id="Modal-file" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">导入/导出</h4>
+              </div>
+              <div class="modal-body">
+                <div class="alert alert-dismissable" id='upload-notify'>
+                    <button type="button" class="close" id="bt-upload-notify">&times;</button>
+                    <label id='lb-msg-upload'></label>
+                </div>
+                <form id="submit-file-form" enctype="multipart/form-data" action="/assets/upload_devices" method="post">
+                  <!-- {% csrf_token %} -->
+                <div class="form-group">
+                  {{form}}
+                  <p class="help-block">Example block-level help text here.</p>
+                </div>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button type="submit" class="btn btn-primary" name='action'>保存</button>
+              </div>
+              </form>
+            </div><!-- /.modal-content -->
+          </div><!-- /.modal-dialog -->
+        </div>
+    </div>
+</div>
+{%endblock%}
+{%block bodyjs%}
+    <script type="text/javascript" src="/static/js/moment.min.js"></script>
+    <script type="text/javascript" src="/static/js/fullcalendar.js"></script>
+    <script type="text/javascript" src="/static/js/zh-cn.js"></script>
+    <script type="text/javascript" src="/static/js/monitor.js"></script>
+    <script type="text/javascript" src="/static/js/zebra_datepicker.js"></script>
+{%endblock%}
+{%block css%}
+<link rel="stylesheet" type="text/css" href="/static/css/fullcalendar.css">
+<link rel="stylesheet" type="text/css" href="/static/css/datetimepicker.css">
+{%endblock%}

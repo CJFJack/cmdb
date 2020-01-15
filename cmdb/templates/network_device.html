@@ -1,0 +1,344 @@
+{%extends 'template.html'%}
+
+{%block content%}
+<div id="page-wrapper">
+    <div class="row">
+        <div class="col-lg-12">
+            <h1 class="page-header">{{head.value}}</h1>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <div class="btn-group">
+                        <a><button id='bt-add' type="button" class="btn btn-primary">增加</button></a>
+                        <a><button id='bt-del' data-text="确定删除网络设备? 0个" type="button" class="btn btn-danger">删除</button></a>
+                    </div>
+                    <div class="pull-right">
+                      <div class="btn-group">
+                        <a><button id='bt-upload' type="button" class="btn btn-primary" >导入</button></a>
+                        <a href="/assets/export_devices"><button id='bt-export' type="button" class="btn btn-primary" >导出</button></a>
+                      </div>
+                    </div>
+                </div>
+                <div class="panel-body">
+                  <div id="div-upload" class="hide">
+                    <form id="submit-file-form" enctype="multipart/form-data" action="/assets/upload_excel_ip_pool/" method="post">
+                      <div class="form-group">
+                        {{form}}
+                      <p class="help-block">上传到资源池</p>
+                      <a href="/assets/template_ip_pool/">下载模板样式</a>
+                      <br>
+                      <br>
+                      <button type="submit" class="btn btn-primary" name='action'>上传</button>
+                      </div>
+                  </div>
+                    </form>
+                </div>
+                  <table id="mytable" class="display" width="100%" cellspacing="0">
+                      <thead>
+                          <tr>
+                              <th class="center sorting_disabled">
+                                <label class="pos-rel">
+                                  <input id='chb-all' type="checkbox"/>
+                                </label>
+                              </th>
+                              <th></th>
+                              <th>id</th>
+                              <th>设备</th>
+                              <th>设备名称</th>
+                              <th>带内网管</th>
+                              <th>带外网管</th>
+                              <th>loopback</th>
+                              <th>VC名称</th>
+                              <th>接口</th>
+                              <th>绑定设备</th>
+                              <th>备注</th>
+                              <th>操作</th>
+                          </tr>
+                      </thead>
+                  </table>
+                </div>
+            </div>
+        </div>
+        <!-- Modal -->
+        <div class="modal fade" id="myModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel"></h4>
+              </div>
+              <div class="modal-body">
+                <div class="alert alert-danger alert-dismissable" id='modal-notify'>
+                  <button type="button" class="close" id="bt-modal-notify">&times;</button>
+                  <label id='lb-msg'></label>
+                </div>
+                <form class="form-horizontal" role="form">
+                  <div class="form-group" id="show_id">
+                      <label class="col-sm-2 control-label ">id</label>
+                        <div class="col-sm-8">
+                          <input type="text" class="form-control " id="id">
+                        </div>
+                  </div>
+                  <div class="form-group">
+                      <label class="col-sm-2 control-label">设备</label>
+                      <div class="col-sm-8">
+                        <input type="text" class="form-control "  placeholder="GZYT-CO-BS-B07" id="device_num">
+                      </div>
+                  </div>
+                  <div class="form-group">
+                      <label class="col-sm-2 control-label">设备名称</label>
+                      <div class="col-sm-8">
+                        <input type="text" class="form-control " placeholder="外部总汇聚交换机1" id="device_name">
+                      </div>
+                  </div>
+                  <div class="form-group" id='device_start'>
+                    <label class="col-lg-2 control-label">设备互联</label>
+                    <div class="col-lg-10">
+                        <div class="form-group row">
+                            <div class="col-lg-4">
+                                <input type="text" class="form-control device_ip" id="device_ip_1" placeholder="192.168.1.1">
+                            </div>
+                            <div class="col-lg-3">
+                                <select id="device_ip_network_area_1" class="network_area" style="width: 115%">
+                                  <option selected="selected" value="0">选择网络区域</option>
+                                </select>
+                            </div>
+                            <div class="col-lg-3">
+                                <input type="text" class="form-control vlan" id="device_ip_1_vlan" placeholder="vlan">
+                            </div>
+                            <div class="col-lg-1">
+                              <button id="add_ip" type="button" class="btn btn-outline btn-primary btn-sm btn-success">增加</button>
+                            </div>
+                        </div>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label class="col-sm-2 control-label"></label>
+                    <div class="col-lg-10">
+                        <div class="form-group row">
+                            <div class="col-lg-4">
+                                <select class="device_ip_opposite_end opposite_end" id="device_ip_opposite_end_1" style="width: 115%">
+                                  <option selected="selected" value="0">选择对端设备</option>
+                                </select>
+                            </div>
+                            <div class="col-lg-4">
+                                <select class="device_ip_opposite_end_ip opposite_end_ip" id="device_ip_opposite_end_ip_1" style="width: 115%">
+                                  <option selected="selected" value="0">选择对端IP</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                  </div>
+                  <div class="form-group" id="device_internal_start">
+                    <label class="col-sm-2 control-label">带内网管</label>
+                    <div class="col-lg-10">
+                        <div class="form-group row">
+                            <div class="col-lg-4">
+                                <input type="text" class="form-control device_internal_ip" id="device_internal_ip_1" placeholder="192.168.1.1">
+                            </div>
+                            <div class="col-lg-3">
+                                <select id="device_internal_ip_network_area_1" class="network_area" style="width: 110%">
+                                  <option selected="selected" value="0">选择网络区域</option>
+                                </select>
+                            </div>
+                            <div class="col-lg-3">
+                                <input type="text" class="form-control vlan" id="device_internal_ip_1_vlan" placeholder="vlan">
+                            </div>
+                            <div class="col-lg-1">
+                              <button id="add_internal_ip" type="button" class="btn btn-outline btn-primary btn-sm btn-success">增加</button>
+                            </div>
+                        </div>
+                    </div>
+                  </div>
+                  <div class="form-group" style="display: none;">
+                    <label class="col-sm-2 control-label"></label>
+                    <div class="col-lg-10">
+                        <div class="form-group row">
+                            <div class="col-lg-4">
+                                <select class="device_internal_ip_opposite_end opposite_end" id="device_internal_ip_opposite_end_1" style="width: 115%">
+                                  <option selected="selected" value="0">选择对端设备</option>
+                                </select>
+                            </div>
+                            <div class="col-lg-4">
+                                <select class="device_internal_ip_opposite_end_ip opposite_end_ip" id="device_internal_ip_opposite_end_ip_1" style="width: 115%">
+                                  <option selected="selected" value="0">选择对端IP</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                  </div>
+                  <div class="form-group" id="device_external_start">
+                    <label class="col-sm-2 control-label">带外网管</label>
+                    <div class="col-lg-10">
+                        <div class="form-group row">
+                            <div class="col-lg-4">
+                                <input type="text" class="form-control device_external_ip" id="device_external_ip_1" placeholder="192.168.1.1">
+                            </div>
+                            <div class="col-lg-3">
+                                <select id="device_external_ip_network_area_1" class="network_area" style="width: 110%">
+                                  <option selected="selected" value="0">选择网络区域</option>
+                                </select>
+                            </div>
+                            <div class="col-lg-3">
+                                <input type="text" class="form-control vlan" id="device_external_ip_1_vlan" placeholder="vlan">
+                            </div>
+                            <div class="col-lg-1">
+                              <button id="add_external_ip" type="button" class="btn btn-outline btn-primary btn-sm btn-success">增加</button>
+                            </div>
+                        </div>
+                    </div>
+                  </div>
+                  <div class="form-group" style="display: none;">
+                    <label class="col-sm-2 control-label"></label>
+                    <div class="col-lg-10">
+                        <div class="form-group row">
+                            <div class="col-lg-4">
+                                <select class="device_external_ip_opposite_end opposite_end" id="device_external_ip_opposite_end_1" style="width: 115%">
+                                  <option selected="selected" value="0">选择对端设备</option>
+                                </select>
+                            </div>
+                            <div class="col-lg-4">
+                                <select class="device_external_ip_opposite_end_ip opposite_end_ip" id="device_external_ip_opposite_end_ip_1" style="width: 115%">
+                                  <option selected="selected" value="0">选择对端IP</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                  </div>
+                  <div class="form-group" id="device_loopback_start">
+                    <label class="col-sm-2 control-label">Loopback</label>
+                    <div class="col-lg-10">
+                        <div class="form-group row">
+                            <div class="col-lg-4">
+                                <input type="text" class="form-control device_loopback_ip" id="device_loopback_ip_1" placeholder="192.168.1.1">
+                            </div>
+                            <div class="col-lg-3">
+                                <select id="device_loopback_ip_network_area_1" class="network_area" style="width: 115%">
+                                  <option selected="selected" value="0">选择网络区域</option>
+                                </select>
+                            </div>
+                            <div class="col-lg-3">
+                                <input type="text" class="form-control vlan" id="device_loopback_ip_1_vlan" placeholder="vlan">
+                            </div>
+                            <div class="col-lg-1">
+                              <button id="add_loopback_ip" type="button" class="btn btn-outline btn-primary btn-sm btn-success">增加</button>
+                            </div>
+                        </div>
+                    </div>
+                  </div>
+                  <div class="form-group" style="display: none;">
+                    <label class="col-sm-2 control-label"></label>
+                    <div class="col-sm-8">
+                        <div class="form-group row">
+                            <label for="inputKey" class="col-sm-1 control-label"></label>
+                            <div class="col-sm-4">
+                                <select class="device_loopback_ip_opposite_end opposite_end" id="device_loopback_ip_opposite_end_1" style="width: 100%">
+                                  <option selected="selected" value="0">选择对端设备</option>
+                                </select>
+                            </div>
+                            <div class="col-sm-4">
+                                <select class="device_loopback_ip_opposite_end_ip opposite_end_ip" id="device_loopback_ip_opposite_end_ip_1" style="width: 115%">
+                                  <option selected="selected" value="0">选择对端IP</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                  </div>
+                  <div class="form-group" style="display: none;">
+                      <label class="col-sm-2 control-label">接口</label>
+                      <div class="col-sm-8">
+                        <input type="text" class="form-control " placeholder="EM0" id="port">
+                      </div>
+                  </div>
+                  <div class="form-group">
+                      <label class="col-sm-2 control-label">备注</label>
+                      <div class="col-sm-8">
+                        <input type="text" class="form-control " id="remarks">
+                      </div>
+                  </div>
+                  <div class="form-group">
+                      <label class="col-sm-2 control-label">路由类型</label>
+                      <div class="col-sm-8">
+                        <input type="text" class="form-control " id="route_type">
+                      </div>
+                  </div>
+                  <div class="form-group">
+                      <label class="col-sm-2 control-label">VC名称</label>
+                      <div class="col-sm-8">
+                        <input type="text" class="form-control " placeholder="" id="vc">
+                      </div>
+                  </div>
+                  <div class="form-group">
+                      <label class="col-sm-2 control-label">绑定设备</label>
+                        <div class="col-sm-8">
+                          <select id="binding_device" style="width: 80%">
+                            <option selected="selected" value="0">选择绑定网络设备</option>
+                          </select>
+                          <button id="reset_binding_device" type="button" class="btn btn-outline btn-primary btn-sm btn-danger">重置</button>
+                        </div>
+                  </div>
+                </form>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button id='bt-save' type="button" class="btn btn-primary">保存</button>
+              </div>
+            </div><!-- /.modal-content -->
+          </div><!-- /.modal-dialog -->
+        </div><!-- /.modal -->
+        <div class="modal fade" id="Modal-file" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">导入/导出</h4>
+              </div>
+              <div class="modal-body">
+                <div class="alert alert-dismissable" id='upload-notify'>
+                    <button type="button" class="close" id="bt-upload-notify">&times;</button>
+                    <label id='lb-msg-upload'></label>
+                </div>
+                <form id="submit-file-form" enctype="multipart/form-data" action="/assets/upload_excel_ip_pool/" method="post">
+                  <!-- {% csrf_token %} -->
+                <div class="form-group">
+                  {{form}}
+                  <p class="help-block">上传到资源池</p>
+                  <a href="/assets/template_ip_pool/">下载模板样式</a>
+                </div>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button type="submit" class="btn btn-primary" name='action'>保存</button>
+              </div>
+              </form>
+            </div><!-- /.modal-content -->
+          </div><!-- /.modal-dialog -->
+        </div>
+    </div>
+</div>
+{%endblock%}
+{%block bodyjs%}
+    <script src="/static/js/jquery.dataTables.js" ></script>
+    {{ django_context_varable }}
+    {% verbatim %}
+    <script id="tpl" type="text/x-handlebars-template">
+          {{#each func}}
+          <button type="button" class="btn btn-{{this.type}} btn-sm" onclick="{{this.fn}}">{{this.name}}</button>
+          {{/each}}
+    </script>
+    {% endverbatim %}
+    <script src="/static/js/handlebars-v3.0.1.js"></script>
+    <script src="/static/js/network_device.js"></script>
+    <script src="/static/js/dataTables.colVis.js"></script>
+    <script type="text/javascript" src="/static/js/zebra_datepicker.js"></script>
+{%endblock%}
+{%block css%}
+<link href="/static/css/jquery.dataTables.css" rel="stylesheet" type="text/css">
+<link href="/static/css/mycss.css" rel="stylesheet" type="text/css">
+<link href="/static/css/dataTables.colVis.css" rel="stylesheet" type="text/css">
+<link rel="stylesheet" type="text/css" href="/static/css/datetimepicker.css">
+<link rel="stylesheet" type="text/css" href="/static/css/jquery.dataTables.css">
+{%endblock%}

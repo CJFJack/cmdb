@@ -1,0 +1,311 @@
+{% extends 'template.html' %}
+
+{% block username %}
+    {{ head.username }}
+{% endblock %}
+
+{% block content %}
+    <div id="page-wrapper">
+        <div class="row">
+            <div class="col-lg-12">
+                <h1 class="page-header">{{ head.value }}</h1>
+            </div>
+        </div>
+        {% if msg %}
+            <div class="alert alert-danger alert-dismissable">
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                {{ msg }}
+            </div>
+        {% endif %}
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <div class="btn-group">
+                            <!--<a><button id='bt-add' type="button" class="btn btn-primary">增加</button></a>-->
+                            <!--<a><button id='bt-del' data-text="确定删除主机? 0个" type="button" class="btn btn-danger">删除</button></a>-->
+                            <a>
+                                <button id='bt-search' type="button" class="btn btn-success">高级搜索</button>
+                            </a>
+                            <a>
+                                <button id='bt-reset' type="button" class="btn btn-danger">重置高级搜索</button>
+                            </a>
+                            <!--<a><button id='bt-refresh' type="button" class="btn btn-primary">刷新状态</button></a>-->
+                            <a>
+                                <button id='bt-download' type="button" class="btn btn-primary">导出excel</button>
+                            </a>
+                            <div id="is_superuser" data-is-superuser="{{ is_superuser }}"></div>
+                        </div>
+                    </div>
+                    <div class="panel-body">
+                        <div id="div-search" class="hide">
+                            <table id="high-search" style="width: 67%; margin: 0 auto 2em auto;" border="0"
+                                   cellpadding="3" cellspacing="0">
+                                <thead>
+                                <tr>
+                                    <th>目标</th>
+                                    <th>内容</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr id="_filter_hotupdate_type" data-column="2">
+                                    <td>热更类型</td>
+                                    <td align="center">
+                                        <select id="filter_hotupdate_type" style="width: 100%">
+                                            <option value="全部" selected="selected">全部</option>
+                                            <option value="前端">前端</option>
+                                            <option value="后端">后端</option>
+                                        </select>
+                                    </td>
+                                </tr>
+                                <tr id="_filter_project" data-column="5">
+                                    <td>项目</td>
+                                    <td align="center">
+                                        <select id="filter_project" class="filter_select2" style="width: 100%">
+                                            <option value="全部" selected="selected">全部</option>
+                                            {% for project in data.all_project %}
+                                                <option value={{ project.id }}>{{ project.text }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </td>
+                                </tr>
+                                <tr id="_filter_area_name" data-column="4">
+                                    <td>地区</td>
+                                    <td align="center"><input style="width:100%" class="column_filter"
+                                                              id="filter_area_name" type="text"></td>
+                                </tr>
+                                <tr id="_filter_title" data-column="4">
+                                    <td>标题</td>
+                                    <td align="center"><input style="width:100%" class="column_filter" id="filter_title"
+                                                              type="text"></td>
+                                </tr>
+                                <tr id="_filter_priority" data-column="5">
+                                    <td>优先级</td>
+                                    <td align="center">
+                                        <select id="filter_priority" style="width: 100%">
+                                            <option value="全部" selected="selected">全部</option>
+                                            {% for id, text in data.priority.items %}
+                                                <option value={{ id }}>{{ text }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </td>
+                                </tr>
+                                <tr id="_filter_status" data-column="5">
+                                    <td>状态</td>
+                                    <td align="center">
+                                        <select id="filter_status" style="width: 100%">
+                                            <option value="全部" selected="selected">全部</option>
+                                            {% for id, text in data.status.items %}
+                                                <option value={{ id }}>{{ text }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </td>
+                                </tr>
+                                <tr id="_filter_title" data-column="4">
+                                    <td>起止时间</td>
+                                    <td align="center">
+                                        <input class="flatpickr flatpickr-input" type="text" placeholder="选择开始时间"
+                                               data-id="datetime" id="filter_start_time" readonly="readonly">
+                                        <span>到</span>
+                                        <input class="flatpickr flatpickr-input" type="text" placeholder="选择结束时间"
+                                               data-id="datetime" id="filter_end_time" readonly="readonly">
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <table id="mytable" class="display" width="100%" cellspacing="0">
+                            <thead>
+                            <tr>
+                                <th>id</th>
+                                <th>创建时间</th>
+                                <th>项目</th>
+                                <th>地区</th>
+                                <th>热更类型</th>
+                                <th>标题</th>
+                                <th>uuid</th>
+                                <th>绑定代号</th>
+                                <th>执行顺序</th>
+                                <th>优先级</th>
+                                <th>状态</th>
+                                <th>操作</th>
+                                <th>详细</th>
+                                <th>日志</th>
+                            </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+                 aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                            <h4 class="modal-title" id="myModalLabel">运维管理机</h4>
+                        </div>
+                        <div class="modal-body">
+                            <div class="alert alert-danger alert-dismissable" id='modal-notify'>
+                                <button type="button" class="close" id="bt-modal-notify">&times;</button>
+                                <label id='lb-msg'></label>
+                            </div>
+                            <form class="form-horizontal" role="form">
+                                <div class="form-group" id='show_id'>
+                                    <label class="col-sm-3 control-label">id</label>
+                                    <input type="text" class="form-control " placeholder="id" id="id">
+                                    <div class="col-sm-8">
+                                        <input type="text" class="form-control ">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">项目</label>
+                                    <div class="col-sm-8">
+                                        <div class="form-group row">
+                                            <div class="col-sm-8">
+                                                <input type="text" class="form-control " id="project"
+                                                       style="width: 160%" readonly="readonly">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">地区</label>
+                                    <div class="col-sm-8">
+                                        <div class="form-group row">
+                                            <div class="col-sm-8">
+                                                <input type="text" class="form-control " id="area_name"
+                                                       style="width: 160%" readonly="readonly">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">热更类型</label>
+                                    <div class="col-sm-8">
+                                        <div class="form-group row">
+                                            <div class="col-sm-8">
+                                                <input type="text" class="form-control " id="update_type"
+                                                       style="width: 160%" readonly="readonly">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">标题</label>
+                                    <div class="col-sm-8">
+                                        <div class="form-group row">
+                                            <div class="col-sm-8">
+                                                <input type="text" class="form-control " id="title" style="width: 160%"
+                                                       readonly="readonly">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label ">优先级</label>
+                                    <div class="col-sm-8">
+                                        <select id="priority" style="width: 100%">
+                                            {% for k, v in data.priority.items %}
+                                                {% if k == '0' %}
+                                                    <option selected="selected" value={{ k }}>{{ v }}</option>
+                                                {% else %}
+                                                    <option value={{ k }}>{{ v }}</option>
+                                                {% endif %}
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label ">状态</label>
+                                    <div class="col-sm-8">
+                                        <select id="status" style="width: 100%">
+                                            {% for k, v in data.status.items %}
+                                                {% if k == '0' %}
+                                                    <option selected="selected" disabled="disabled"
+                                                            value={{ k }}>{{ v }}</option>
+                                                {% else %}
+                                                    <option value={{ k }}>{{ v }}</option>
+                                                {% endif %}
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                            <button id='bt-save' type="button" class="btn btn-primary">保存</button>
+                        </div>
+                    </div><!-- /.modal-content -->
+                </div><!-- /.modal-dialog -->
+            </div><!-- /.modal -->
+
+            <div class="modal fade2" id="myModal2" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title2" id="myModalLabel2">下载中...请勿刷新或者离开页面</h4>
+                        </div>
+                        <div class="modal-body">
+                            <form class="form-horizontal" role="form">
+                                <div class="form-group" id='load2' style="display: none;">
+                                    <label class="col-sm-12"></label>
+                                    <div class="col-sm-12">
+                                        <div class="ball"></div>
+                                    </div>
+                                </div>
+                                <div class="form-group" id='show-msg2'>
+                                    <label class="col-sm-3 control-label"></label>
+                                    <div class="col-sm-8">
+                                        <p id='load-msg2'></p>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="modal-footer" id="modal-footer2">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                        </div>
+                    </div><!-- /.modal-content -->
+                </div><!-- /.modal-dialog -->
+            </div>
+            <div class="modal fade2" id="myModal-update" role="dialog" aria-labelledby="myModalLabel"
+                 aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-body">
+                        </div>
+                        <div class="modal-footer" id="modal-footer2">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                        </div>
+                    </div><!-- /.modal-content -->
+                </div><!-- /.modal-dialog -->
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block bodyjs %}
+    <script src="/static/js/jquery.dataTables.js"></script>
+    {{ django_context_varable }}
+    {% verbatim %}
+    <script id="tpl" type="text/x-handlebars-template">
+        {{#each func}}
+        <button type="button" class="btn btn-{{this.type}} btn-sm {{this.is_disabled}}" onclick="{{this.fn}}">
+            {{this.name}}
+        </button>
+        {{/each}}
+    </script>
+    {% endverbatim %}
+    <script src="/static/js/handlebars-v3.0.1.js"></script>
+    <script src="/static/js/reconnecting-websocket.js"></script>
+    <script src="/static/js/flatpickr.js"></script>
+    <script src="/static/js/zh.js"></script>
+    <script src="/static/js/hot_server_list.js?v=20190702001"></script>
+{% endblock %}
+{% block css %}
+    <link href="/static/css/jquery.dataTables.css" rel="stylesheet" type="text/css">
+    <link href="/static/css/flatpickr.css" rel="stylesheet" type="text/css">
+    <link href="/static/css/flatpickr_material_green.css" rel="stylesheet" type="text/css">
+    <link href="/static/css/load.css" rel="stylesheet" type="text/css">
+    <!--<link href="/static/css/mycss.css" rel="stylesheet" type="text/css">-->
+{% endblock %}

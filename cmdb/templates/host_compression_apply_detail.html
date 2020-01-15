@@ -1,0 +1,175 @@
+{% extends 'template.html' %}
+
+{% block username %}
+    {{ request.user.username }}
+{% endblock %}
+
+{% block content %}
+
+    <div id="page-wrapper">
+        <div class="row">
+            <div class="col-lg-12">
+                <h1 class="page-header">{{ apply_obj.title }}</h1>
+                <input style="display: none;" id="apply_id" value="{{ apply_obj.id }}">
+                <input style="display: none;" id="action_status" value="{{ apply_obj.action_status }}">
+                <input style="display: none;" id="recover_status" value="{{ apply_obj.recover_status }}">
+                <input style="display: none;" id="total" value="{{ total }}">
+                <input style="display: none;" id="migration_finish" value="{{ migration_finish }}">
+                <input style="display: none;" id="recover_finish" value="{{ recover_finish }}">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                {% if apply_obj.type == 2 %}
+                    <div class="panel panel-green" id="migrate_show_result_panel">
+                        <div class="panel-heading">
+                            <span id="migrate_total">迁服总数：{{ total }}</span>&nbsp;&nbsp;<span
+                                id="migrate_finish">已完成：{{ migration_finish }}</span>&nbsp;&nbsp;
+                            <span id="migrate_success">成功：{{ migration_success }}</span>&nbsp;&nbsp;<span
+                                id="migrate_failure">失败：{{ migration_failure }}</span>
+                        </div>
+                        <div class="panel-body">
+                            <div id="action_container"></div>
+                        </div>
+                        <a href="#">
+                            <div class="panel-footer">
+                            <span class="pull-left" id="migrate_show_result_success">
+                                {% if apply_obj.action_status == 1 %}
+                                    <span>未迁服</span>
+                                {% endif %}
+                                {% if apply_obj.action_status == 2 %}
+                                    <span>正在迁服中......</span>
+                                {% endif %}
+                                {% if apply_obj.action_status == 3 %}
+                                    <span>迁服成功</span>
+                                {% endif %}
+                                {% if apply_obj.action_status == 4 %}
+                                    <span>迁服失败</span>
+                                {% endif %}
+                            </span>
+                                <div class="clearfix"></div>
+                            </div>
+                        </a>
+                    </div>
+                {% endif %}
+                <div class="panel panel-green" id="recover_show_result_panel">
+                    <div class="panel-heading">
+                        <span id="recover_total">回收总数：{{ total }}</span>&nbsp;&nbsp;<span
+                            id="recover_finish">已完成：{{ recover_finish }}</span>&nbsp;&nbsp;
+                        <span id="recover_success">成功：{{ recover_success }}</span>&nbsp;&nbsp;<span
+                            id="recover_failure">失败：{{ recover_failure }}</span>
+                    </div>
+                    <div class="panel-body">
+                        <div id="recover_container"></div>
+                    </div>
+                    <a href="#">
+                        <div class="panel-footer">
+                            <span class="pull-left" id="recover_show_result_success">
+                                {% if apply_obj.recover_status == 1 %}
+                                    <span>未回收</span>
+                                {% endif %}
+                                {% if apply_obj.recover_status == 2 %}
+                                    <span>正在回收中......</span>
+                                {% endif %}
+                                {% if apply_obj.recover_status == 3 %}
+                                    <span>回收成功</span>
+                                {% endif %}
+                                {% if apply_obj.recover_status == 4 %}
+                                    <span>回收失败</span>
+                                {% endif %}
+                            </span>
+                            <div class="clearfix"></div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+            <div class="col-lg-12">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <div class="btn-group">
+                            <a>
+                                <button id='bt-failed' type="button" class="btn btn-outline btn-danger btn-sm">
+                                    查看失败主机
+                                </button>
+                            </a>
+                            <a>
+                                <button id='bt-success' type="button" class="btn btn-outline btn-success btn-sm">
+                                    查看成功主机
+                                </button>
+                            </a>
+                            <a>
+                                <button id='bt-clear' type="button" class="btn btn-outline btn-primary btn-sm">
+                                    重置过滤主机
+                                </button>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="panel-body">
+                        <table id="mytable" class="display" width="100%" cellspacing="0">
+                            <thead>
+                            <tr>
+                                <th>展开详细</th>
+                                <th>项目</th>
+                                <th>机房</th>
+                                <th>业务类型</th>
+                                <th>操作类型</th>
+                                <th>IP</th>
+                                <th>迁服状态</th>
+                                <th>迁服结果隐藏</th>
+                                <th>回收状态</th>
+                                <th>回收结果隐藏</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for detail in detail_data %}
+                                <tr>
+                                    <td></td>
+                                    <td>{{ detail.project }}</td>
+                                    <td>{{ detail.room }}</td>
+                                    <td>{{ detail.business }}</td>
+                                    <td>{{ detail.type }}</td>
+                                    <td>{{ detail.ip }}</td>
+                                    <td>
+                                        <div class="tooltip-msg">
+                                            <span class="label
+{% if detail.migration_status == '未迁服' %}label-warning
+{% elif detail.migration_status == '迁服中' %}label-info
+{% elif detail.migration_status == '迁服成功' %}label-success
+{% elif detail.migration_status == '迁服失败' %}label-danger{% endif %}" data-toggle="tooltip" data-placement="auto"
+                                                  title="{{ detail.msg }}">{{ detail.migration_status }}</span>
+                                        </div>
+                                    </td>
+                                    <td>{{ detail.migration_remark }}</td>
+                                    <td>
+                                        <div class="tooltip-msg">
+                                            <span class="label
+{% if detail.recover_status == '未回收' %}label-warning
+{% elif detail.recover_status == '回收中' %}label-info
+{% elif detail.recover_status == '回收成功' %}label-success
+{% elif detail.recover_status == '回收失败' %}label-danger{% endif %}" data-toggle="tooltip" data-placement="auto"
+                                                  title="{{ detail.msg }}">{{ detail.recover_status }}</span>
+                                        </div>
+                                    </td>
+                                    <td>{{ detail.recover_remark }}</td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- 操作类型标志-->
+    <input style="display: none;" id="id_type" value="{{ type }}"></input>
+{% endblock %}
+{% block bodyjs %}
+    <script src="/static/js/jquery.dataTables.js"></script>
+    <script src="/static/js/host_compression_apply_detail.js?v=3848ea41sd23t63mj56su6790dfg"></script>
+    <script src="/static/js/progressbar.js"></script>
+    <script src="/static/js/reconnecting-websocket.js"></script>
+{% endblock %}
+{% block css %}
+    <link href="/static/css/jquery.dataTables.css" rel="stylesheet" type="text/css">
+    <link href="/static/css/hot_server_detail.css?v=23hf893hghnafh1hegh289gh" rel="stylesheet" type="text/css">
+{% endblock %}

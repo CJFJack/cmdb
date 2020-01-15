@@ -1,0 +1,181 @@
+{% extends 'template.html' %}
+
+{% block username %}
+    {{ head.username }}
+{% endblock %}
+
+{% block content %}
+    <div id="page-wrapper">
+        <div class="row">
+            <div class="col-lg-12">
+                <h1 class="page-header">{{ head.value }}</h1>
+                <h1 class="page-header" id="workflow_id" style="display: none;">{{ head.workflow }}</h1>
+                <h1 class="page-header" id="first_name" style="display: none;">{{ first_name }}</h1>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <div class="container">
+                                    <form role="form" class="form-horizontal">
+                                        <div class="form-group">
+                                            <label class="col-sm-12" for="TextArea">项目</label>
+                                            <div class="col-sm-6">
+                                                <select id="project" style="width: 100%">
+                                                    <option value="0" selected="selected">选择项目</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-sm-12">申请人</label>
+                                            <div class="col-sm-6">
+                                                <input class="form-control" id="applicant" value="{{ head.username }}"
+                                                       readonly="readonly"></input>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-sm-12" for="TextArea">标题</label>
+                                            <div class="col-sm-6">
+                                                <input class="form-control" id="title"></input>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-sm-12" for="TextArea">原因</label>
+                                            <div class="col-sm-6">
+                                                <textarea class="form-control" id="reason"></textarea>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-sm-12" for="TextArea">key</label>
+                                            <div class="col-sm-6">
+                                                <textarea class="form-control" id="key" rows="7"
+                                                          style="word-break: break-all"></textarea>
+                                            </div>
+                                        </div>
+                                        <div class="form-group" style="display: none">
+                                            <label class="col-sm-1" for="TextArea">key类型</label>
+                                            <div class="radio radio-danger radio-inline">
+                                                <input type="radio" id="is_root" value=true name="keyType">
+                                                <label for="is_root"> root </label>
+                                            </div>
+                                            <div class="radio radio-success radio-inline">
+                                                <input type="radio" id="is_normal" value=false name="keyType"
+                                                       checked="">
+                                                <label for="is_normal"> 普通 </label>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-sm-12" for="TextArea">分组</label>
+                                            <div class="col-sm-6">
+                                                <select id="group" style="width: 100%">
+                                                    <option value="phpers" selected="selected">php开发组</option>
+                                                    <option value="phpadmin">php管理组</option>
+                                                    <option value="serdevers">后端开发组</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-sm-1" for="TextArea">时效性</label>
+                                            <div class="radio radio-danger radio-inline">
+                                                <input type="radio" id="permanent" value=false name="timeliness">
+                                                <label for="permanent"> 永久 </label>
+                                            </div>
+                                            <div class="radio radio-success radio-inline">
+                                                <input type="radio" id="temporary" value=true name="timeliness"
+                                                       checked="">
+                                                <label for="temporary"> 临时 </label>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-sm-12" for="TextArea">起止时间(以北京时间为准)</label>
+                                            <div class="col-sm-2">
+                                                <input class="flatpickr flatpickr-input" type="text"
+                                                       placeholder="选择开始时间" data-id="datetime" id="start_time"
+                                                       readonly="readonly">
+                                            </div>
+                                            <div class="col-sm-2">
+                                                <input class="flatpickr flatpickr-input" type="text"
+                                                       placeholder="选择结束时间" data-id="datetime" id="end_time"
+                                                       readonly="readonly">
+                                            </div>
+                                        </div>
+                                        <div class="form-group" style="display: none;">
+                                            <label class="col-sm-12" for="TextArea">机房的全部IP</label>
+                                            <div class="col-sm-2">
+                                                <select id="room" style="width: 100%">
+                                                    <option value="0" selected="selected">选择机房</option>
+                                                </select>
+                                            </div>
+                                            <!--<div class="col-sm-2 checkbox checkbox-success">
+                                              <input type="checkbox" class="form-check-input" id='all_ip'>
+                                              <label for="all_ip">
+                                                    全选机房IP
+                                                </label>
+                                            </div>-->
+                                        </div>
+                                        <div class="form-group" id='insert_after'>
+                                            <div class="col-sm-3">
+                                                <label>根据IP选择服务器</label>
+                                                <button id='myAdd' type='button'>添加</button>
+                                            </div>
+                                        </div>
+                                        <div class="form-group" id='insert_ip_before' style="display: none;">
+                                            <div class="col-sm-2">
+                                                <label>xxxxx</label>
+                                                <button type='button'>添加</button>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-sm-3">
+                                                <label>根据游戏服选择服务器</label>
+                                                <button id='myAdd2' type='button'>添加</button>
+                                            </div>
+                                        </div>
+                                        <div class="form-group" id='insert_gameserver_before' style="display: none;">
+                                            <div class="col-sm-2">
+                                                <label>xxxxx</label>
+                                                <button type='button'>添加</button>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-sm-12">流程步骤</label>
+                                            <div class="col-sm-6">
+                                                <p>{{ state_step.value }}</p>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-sm-6">
+                                                <div class="alert alert-success col-sm-12" id="approve_user"
+                                                     role="alert"></div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group" id='append_before'>
+                                            <div class="col-sm-6">
+                                                <button type="button" class="btn btn-primary" id='bt-commit'>提交</button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                    <hr>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block bodyjs %}
+    <script src="/static/js/server_permission_workflow.js?v=20191107001"></script>
+    <script src="/static/js/flatpickr.js"></script>
+    <script src="/static/js/zh.js"></script>
+{% endblock %}
+{% block css %}
+    <link href="/static/css/awesome-bootstrap-checkbox.css" rel="stylesheet" type="text/css">
+    <link href="/static/css/flatpickr.css" rel="stylesheet" type="text/css">
+    <link href="/static/css/flatpickr_material_green.css" rel="stylesheet" type="text/css">
+
+{% endblock %}

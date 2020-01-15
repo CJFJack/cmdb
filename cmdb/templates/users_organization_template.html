@@ -1,0 +1,289 @@
+<!-- 组织架构树状图区域 -->
+<div class="col-lg-4">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <!-- 按钮部分 -->
+            <div class="btn-group">
+                {% if request.user.is_superuser %}
+                    <a>
+                        <button id='bt-add-section' type="button" class="btn btn-sm btn-success"
+                                aria-label="Left Align">
+                            <span class="glyphicon glyphicon-plus" aria-hidden="true">增加部门</span>
+                        </button>
+                    </a>
+                    <a>
+                        <button id='bt-add-user' type="button" class="btn btn-sm btn-warning" aria-label="Left Align">
+                            <span class="glyphicon glyphicon-plus" aria-hidden="true">增加用户</span>
+                        </button>
+                    </a>
+                {% endif %}
+                <a>
+                    <button id='bt-download' type="button" class="btn btn-sm btn-primary" aria-label="Left Align">
+                        <span class="glyphicon glyphicon-download-alt" aria-hidden="true">导出用户</span>
+                    </button>
+                </a>
+                <a>
+                    <button id='bt-expand' type="button" class="btn btn-sm btn-info" aria-label="Left Align">
+                        <span class="glyphicon glyphicon-collapse-down" aria-hidden="true">全部展开</span>
+                    </button>
+                </a>
+                <a>
+                    <button id='bt-collapse' type="button" class="btn btn-sm btn-default" aria-label="Left Align">
+                        <span class="glyphicon glyphicon-collapse-up" aria-hidden="true">全部折叠</span>
+                    </button>
+                </a>
+
+            </div>
+        </div>
+
+        <div class="panel-body">
+            <!-- 组织架构图搜索 -->
+            <div class="sidebar-search">
+                <div class="input-group custom-search-form">
+                    <span class="input-group-addon"><i class="fa fa-search"></i></span>
+                    <input type="text" class="form-control" placeholder="请输入公司/部门/项目组/小组......" id="search">
+                    <span class="input-group-btn">
+                        <button class="btn btn-success" type="button" id="bt-search">
+                            <span>搜索</span>
+                        </button>
+                        <button class="btn btn-default" type="button" id="bt-clear">
+                            <span>清空</span>
+                        </button>
+                    </span>
+                </div>
+                <!-- /input-group -->
+            </div>
+            <!-- 组织架构图主体 -->
+            <div id="tree" style="height: 740px;overflow-y :scroll;"></div>
+        </div>
+    </div>
+</div>
+
+
+<!-- 增加部门弹出框 -->
+<div class="modal fade" id="myModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel"></h4>
+            </div>
+            <form class="form-horizontal" role="form" action="{% url 'organization' %}" method="post">
+                {% csrf_token %}
+                <div class="modal-body">
+                    <div class="alert alert-danger alert-dismissable" id='modal-notify-add-section'>
+                        <button type="button" class="close" id="bt-modal-notify">&times;</button>
+                        <label id='lb-msg-add-section'></label>
+                    </div>
+                    <div class="form-group" id="show_id">
+                        <label class="col-sm-3 control-label">id</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" id="id">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">父级节点</label>
+                        <div class="col-sm-8">
+                            <select id="section-parent" class="form-control" style="width: 100%" name="parent">
+                                <option selected="selected" value="0">无</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">节点名称</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" id="section_name" name="name" placeholder="请输入节点名称">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">节点负责人</label>
+                        <div class="col-sm-8">
+                            <select id="section-leader" class="form-control" style="width: 100%" name="leader">
+                                <option selected="selected" value="0">选择负责人</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">是否公共部门</label>
+                        <div class="col-sm-8">
+                            <label class="radio-inline">
+                                <input type="radio" name="is_public" value="True"/> 是
+                            </label>
+                            <label class="radio-inline">
+                                <input type="radio" name="is_public" value="False"/> 否
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">部门 / 小组</label>
+                        <div class="col-sm-8">
+                            <label class="radio-inline">
+                                <input type="radio" name="is_department_group" value="True"/> 小组
+                            </label>
+                            <label class="radio-inline">
+                                <input type="radio" name="is_department_group" value="False"/> 部门
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button id='bt-save-section-add' type="button" class="btn btn-primary">保存</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">返回</button>
+                </div>
+            </form>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+
+<!-- 增加用户弹出框 -->
+<div class="modal fade" id="myModal-add-user" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel-add-user"></h4>
+            </div>
+            <form class="form-horizontal" role="form" action="{% url 'organization_user_add' %}" method="post">
+                {% csrf_token %}
+                <div class="modal-body">
+                    <div class="alert alert-danger alert-dismissable" id='modal-notify-add-user'>
+                        <button type="button" class="close" id="bt-modal-notify-add-user">&times;</button>
+                        <label id='lb-msg-add-user'></label>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">用户名</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" id="name-add-user" name="username"
+                                   placeholder="请输入用户名">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">用户拼音(登录名)</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" id="first_name-add-user" name="first_name"
+                                   placeholder="用户拼音，用作系统登录名">
+                        </div>
+                    </div>
+                    <!--<div class="form-group">
+                        <label class="col-sm-3 control-label">用户邮箱</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" id="email" name="email"
+                                   placeholder="请输入用户邮箱">
+                        </div>
+                    </div>-->
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">员工职位</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" id="title" name="title"
+                                   placeholder="请输入员工职位">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">所属部门</label>
+                        <div class="col-sm-8">
+                            <select class="form-control" id="ancestors-user-add" name="ancestors-user-add"
+                                    style="width: 100%">
+                                <option selected="selected" value="0">无</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="control-label col-md-3">性别</label>
+                        <div class="form-check">
+                            <label class="form-check-label">
+                                &nbsp;&nbsp;&nbsp;&nbsp;<input name="sex" value="1" class="form-check-input"
+                                                               type="radio">
+                                男
+                            </label>&nbsp;&nbsp;&nbsp;
+                            <label class="form-check-label">
+                                <input name="sex" value="2" class="form-check-input" type="radio">
+                                女
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="control-label col-md-3">用户类型</label>
+                        <div class="form-check">
+                            <label class="form-check-label">
+                                &nbsp;&nbsp;&nbsp;&nbsp;<input name="is_superuser" value="0" class="form-check-input"
+                                                               checked type="radio">
+                                普通用户
+                            </label>&nbsp;&nbsp;&nbsp;
+                            <label class="form-check-label">
+                                <input name="is_superuser" value="1" class="form-check-input" type="radio">
+                                管理员
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="control-label col-md-3">是否开通企业QQ</label>
+                        <div class="form-check">
+                            <label class="form-check-label">
+                                &nbsp;&nbsp;&nbsp;&nbsp;<input name="is_open_qq" value="1" class="form-check-input"
+                                                               type="radio">
+                                是
+                            </label>&nbsp;&nbsp;&nbsp;
+                            <label class="form-check-label">
+                                <input name="is_open_qq" value="0" class="form-check-input" type="radio">
+                                否
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="control-label col-md-3">是否开通企业邮箱</label>
+                        <div class="form-check">
+                            <label class="form-check-label">
+                                &nbsp;&nbsp;&nbsp;&nbsp;<input name="is_open_email" value="1" class="form-check-input"
+                                                               type="radio">
+                                是
+                            </label>&nbsp;&nbsp;&nbsp;
+                            <label class="form-check-label">
+                                <input name="is_open_email" value="0" class="form-check-input" type="radio">
+                                否
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="control-label col-md-3">邮箱后缀(可多选)</label>
+                        <div class="col-sm-8">
+                            <select class="form-control" id="ent_email" name="ent_email"
+                                    style="width: 100%" multiple="">
+                                <option disabled value="0">请选择邮箱后缀</option>
+                                <option value="1">@forcegames.cn</option>
+                                <option value="2">@chuangyunet.com</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group" id="show_ldap_group">
+                        <label class="col-sm-3 control-label">是否开通LDAP</label>
+                        <div class="form-check">
+                            <label class="form-check-label">
+                                &nbsp;&nbsp;&nbsp;&nbsp;<input name="is_open_ldap" value="1" class="form-check-input"
+                                                               type="radio">
+                                是
+                            </label>&nbsp;&nbsp;&nbsp;
+                            <label class="form-check-label">
+                                <input name="is_open_ldap" value="0" class="form-check-input" type="radio">
+                                否
+                            </label>
+                        </div>
+                        <!--<div class="col-sm-8">
+                            <select id="ldap_group" style="width: 100%">
+                                <option selected="selected" value="0">选择LDAP部门(不选则不添加LDAP账号)</option>
+                            </select>
+                        </div>
+                        <button type='button' id="reset_ldap_group">X</button>-->
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button id='bt-save-user-add' type="button" class="btn btn-primary">保存</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">返回</button>
+                </div>
+            </form>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+
+

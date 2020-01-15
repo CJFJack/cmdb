@@ -1,0 +1,113 @@
+{% extends 'template.html' %}
+
+{% block username %}
+    {{ request.user.username }}
+{% endblock %}
+
+{% block content %}
+    <div id="page-wrapper">
+        <div class="row">
+            <div class="col-lg-12">
+                <h1 class="page-header">腾讯云帐号信息</h1>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <div class="btn-group">
+                            <button id='bt-add' type="button" class="btn btn-success">增加</button>
+                            <button id='bt-del' data-text="确定删除? 0个" type="button" class="btn btn-danger">删除
+                            </button>
+                            <a id='bt-back' href="/assets/cloud/" type="button" class="btn btn-primary">返回</a>
+                        </div>
+                    </div>
+                    <div class="panel-body">
+                        <table id="mytable" class="display" width="100%" cellspacing="0">
+                            <thead>
+                            <tr>
+                                <th class="center sorting_disabled">
+                                    <label class="pos-rel">
+                                        <input id='chb-all' type="checkbox"/>
+                                    </label>
+                                </th>
+                                <th>id</th>
+                                <th>供应商</th>
+                                <th>备注</th>
+                                <th>SecretId</th>
+                                <th>SecretKey</th>
+                                <th>操作</th>
+                            </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modal -->
+            <div class="modal fade" id="myModal" tabindex="1" role="dialog" aria-labelledby="myModalLabel"
+                 aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                            <h4 class="modal-title" id="myModalLabel"></h4>
+                        </div>
+                        <div class="modal-body">
+                            <div class="alert alert-danger alert-dismissable" id="modal-notify">
+                                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;
+                                </button>
+                                <label id='lb-msg'></label>
+                            </div>
+                            <form class="form-horizontal" role="form">
+                                <div class="form-group" id='show_id'>
+                                    <label class="col-sm-3 control-label">id</label>
+                                    <input type="text" class="form-control " placeholder="id" id="id">
+                                    <div class="col-sm-8">
+                                        <input type="text" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">云供应商</label>
+                                    <div class="col-sm-8">
+                                        <input class="form-control" id="cloud_name" disabled style="width: 100%;">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">备注</label>
+                                    <div class="col-sm-8">
+                                        <input class="form-control" id="remark" style="width: 100%;">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">secret_id</label>
+                                    <div class="col-sm-8">
+                                        <input class="form-control" id="secret_id" style="width: 100%;">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">secret_key</label>
+                                    <div class="col-sm-8">
+                                        <input class="form-control" id="secret_key" style="width: 100%;">
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                            <button id='bt-save' type="button" class="btn btn-primary">保存</button>
+                        </div>
+                    </div><!-- /.modal-content -->
+                </div><!-- /.modal-dialog -->
+            </div><!-- /.modal -->
+        </div>
+    </div>
+{% endblock %}
+{% block bodyjs %}
+    <script src="/static/js/jquery.dataTables.js"></script>
+    <script src="/static/js/tecent_cloud_account.js?v=20190726001"></script>
+{% endblock %}
+
+{% block css %}
+    <link href="/static/css/jquery.dataTables.css" rel="stylesheet" type="text/css">
+{% endblock %}

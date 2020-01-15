@@ -1,0 +1,22 @@
+td.details-control {
+    background: url('/static/img/details_open.png') no-repeat center center;
+    cursor: pointer;
+}
+tr.shown td.details-control {
+    background: url('/static/img/details_close.png') no-repeat center center;
+}
+
+#high-search tr th {
+	text-align: center;
+}
+#high-search tr td {
+	text-align: center;
+}
+
+tr.warn {
+    background-color: red !important;;
+}
+
+th.center {
+	text-align: center;
+}

@@ -1,0 +1,482 @@
+{% extends 'template.html' %}
+
+{% block username %}
+    {{ head.username }}
+{% endblock %}
+
+{% block content %}
+    <div id="page-wrapper">
+        <div class="row">
+            <div class="col-lg-12">
+                <h1 class="page-header">{{ head.value }}</h1>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <div class="btn-group">
+                            <!--<a><button id='bt-add' type="button" class="btn btn-primary">增加</button></a>-->
+                            <!--<a><button id='bt-del' data-text="确定删除主机? 0个" type="button" class="btn btn-danger">删除</button></a>-->
+                            <a>
+                                <button id='bt-search' type="button" class="btn btn-success">高级搜索</button>
+                            </a>
+                            <a>
+                                <button id='bt-reset' type="button" class="btn btn-danger">重置高级搜索</button>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="panel-body">
+                        <div id="div-search" class="hide">
+                            <table id="high-search" style="width: 67%; margin: 0 auto 2em auto;" border="0"
+                                   cellpadding="3" cellspacing="0">
+                                <thead>
+                                <tr>
+                                    <th>目标</th>
+                                    <th>内容</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr id="_filter_event" data-column="2">
+                                    <td>事件类型</td>
+                                    <td align="center">
+                                        <select id="filter_event" style="width: 100%">
+                                            <option value="100" selected="selected">全部</option>
+                                            {% for x in all_events %}
+                                                <option value="{{ x.0 }}">{{ x.1 }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </td>
+                                </tr>
+                                <tr id="_filter_assets_number" data-column="4">
+                                    <td>资产编号</td>
+                                    <td align="center"><input style="width:100%" class="column_filter"
+                                                              id="filter_assets_number" type="text"></td>
+                                </tr>
+                                <tr id="_filter_name" data-column="4">
+                                    <td>资产名称</td>
+                                    <td align="center"><input style="width:100%" class="column_filter" id="filter_name"
+                                                              type="text"></td>
+                                </tr>
+                                <tr id="_filter_CPU" data-column="6">
+                                    <td>CPU</td>
+                                    <td align="center">
+                                        <select id="filter_CPU" class="filter_select2" style="width: 100%">
+                                            <option value="0" selected="selected">全部</option>
+                                            {% for cpu in all_cpu %}
+                                                <option value={{ cpu }}>{{ cpu }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </td>
+                                </tr>
+                                <tr id="_filter_board" data-column="6">
+                                    <td>主板</td>
+                                    <td align="center">
+                                        <select id="filter_board" class="filter_select2" style="width: 100%">
+                                            <option value="0" selected="selected">全部</option>
+                                            {% for board in all_board %}
+                                                <option value={{ board }}>{{ board }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </td>
+                                </tr>
+                                <tr id="_filter_ssd" data-column="6">
+                                    <td>固态硬盘</td>
+                                    <td align="center">
+                                        <select id="filter_ssd" class="filter_select2" style="width: 100%">
+                                            <option value="0" selected="selected">全部</option>
+                                            {% for ssd in all_ssd %}
+                                                <option value={{ ssd }}>{{ ssd }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </td>
+                                </tr>
+                                <tr id="_filter_disk" data-column="6">
+                                    <td>机械硬盘</td>
+                                    <td align="center">
+                                        <select id="filter_disk" class="filter_select2" style="width: 100%">
+                                            <option value="0" selected="selected">全部</option>
+                                            {% for disk in all_disk %}
+                                                <option value={{ disk }}>{{ disk }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </td>
+                                </tr>
+                                <tr id="_filter_mem" data-column="6">
+                                    <td>内存</td>
+                                    <td align="center">
+                                        <select id="filter_mem" class="filter_select2" style="width: 100%">
+                                            <option value="0" selected="selected">全部</option>
+                                            {% for mem in all_mem %}
+                                                <option value={{ mem }}>{{ mem }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </td>
+                                </tr>
+                                <tr id="_filter_graphics" data-column="6">
+                                    <td>显卡</td>
+                                    <td align="center">
+                                        <select id="filter_graphics" class="filter_select2" style="width: 100%">
+                                            <option value="0" selected="selected">全部</option>
+                                            {% for graphics in all_graphics %}
+                                                <option value={{ graphics }}>{{ graphics }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </td>
+                                </tr>
+                                <tr id="_filter_number" data-column="7">
+                                    <td>数量</td>
+                                    <td align="center"><input style="width:100%" class="column_filter"
+                                                              id="filter_number" type="text"></td>
+                                </tr>
+                                <tr id="_filter_etime" data-column="8">
+                                    <td>事件时间</td>
+                                    <td align="center"><input style="width:100%" class="column_filter" id="filter_etime"
+                                                              type="text"></td>
+                                </tr>
+                                <tr id="_filter_log_user" data-column="9">
+                                    <td>录入人</td>
+                                    <td align="center">
+                                        <select id="filter_log_user" class="filter_select2" style="width: 100%">
+                                            <option value="0" selected="selected">全部</option>
+                                            {% for user in all_users %}
+                                                <option value={{ user.username }}>{{ user.username }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </td>
+                                </tr>
+                                <tr id="_filter_pos" data-column="2">
+                                    <td>位置</td>
+                                    <td align="center">
+                                        <select id="filter_pos" style="width: 100%">
+                                            <option value="0" selected="selected">全部</option>
+                                        </select>
+                                    </td>
+                                </tr>
+                                <tr id="_filter_user" data-column="7">
+                                    <td>保管人</td>
+                                    <td align="center">
+                                        <select id="filter_user" class="filter_select2" style="width: 100%">
+                                            <option value="0" selected="selected">全部</option>
+                                            {% for user in all_users %}
+                                                <option value={{ user.username }}>{{ user.username }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </td>
+                                </tr>
+
+                                <tr id="_filter_purchase" data-column="2">
+                                    <td>新购买</td>
+                                    <td align="center">
+                                        <select id="filter_purchase" style="width: 100%" class="filter_select2">
+                                            <option value="100" selected="selected">全部</option>
+                                            <option value="0">否</option>
+                                            <option value="1">是</option>
+                                        </select>
+                                    </td>
+                                </tr>
+
+                                <tr id="_filter_price" data-column="9">
+                                    <td>单价</td>
+                                    <td align="center"><input style="width:100%" class="column_filter" id="filter_price"
+                                                              type="text"></td>
+                                </tr>
+
+                                </tbody>
+                            </table>
+                        </div>
+                        <table id="mytable" class="display" width="100%" cellspacing="0">
+                            <thead>
+                            <tr>
+                                <th>事件ID</th>
+                                <th>事件类型</th>
+                                <th>资产编号</th>
+                                <th>资产名称</th>
+                                <th>型号</th>
+                                <th>数量</th>
+                                <th>事件发生时间</th>
+                                <th>录入人</th>
+                                <th>位置</th>
+                                <th>保管人</th>
+                                <th>新购买</th>
+                                <th>单价</th>
+                                <th>前领用人</th>
+                                <th>备注</th>
+                            </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <!-- Modal -->
+            <div class="modal fade" id="myModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                            <h4 class="modal-title" id="myModalLabel"></h4>
+                        </div>
+                        <div class="modal-body">
+                            <div class="alert alert-danger alert-dismissable" id='modal-notify'>
+                                <button type="button" class="close" id="bt-modal-notify">&times;</button>
+                                <label id='lb-msg'></label>
+                            </div>
+                            <form class="form-horizontal" role="form">
+                                <div class="form-group" id='show_id'>
+                                    <label class="col-sm-3 control-label">主机id</label>
+                                    <div class="col-sm-8">
+                                        <input type="text" class="form-control " placeholder="" id="id">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label ">状态标识</label>
+                                    <div class="col-sm-8">
+                                        <select id="status">
+                                            <option value="0">未初始化</option>
+                                            <option value="1" selected="selected">可用</option>
+                                            <option value="2">停用</option>
+                                            <option value="3">新机器</option>
+                                            <option value="4">已归还</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label ">机器归属</label>
+                                    <div class="col-sm-8">
+                                        <select id="host_class">
+                                            <option value="0" selected="selected">公司内网</option>
+                                            <option value="1">公司自有外网机器</option>
+                                            <option value="2">游戏合作商提供</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">所在项目</label>
+                                    <div class="col-sm-8">
+                                        <select id="belongs_to_game_project" style="width: 100%">
+                                            <option selected="selected" value="0">选择项目</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label ">所在机房</label>
+                                    <div class="col-sm-8">
+                                        <select id="belongs_to_room" style="width: 100%">
+                                            <option selected="selected" value="0">选择机房</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label ">机器类型</label>
+                                    <div class="col-sm-8">
+                                        <select id="machine_type">
+                                            <option value="0" selected="selected">云主机</option>
+                                            <option value="1">物理机</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label ">业务类型</label>
+                                    <div class="col-sm-8">
+                                        <select id="belongs_to_business" style="width: 100%">
+                                            <option selected="selected" value="0">选择业务类型</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">平台或提供商标识</label>
+                                    <div class="col-sm-8">
+                                        <input type="text" class="form-control" placeholder="YY" id="platform">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">局域网IP</label>
+                                    <div class="col-sm-8">
+                                        <input type="text" class="form-control" placeholder="192.168.1.1"
+                                               id="internal_ip">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">电信ip</label>
+                                    <div class="col-sm-8">
+                                        <input type="text" class="form-control" placeholder="43.18.12.132"
+                                               id="telecom_ip">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">联通ip</label>
+                                    <div class="col-sm-8">
+                                        <input type="text" class="form-control" placeholder="43.18.12.132"
+                                               id="unicom_ip">
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label ">操作系统</label>
+                                    <div class="col-sm-8">
+                                        <select id="system">
+                                            <option value="0" selected="selected">linux</option>
+                                            <option value="1">windows</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label ">公网访问状态标识</label>
+                                    <div class="col-sm-8">
+                                        <select id="is_internet">
+                                            <option value="0" selected="selected">完全内网机器</option>
+                                            <option value="1">公网访问不了但可上外网</option>
+                                            <option value="2">公网可访问</option>
+                                            <option value="3">映射外部受限访问</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">服务器SSH用户</label>
+                                    <div class="col-sm-8">
+                                        <div class="form-group row">
+                                            <div class="col-sm-8">
+                                                <input type="text" class="form-control " id="sshuser">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">服务器SSH端口</label>
+                                    <div class="col-sm-8">
+                                        <div class="form-group row">
+                                            <div class="col-sm-8">
+                                                <input type="text" class="form-control " id="sshport">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">机器型号</label>
+                                    <div class="col-sm-8">
+                                        <div class="form-group row">
+                                            <div class="col-sm-8">
+                                                <input type="text" class="form-control " id="machine_model">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">cpu核心数</label>
+                                    <div class="col-sm-8">
+                                        <div class="form-group row">
+                                            <div class="col-sm-8">
+                                                <input type="text" class="form-control " id="cpu_num">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">cpu</label>
+                                    <div class="col-sm-8">
+                                        <div class="form-group row">
+                                            <div class="col-sm-8">
+                                                <input type="text" class="form-control " id="cpu">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">ram</label>
+                                    <div class="col-sm-8">
+                                        <div class="form-group row">
+                                            <div class="col-sm-8">
+                                                <input type="text" class="form-control " id="ram">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">硬盘</label>
+                                    <div class="col-sm-8">
+                                        <div class="form-group row">
+                                            <div class="col-sm-8">
+                                                <input type="text" class="form-control " id="disk">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">用途</label>
+                                    <div class="col-sm-8">
+                                        <input type="text" class="form-control" placeholder="" id="host_comment">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">宿主机</label>
+                                    <div class="col-sm-8">
+                                        <input type="text" class="form-control" placeholder="" id="belongs_to_host">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">标识符</label>
+                                    <div class="col-sm-8">
+                                        <input type="text" class="form-control" placeholder="" id="host_identifier">
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                            <button id='bt-save' type="button" class="btn btn-primary">保存</button>
+                        </div>
+                    </div><!-- /.modal-content -->
+                </div><!-- /.modal-dialog -->
+            </div><!-- /.modal -->
+
+            <div class="modal fade" id="Modal-file" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <form id="submit-file-form" enctype="multipart/form-data" action="/assets/upload_devices"
+                              method="post">
+                            <!-- {% csrf_token %} -->
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;
+                                </button>
+                                <h4 class="modal-title" id="myModalLabel">导入/导出</h4>
+                            </div>
+                            <div class="modal-body">
+                                <div class="alert alert-dismissable" id='upload-notify'>
+                                    <button type="button" class="close" id="bt-upload-notify">&times;</button>
+                                    <label id='lb-msg-upload'></label>
+                                </div>
+
+                                <div class="form-group">
+                                    {{ form }}
+                                    <p class="help-block">Example block-level help text here.</p>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                                <button type="submit" class="btn btn-primary" name='action'>保存</button>
+                            </div>
+                        </form>
+                    </div><!-- /.modal-content -->
+                </div><!-- /.modal-dialog -->
+            </div>
+
+        </div>
+    </div>
+{% endblock %}
+{% block bodyjs %}
+    <script src="/static/js/jquery.dataTables.js"></script>
+    {{ django_context_varable }}
+    {% verbatim %}
+    <script id="tpl" type="text/x-handlebars-template">
+        {{#each func}}
+        <button type="button" class="btn btn-{{this.type}} btn-sm" onclick="{{this.fn}}">{{this.name}}</button>
+        {{/each}}
+    </script>
+    {% endverbatim %}
+    <script src="/static/js/handlebars-v3.0.1.js"></script>
+    <script src="/static/js/assets_trace.js?v=a53a06a6eefda4e12418d3ddb1bbaf39a07b7fdb"></script>
+{% endblock %}
+{% block css %}
+    <link href="/static/css/jquery.dataTables.css" rel="stylesheet" type="text/css">
+    <link href="/static/css/mycss.css" rel="stylesheet" type="text/css">
+{% endblock %}

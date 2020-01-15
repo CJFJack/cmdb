@@ -1,0 +1,397 @@
+{% extends 'template.html' %}
+
+{% block username %}
+    {{ head.username }}
+{% endblock %}
+
+{% block content %}
+    <div id="page-wrapper">
+        <div class="row">
+            <div class="col-lg-12">
+                <h1 class="page-header">{{ head.value }}</h1>
+                <h1 class="page-header" id="wse_id" style="display: none;">{{ head.wse }}</h1>
+                <input class="hidden" id="edit_client" value="{{ data.edit_client }}"/>
+                <input class="hidden" id="edit_server" value="{{ data.edit_server }}"/>
+                <input class="hidden" id="ops_edit" value="{{ data.ops_edit }}"/>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <div class="container">
+                                    <form role="form" class="form-horizontal">
+                                        <div class="form-group">
+                                            <label class="col-sm-12">申请人</label>
+                                            <div class="col-sm-6">
+                                                <input class="form-control" id="applicant" readonly="readonly"
+                                                       value="{{ data.applicant }}"/>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label class="col-sm-12" for="TextArea">标题</label>
+                                            <div class="col-sm-6">
+                                                {% if data.recommit %}
+                                                    <input class="form-control" id="title"
+                                                           value="{{ data.title }}"/>
+                                                {% else %}
+                                                    <input class="form-control" id="title" readonly="readonly"
+                                                           value="{{ data.title }}"/>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label class="col-sm-12" for="TextArea">更新内容</label>
+                                            <div class="col-sm-6">
+                                                <textarea class="form-control" id="content" rows="10"
+                                                          readonly="readonly">{{ data.content }}</textarea>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label class="col-sm-12" for="TextArea">项目</label>
+                                            <div class="col-sm-6">
+                                                <input class="form-control" id="project" readonly="readonly"
+                                                       value="{{ data.project }}"/>
+                                                <input class="form-control hidden" id="project_id" readonly="readonly"
+                                                       value="{{ data.project_id }}"/>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label class="col-sm-12" for="TextArea">地区</label>
+                                            <div class="col-sm-6">
+                                                <input class="form-control" id="area" readonly="readonly"
+                                                       value="{{ data.area }}"/>
+                                                <input class="form-control hidden" id="area_id" readonly="readonly"
+                                                       value="{{ data.area_id }}"/>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label class="col-sm-12" for="TextArea">起止时间(以北京时间为准)</label>
+                                            <div class="col-sm-2">
+                                                <input class="form-control" id="start_time" readonly="readonly"
+                                                       value="{{ data.start_time }}"/>
+                                            </div>
+                                            <div class="col-sm-2">
+                                                <input class="form-control" id="end_time" readonly="readonly"
+                                                       value="{{ data.end_time }}"/>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label class="col-sm-12" for="TextArea">更新区服说明</label>
+                                            <div class="col-sm-6">
+                                                <textarea class="form-control" id="server_list" rows="5"
+                                                          readonly="readonly">{{ data.server_list }}</textarea>
+                                            </div>
+                                        </div>
+
+                                        <hr>
+
+                                        {#                                        <div class="form-group" id="show_overview_server_list_v2">#}
+                                        {#                                            <label class="col-sm-12">更新的区服</label>#}
+                                        {#                                            <div class="col-sm-6">#}
+                                        {#                                                <select id="server_list_v2" multiple="multiple">#}
+                                        {#                                                    {% for gtype, gtype_fp_server_list in data.server_list.items %}#}
+                                        {#                                                        {% for pf, server_list in gtype_fp_server_list.items %}#}
+                                        {#                                                            {% for server in server_list %}#}
+                                        {#                                                                <option selected#}
+                                        {#                                                                        value={{ server.srv_id }} data-section={{ gtype }}/{{ pf }} data-srv={{ server.srv_id }} >{{ server.srv_name }};{{ server.srv_id }};{{ server.ip }}</option>#}
+                                        {#                                                            {% endfor %}#}
+                                        {#                                                        {% endfor %}#}
+                                        {#                                                    {% endfor %}#}
+                                        {#                                                </select>#}
+                                        {#                                            </div>#}
+                                        {#                                        </div>#}
+
+                                        <div class="form-group">
+                                            <label class="col-sm-12">区服范围</label>
+                                            <div class="col-sm-6">
+                                                {% if data.ops_edit %}
+                                                    <select class="form-control" id="server_range">
+                                                        <option selected disabled></option>
+                                                        {% for option in data.server_range_option %}
+                                                            <option value="{{ option.0 }}">{{ option.1 }}</option>
+                                                        {% endfor %}
+                                                    </select>
+                                                {% else %}
+                                                    <select class="form-control" disabled id="server_range">
+                                                        <option selected disabled
+                                                                value="{{ data.server_range }}">{{ data.server_range_text }}</option>
+                                                        <option value="all">全服</option>
+                                                        <option value="include">部分区服</option>
+                                                        <option value="exclude">排除区服</option>
+                                                    </select>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group hidden" id="div_server_content">
+                                            <label class="col-sm-12"
+                                                   for="TextArea">{{ data.server_range_text }}ID</label>
+                                            <div class="col-sm-6">
+                                                {% if data.ops_edit %}
+                                                    <textarea class="form-control" id="server_content"
+                                                              rows="5"
+                                                              placeholder="多条命令以行分隔，如:&#10;qufu_1&#10;qufu_2"></textarea>
+                                                {% else %}
+                                                    {% if data.server_range == 'exclude' %}
+                                                        <textarea class="form-control" id="server_content" rows="5"
+                                                                  readonly="readonly">{{ data.server_exclude_content }}</textarea>
+                                                    {% else %}
+                                                        <textarea class="form-control" id="server_content" rows="5"
+                                                                  readonly="readonly">{{ data.server_content }}</textarea>
+                                                    {% endif %}
+                                                {% endif %}
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group hidden" id="div_on_new_server">
+                                            <label class="col-sm-12">同步更新新服</label>
+                                            <div class="col-sm-6">
+                                                {% if data.ops_edit %}
+                                                    <input class="checkbox" id="on_new_server" type="checkbox"/>
+                                                {% else %}
+                                                    <input class="checkbox" id="on_new_server" type="checkbox"
+                                                           {% if data.on_new_server %}checked{% endif %} disabled/>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label class="col-sm-12" for="TextArea">前端版本号(同发布目录名)</label>
+                                            <div class="col-sm-12" id='create_update_version'>
+                                                {% if data.ops_edit %}
+                                                    <button type="button" id="bt-add"
+                                                            class="btn btn-outline btn-primary btn-xs">
+                                                        添加
+                                                    </button>
+                                                {% else %}
+                                                    {% if data.client_content %}
+                                                        {% for d in data.client_content %}
+                                                            <div class="form-group row update_content">
+                                                                {% if forloop.counter == 1 %}
+                                                                    {% if d.client_type == d.cdn_dir or d.client_type == '' %}
+                                                                        <label class="col-sm-2 col-form-label hidden"></label>
+                                                                    {% else %}
+                                                                        <label class="col-sm-2 col-form-label">客户端类型</label>
+                                                                    {% endif %}
+                                                                    <label class="col-sm-3 col-form-label">cdn根</label>
+                                                                    <label class="col-sm-2 col-form-label">cdn目录</label>
+                                                                    <label class="col-sm-2 col-form-label">版本号</label>
+                                                                    {% if d.client_type == d.cdn_dir or d.client_type == '' %}
+                                                                        <label class="col-sm-4 col-form-label">&nbsp;</label>
+                                                                    {% else %}
+                                                                        <label class="col-sm-2 col-form-label">&nbsp;</label>
+                                                                    {% endif %}
+                                                                {% endif %}
+                                                                {% if d.client_type == d.cdn_dir or d.client_type == '' %}
+                                                                    <div class="col-sm-2 hidden">
+                                                                        <input class="form-control client_type" readonly
+                                                                               value="{{ d.client_type }}">
+                                                                    </div>
+                                                                {% else %}
+                                                                    <div class="col-sm-2">
+                                                                        <input class="form-control client_type" readonly
+                                                                               value="{{ d.client_type }}">
+                                                                    </div>
+                                                                {% endif %}
+
+                                                                <div class="col-sm-3">
+                                                                    <input class="form-control cdn_root_url"
+                                                                           readonly
+                                                                           value="{{ d.cdn_root_url }}">
+                                                                </div>
+                                                                <div class="col-sm-2">
+                                                                    <input class="form-control cdn_dir" readonly
+                                                                           value="{{ d.cdn_dir }}">
+                                                                </div>
+                                                                <div class="col-sm-2">
+                                                                    <input class="form-control"
+                                                                           {% if not data.edit_client %}readonly{% endif %}
+                                                                           value="{{ d.version }}">
+                                                                </div>
+                                                                {% if d.client_type == d.cdn_dir or d.client_type == '' %}
+                                                                    <div class="alert alert-danger col-sm-4 show_update_content_msg"
+                                                                         style="display: none;">请选择更新cdn root url!
+                                                                    </div>
+                                                                {% else %}
+                                                                    <div class="alert alert-danger col-sm-2 show_update_content_msg"
+                                                                         style="display: none;">请选择更新cdn root url!
+                                                                    </div>
+                                                                {% endif %}
+                                                            </div>
+                                                        {% endfor %}
+                                                    {% else %}
+                                                        <input class="form-control" id="client_version"
+                                                               readonly="readonly" style="width: 49%"
+                                                               value="{{ data.client_version }}"/>
+                                                    {% endif %}
+                                                {% endif %}
+                                            </div>
+                                        </div>
+
+                                        <hr>
+
+                                        <div class="form-group">
+                                            <label class="col-sm-12" for="TextArea">后端版本号(同发布目录名)</label>
+                                            <div class="col-sm-6">
+                                                {% if data.edit_server %}
+                                                    <input class="form-control" id="server_version"
+                                                           value="{{ data.server_version }}"/>
+                                                {% else %}
+                                                    <input class="form-control" id="server_version" readonly="readonly"
+                                                           value="{{ data.server_version }}"/>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label class="col-sm-12" for="TextArea">是否执行跨服重排</label>
+                                            <div class="col-sm-6">
+                                                {% if data.edit_server %}
+                                                    <input class="checkbox" id="ask_reset" type="checkbox"/>
+                                                {% else %}
+                                                    <input disabled class="checkbox" id="ask_reset" type="checkbox"
+                                                           {% if data.ask_reset == 'yes' %}checked{% endif %}/>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group hidden" id="div_server_erlang">
+                                            <label class="col-sm-12" for="TextArea">跨服重排命令</label>
+                                            <div class="col-sm-6">
+                                                {% if data.edit_server %}
+                                                    <textarea class="form-control" id="server_erlang"
+                                                              rows="5"
+                                                              placeholder="多条命令以行分隔，如:&#10;command1&#10;command2">{{ data.server_erlang }}</textarea>
+                                                {% else %}
+                                                    <textarea class="form-control" id="server_erlang" rows="6"
+                                                              readonly="readonly">{{ data.server_erlang }}</textarea>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label class="col-sm-12" for="TextArea">后端注意事项</label>
+                                            <div class="col-sm-6">
+                                                {% if data.edit_server %}
+                                                    <textarea class="form-control" id="server_attention"
+                                                              rows="6">{{ data.server_attention }}</textarea>
+                                                {% else %}
+                                                    <textarea class="form-control" id="server_attention" rows="6"
+                                                              readonly="readonly">{{ data.server_attention }}</textarea>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+
+                                        <hr>
+
+                                        {#                                        {% if not web_cdn_api_config %}#}
+                                        {#                                            <div class="form-group">#}
+                                        {#                                                <label class="col-sm-12" for="TextArea">前端版本号(同发布目录名)</label>#}
+                                        {#                                                <div class="col-sm-6">#}
+                                        {#                                                    {% if data.edit_client %}#}
+                                        {#                                                        <input class="form-control" id="client_version"#}
+                                        {#                                                               value="{{ data.client_version }}"/>#}
+                                        {#                                                    {% else %}#}
+                                        {#                                                        <input class="form-control" id="client_version"#}
+                                        {#                                                               readonly="readonly"#}
+                                        {#                                                               value="{{ data.client_version }}"/>#}
+                                        {#                                                    {% endif %}#}
+                                        {#                                                </div>#}
+                                        {#                                            </div>#}
+                                        {#                                        {% endif %}#}
+
+                                        <div class="form-group">
+                                            <label class="col-sm-12" for="TextArea">前端注意事项</label>
+                                            <div class="col-sm-6">
+                                                {% if data.edit_client %}
+                                                    <textarea class="form-control" id="client_attention"
+                                                              rows="6">{{ data.client_attention }}</textarea>
+                                                {% else %}
+                                                    <textarea class="form-control" id="client_attention" rows="6"
+                                                              readonly="readonly">{{ data.client_attention }}</textarea>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label class="col-sm-12">审核流程步骤</label>
+                                            <div class="col-sm-6">
+                                                <div class="ystep1"></div>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label class="col-sm-1">审批意见</label>
+                                            <div class="col-sm-6">
+                                                {% if data.has_approved %}
+                                                    <p>{{ data.state_value }}</p>
+                                                {% else %}
+                                                    {% for t in transitions %}
+                                                        <label class="radio-inline {% if t.condition == '同意' %}text-success{% else %}text-danger{% endif %}">
+                                                            <input type="radio" name='transitions'
+                                                                   id={{ t.id }} condition={{ t.condition }} {% if t.condition == '同意' %}checked{% endif %}>{{ t.condition }}
+                                                        </label>
+                                                    {% endfor %}
+                                                {% endif %}
+                                            </div>
+                                        </div>
+
+                                        {% if not data.has_approved %}
+                                            <div class="form-group">
+                                                <label class="col-sm-12">审批意见(可选)</label>
+                                                <div class="col-sm-6">
+                                                    <textarea class="form-control" rows="3" id='opinion'
+                                                              placeholder="你拒绝本次申请的理由是?"></textarea>
+                                                </div>
+                                            </div>
+                                        {% endif %}
+
+                                        {% if data.has_approved %}
+                                        {% else %}
+                                            <!--<div class="form-group">
+                                              <label class="checkbox-inline col-sm-12">
+                                                <div class="col-sm-6">
+                                                  <input type="checkbox" id='sendmail'>邮件通知
+                                                </div>
+                                              </label>
+                                            </div>-->
+                                            <div class="form-group">
+                                                <div class="col-sm-6">
+                                                    <button type="button" class="btn btn-primary" id='bt-commit'>提交
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        {% endif %}
+                                    </form>
+                                    <hr>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block bodyjs %}
+    <script src="/static/js/version_update_workflow_approve_v2.js?v=20191016001"></script>
+    <script src="/static/js/ystep.js"></script>
+    <script src="/static/js/jquery.tree-multiselect.js"></script>
+    <script src="/static/js/showloading.min.js"></script>
+{% endblock %}
+{% block css %}
+    <link href="/static/css/ystep.css" rel="stylesheet" type="text/css">
+    <!--<link href="/static/css/load.css" rel="stylesheet" type="text/css">-->
+    <link href="/static/css/jquery.tree-multiselect.css" rel="stylesheet" type="text/css">
+    <link href="/static/css/select2-bootstrap.css" rel="stylesheet" type="text/css">
+    <link href="/static/css/showloading.css" rel="stylesheet" media="screen">
+{% endblock %}

@@ -1,0 +1,230 @@
+{% extends 'template.html' %}
+
+{% block username %}
+    {{ request.user.username }}
+{% endblock %}
+
+{% block content %}
+    <div id="page-wrapper">
+        <div class="row">
+            <div class="col-lg-12">
+                <h1 class="page-header">修改开服时间管理</h1>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <div class="btn-group">
+                            <a>
+                                <button id='bt-search' type="button" class="btn btn-success">高级搜索</button>
+                            </a>
+                            <a>
+                                <button id='bt-reset' type="button" class="btn btn-danger">重置高级搜索</button>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="panel-body">
+                        <div id="div-search" class="hide">
+                            <table id="high-search" style="width: 40%; margin: 0 auto 2em auto;" border="0"
+                                   cellpadding="3" cellspacing="0">
+                                <thead>
+                                <tr>
+                                    <th>目标</th>
+                                    <th>内容</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr id="_filter_uuid" data-column="2">
+                                    <td>uuid</td>
+                                    <td align="center">
+                                        <input style="width:100%" class="form-control column_filter"
+                                               id="filter_uuid" type="text">
+                                    </td>
+                                </tr>
+                                <tr id="_filter_project" data-column="2">
+                                    <td>游戏项目</td>
+                                    <td align="center">
+                                        <select id="filter_project" class="filter_select2 form-control"
+                                                style="width: 100%">
+                                            <option value="全部" selected="selected">全部</option>
+                                            {% for gp in game_project %}
+                                                <option value={{ gp.id }}>{{ gp.text }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </td>
+                                </tr>
+                                <tr id="_filter_game_server" data-column="2">
+                                    <td>web区服id</td>
+                                    <td align="center">
+                                        <input style="width:100%" class="form-control column_filter"
+                                               id="filter_game_server" type="text">
+                                    </td>
+                                </tr>
+                                <tr id="_filter_status" data-column="2">
+                                    <td>状态</td>
+                                    <td align="center">
+                                        <select id="filter_status" class="filter_select2 form-control"
+                                                style="width: 100%">
+                                            <option value="全部" selected="selected">全部</option>
+                                            {% for status in status_list %}
+                                                <option value={{ status.id }}>{{ status.text }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </td>
+                                </tr>
+                                <tr id="_filter_create_time" data-column="2">
+                                    <td>创建时间</td>
+                                    <td align="center">
+                                        <div class="form-group">
+                                            <div class="col-sm-5">
+                                                <input class="flatpickr flatpickr-input form-control" type="text"
+                                                       placeholder="选择开始时间"
+                                                       data-id="datetime" id="filter_start_create_time">
+                                            </div>
+                                            <label class="col-md-1 control-label">到</label>
+                                            <div class="col-sm-6">
+                                                <input class="flatpickr flatpickr-input form-control" type="text"
+                                                       placeholder="选择结束时间"
+                                                       data-id="datetime" id="filter_end_create_time">
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr id="_filter_off_time" data-column="2">
+                                    <td>开服时间</td>
+                                    <td align="center">
+                                        <div class="form-group">
+                                            <div class="col-sm-5">
+                                                <input class="flatpickr flatpickr-input form-control" type="text"
+                                                       placeholder="选择开始时间"
+                                                       data-id="datetime" id="filter_start_open_time">
+                                            </div>
+                                            <label class="col-md-1 control-label">到</label>
+                                            <div class="col-sm-6">
+                                                <input class="flatpickr flatpickr-input form-control" type="text"
+                                                       placeholder="选择结束时间"
+                                                       data-id="datetime" id="filter_end_open_time">
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <table id="mytable" class="display" width="100%" cellspacing="0">
+                            <thead>
+                            <tr>
+                                <th>id</th>
+                                <th>创建时间</th>
+                                <th>uuid</th>
+                                <th>修改区服</th>
+                                <th>修改开服时间</th>
+                                <th>任务状态</th>
+                                <th>操作</th>
+                                <th>详细</th>
+                                <th>日志</th>
+                            </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- 管理员标志-->
+    <div id="is_superuser" data-is-superuser="{{ request.user.is_superuser }}"></div>
+
+    <!-- 编辑modal-->
+    <div class="modal fade" id="myModal" tabindex="" role="dialog" aria-labelledby="myModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title" id="myModalLabel"></h4>
+                </div>
+                <div class="modal-body">
+                    <input style="display: none" id="id_edit">
+                    <div class="alert alert-danger alert-dismissable" id='modal-notify'>
+                        <button type="button" class="close" id="bt-modal-notify">&times;</button>
+                        <label id='lb-msg'></label>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-sm-3 control-label">任务状态</label>
+                        <div class="col-sm-8">
+                            <select id="edit_status" class="form-control" style="width: 100%">
+                                <option></option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-sm-3 control-label">修改开服时间</label>
+                        <div class="col-sm-8">
+                            <input class="flatpickr flatpickr-input form-control" type="text"
+                                   placeholder="选择开服时间"
+                                   data-id="datetime" id="edit_open_time" name="edit_open_time">
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                    <button id='bt-save' type="button" class="btn btn-primary" onclick="save()">保存</button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+
+    <div class="modal fade" id="myModal2" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <input style="display: none" id="id_execute">
+                    <h5 id="id_confirm"></h5>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                    <button id='bt-confirm' type="button" class="btn btn-primary" onclick="execute()">确认</button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+
+    <div class="modal fade" id="myModal3" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <h5 id="id_notice"></h5>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+
+{% endblock %}
+{% block bodyjs %}
+    {{ django_context_varable }}
+    {% verbatim %}
+    <script id="tpl" type="text/x-handlebars-template">
+        {{#each func}}
+        <button type="button" class="btn btn-{{this.type}} btn-sm" onclick="{{this.fn}}">{{this.name}}</button>
+        {{/each}}
+    </script>
+    {% endverbatim %}
+    <script src="/static/js/handlebars-v3.0.1.js"></script>
+    <script src="/static/js/jquery.dataTables.js"></script>
+    <script src="/static/js/flatpickr.js"></script>
+    <script src="/static/js/zh.js"></script>
+    <script src="/static/js/modify_srv_open_time_schedule_list.js?v=20190621001"></script>
+    <script src="/static/js/reconnecting-websocket.js"></script>
+{% endblock %}
+{% block css %}
+    <link href="/static/css/jquery.dataTables.css" rel="stylesheet" type="text/css">
+    <link href="/static/css/flatpickr.css" rel="stylesheet" type="text/css">
+    <link href="/static/css/flatpickr_material_green.css" rel="stylesheet" type="text/css">
+    <link href="/static/css/select2-bootstrap.css" rel="stylesheet" type="text/css">
+{% endblock %}

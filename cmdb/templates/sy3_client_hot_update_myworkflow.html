@@ -1,0 +1,150 @@
+{%extends 'template.html'%}
+
+{%block username%}
+{{head.username}}
+{%endblock%}
+
+{%block content%}
+<div id="page-wrapper">
+    <div class="row">
+        <div class="col-lg-12">
+            <h1 class="page-header">{{head.value}}</h1>
+            <h1 class="page-header" id="workflow_id" style="display: none;">{{head.workflow}}</h1>
+            <h1 class="page-header" id="wse_id" style="display: none;">{{data.id}}</h1>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                  <div class="row">
+                    <div class="col-lg-6">
+                        <div class="container">
+                          <form role="form" class="form-horizontal">
+                            <div class="form-group">
+                              <label class="col-sm-12">申请人</label>
+                              <div class="col-sm-6">
+                                <input type="text" readonly class="form-control" id="applicant" value={{data.applicant.username}}>
+                              </div>
+                            </div>
+                            <div class="form-group">
+                              <label class="col-sm-12" for="TextArea">标题</label>
+                              <div class="col-sm-6">
+                                  <input type="text" readonly class="form-control" id="title" value={{data.title}}>
+                              </div>
+                            </div>
+                            <div class="form-group">
+                              <label class="col-sm-12" for="TextArea">原因</label>
+                              <div class="col-sm-6">
+                                  <textarea class="form-control" id="reason" readonly rows="5">{{data.reason}}</textarea>
+                              </div>
+                            </div>
+                            {% if data.attention %}
+                                <div class="form-group" style="display: none">
+                                  <label class="col-sm-12" for="TextArea">注意事项(可选)</label>
+                                  <div class="col-sm-6">
+                                      <textarea class="form-control" id="attention" readonly rows="5">{{data.attention}}</textarea>
+                                  </div>
+                                </div>
+                            {% endif %}
+                            <br>
+
+                            <div class="form-group row">
+                                  <label class="col-sm-2 col-form-label">项目地区</label>
+                                  <div class="col-sm-3">
+                                      <input type="text" readonly class="form-control" id="project" value="{{data.project}}">
+                                  </div>
+                                  <div class="col-sm-3">
+                                      <input type="text" readonly class="form-control" id="area_name" value="{{data.area_name}}">
+                                  </div>
+                            </div>
+                            <br>
+                            
+                            {% for cdn_client_version in data.content %}
+                              {% if forloop.counter == 1 %}
+                                <div class="form-group cdn_version row">
+                                  <label class="col-sm-12 col-form-label">
+                                    更新的条目
+                                  </label>
+                                  <div class="col-sm-3">
+                                    <input class="form-control" readonly="readonly" value={{cdn_client_version.client_type}}></input>
+                                  </div>
+                                  <div class="col-sm-3">
+                                    <input class="form-control" readonly="readonly" value={{cdn_client_version.cdn_root_url}}></input>
+                                  </div>
+                                  <div class="col-sm-3">
+                                    <input class="form-control" readonly="readonly" value={{cdn_client_version.cdn_dir}}></input>
+                                  </div>
+                                  <div class="col-sm-3">
+                                    <input class="form-control" readonly="readonly" value={{cdn_client_version.version}}></input>
+                                  </div>
+                                </div>
+                              {% else %}
+                                <div class="form-group cdn_version">
+                                  <div class="col-sm-3">
+                                    <input class="form-control" readonly="readonly" value={{cdn_client_version.client_type}}></input>
+                                  </div>
+                                  <div class="col-sm-3">
+                                    <input class="form-control" readonly="readonly" value={{cdn_client_version.cdn_root_url}}></input>
+                                  </div>
+                                  <div class="col-sm-3">
+                                    <input class="form-control" readonly="readonly" value={{cdn_client_version.cdn_dir}}></input>
+                                  </div>
+                                  <div class="col-sm-3">
+                                    <input class="form-control" readonly="readonly" value={{cdn_client_version.version}}></input>
+                                  </div>
+                                </div>
+                              {% endif %}
+                            {% endfor %}
+
+                            <div class="form-group">
+                                  <label class="col-sm-12" for="TextArea">
+                                    和后端一起绑定热更新代号及先后顺序
+                                  </label>
+                                  <div class="col-sm-3">
+                                      <input class="form-control" id="pair_code" value={{data.pair_code}} readonly="readonly"></input>
+                                  </div>
+                                  <div class="col-sm-3">
+                                      <input class="form-control" id="order" value={{data.order}} readonly="readonly"></input>
+                                  </div>
+                            </div>
+
+                            <div class="form-group" id="ystep1">
+                              <label class="col-sm-12">审核流程步骤</label>
+                              <div class="col-sm-6">
+                                <div class="ystep1"></div>
+                              </div>
+                            </div>
+
+                            {% if data.opinion %}
+                              <div class="form-group">
+                                <label class="col-sm-12" for="TextArea">审批意见</label>
+                                <div class="col-sm-6">
+                                    <textarea class="form-control" rows="3" id="opinion" readonly="readonly">{{data.opinion}}</textarea>
+                                </div>
+                              </div>
+                            {% endif %}
+                            
+                          </form>
+                          <hr>
+                        </div>
+                    </div>
+                  </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{%endblock%}
+{%block bodyjs%}
+    <script src="/static/js/sy3_client_hot_update_myworkflow.js"></script>
+    <script src="/static/js/flatpickr.js"></script>
+    <script src="/static/js/zh.js"></script>
+    <script src="/static/js/jquery.tree-multiselect.js"></script>
+    <script src="/static/js/ystep.js"></script>
+{%endblock%}
+{%block css%}
+    <link href="/static/css/flatpickr.css" rel="stylesheet" type="text/css">
+    <link href="/static/css/jquery.tree-multiselect.css" rel="stylesheet" type="text/css">
+    <link href="/static/css/ystep.css" rel="stylesheet" type="text/css">
+{%endblock%}

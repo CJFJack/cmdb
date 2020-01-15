@@ -1,0 +1,191 @@
+{% extends 'template.html' %}
+
+{% block username %}
+    {{ head.username }}
+{% endblock %}
+
+{% block content %}
+    <div id="page-wrapper">
+        <div class="row">
+            <div class="col-lg-12">
+                <h1 class="page-header">{{ head.value }}</h1>
+                <h1 class="page-header" id="wse_id" style="display: none;">{{ data.id }}</h1>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <div class="container">
+                                    <form role="form" class="form-horizontal">
+                                        <div class="form-group">
+                                            <label class="col-sm-12">申请人</label>
+                                            <div class="col-sm-6">
+                                                <select id="applicant" style="width: 100%" disabled>
+                                                    <option value={{ data.applicant_id }} selected="selected">{{ data.applicant }}</option>
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label class="col-sm-12" for="TextArea">标题</label>
+                                            <div class="col-sm-6">
+                                                {% if data.recommit %}
+                                                    <input class="form-control" id="title"
+                                                           value={{ data.title }}>
+                                                {% else %}
+                                                    <input class="form-control" id="title" readonly="readonly"
+                                                           value={{ data.title }}>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-sm-12" id="address_type">MAC地址</label>
+                                            <div class="col-sm-6">
+                                                <input class="form-control" readonly="readonly" id="mac"
+                                                       value={{ data.mac }}>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-sm-12" for="TextArea">申请理由</label>
+                                            <div class="col-sm-6">
+                                                {% if data.recommit %}
+                                                    <textarea class="form-control"
+                                                              id="reason">{{ data.reason }}</textarea>
+                                                {% else %}
+                                                    <textarea class="form-control" id="reason"
+                                                              readonly="readonly">{{ data.reason }}</textarea>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                        <div class="form-group" id="wifi-name">
+                                            <label class="col-sm-12" for="TextArea">wifi名称</label>
+                                            <div class="col-sm-6">
+                                                <input class="form-control" id="name"
+                                                       value={{ data.name }} readonly>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-sm-12">审核流程步骤</label>
+                                            <div class="col-sm-6">
+                                                <div class="ystep1"></div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group" id='append_before'>
+                                            <div class="col-sm-6">
+                                                {% if data.recommit %}
+                                                    <button type="button" class="btn btn-primary" id='bt-commit'>提交
+                                                    </button>
+                                                {% endif %}
+                                                {% if data.is_handle and not data.is_execute %}
+                                                    <button type="button" class="btn btn-success" id='bt-load'>完成
+                                                    </button>
+                                                {% endif %}
+                                                {% if data.can_execute %}
+                                                    <button type="button" class="btn btn-success" id='bt-execute'>执行
+                                                    </button>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                        {% if data.opinion %}
+                                            <div class="form-group">
+                                                <label class="col-sm-12" for="TextArea">审批意见</label>
+                                                <div class="col-sm-6">
+                                                    <textarea class="form-control" rows="3" id="opinion"
+                                                              readonly="readonly">{{ data.opinion }}</textarea>
+                                                </div>
+                                            </div>
+                                        {% else %}
+                                            <div class="form-group">
+                                                <label class="col-sm-12" for="TextArea">审批意见</label>
+                                                <div class="col-sm-6">
+                                                    <textarea class="form-control" rows="3" id="opinion"
+                                                              readonly="readonly">无</textarea>
+                                                </div>
+                                            </div>
+                                        {% endif %}
+                                        {% if data.wifi_add_result %}
+                                            <div class="form-group">
+                                                <label class="col-sm-12" for="TextArea">wifi开通结果</label>
+                                                <div class="col-sm-6">
+                                                    <textarea class="form-control" rows="3" id="wifi_add_result"
+                                                              readonly="readonly">{{ data.wifi_add_result }}</textarea>
+                                                </div>
+                                            </div>
+                                        {% endif %}
+                                    </form>
+                                    <hr>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal fade" id="myModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title" id="myModalLabel">执行中...请勿关闭或者刷新页面</h4>
+                        </div>
+                        <div class="modal-body">
+                            <form class="form-horizontal" role="form">
+                                {% if data.can_execute %}
+                                    {% if not data.has_approved %}
+                                        <div class="form-group" id='load' style="display: none;">
+                                            <label class="col-sm-12"></label>
+                                            <div class="col-sm-12">
+                                                <div class="ball"></div>
+                                            </div>
+                                        </div>
+                                    {% endif %}
+                                {% endif %}
+                                <div class="form-group" id='show-msg'>
+                                    <label class="col-sm-3 control-label"></label>
+                                    <div class="col-sm-8">
+                                        <p id='load-msg'></p>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="modal-footer" id="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                        </div>
+                    </div><!-- /.modal-content -->
+                </div><!-- /.modal-dialog -->
+            </div>
+
+        </div>
+    </div>
+{% endblock %}
+{% block bodyjs %}
+    <script src="/static/js/wifi_myworkflow.js?v=20190426001"></script>
+    <script src="/static/js/ystep.js"></script>
+    <script>
+        //若数据为IP地址，则标题为”IP地址“，若数据为MAC地址，则标题为”MAC地址“
+        $(document).ready(function () {
+            let regex = "^((25[0-5]|2[0-4]\\d|((1\\d{2})|([1-9]?\\d)))\\.){3}(25[0-5]|2[0-4]\\d|((1\\d{2})|([1-9]?\\d)))$";
+            let regexp = new RegExp(regex);
+            let address = $("#mac").val();
+
+            if (regexp.test(address)) {
+                $("#address_type").text("IP地址");
+            }
+        });
+    </script>
+    <script>
+        //若数据wifi名称为Null，则为网络问题申请，则不显示该段落
+        $(document).ready(function () {
+            let name = $("#name").val();
+            if (name == "Null") {
+                $("#wifi-name").hide();
+            }
+        });
+    </script>
+{% endblock %}
+{% block css %}
+    <link href="/static/css/ystep.css" rel="stylesheet" type="text/css">
+    <link href="/static/css/load.css" rel="stylesheet" type="text/css">
+{% endblock %}

@@ -1,0 +1,84 @@
+{%extends 'template.html'%}
+
+{%block username%}
+{{head.username}}
+{%endblock%}
+
+{%block content%}
+<div id="page-wrapper">
+    <div class="row">
+        <div class="col-lg-12">
+            <h1 class="page-header">{{head.value}}</h1>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="panel panel-green" id="show_result_panel">
+                <div class="panel-heading">
+                    更新进度<span id="show_result"></span>
+                </div>
+                <div class="panel-body">
+                    <div id="container"></div>
+                </div>
+                <a href="#">
+                    <div class="panel-footer">
+                        <span class="pull-left" id="show_result_success">正在更新中......</span>
+                        <div class="clearfix"></div>
+                    </div>
+                </a>
+            </div>
+            <!-- /.col-lg-4 -->
+        </div>
+        <div class="col-lg-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <div class="btn-group">
+                        <a><button id='bt-failed' type="button" class="btn btn-outline btn-danger btn-sm">查看失败区服</button></a>
+                        <a><button id='bt-success' type="button" class="btn btn-outline btn-success btn-sm">查看成功区服</button></a>
+                        <a><button id='bt-clear' type="button" class="btn btn-outline btn-primary btn-sm">重置过滤区服</button></a>
+                    </div>
+                </div>
+                <div class="panel-body">
+                      <table id="mytable" class="display" width="100%" cellspacing="0">
+                          <thead>
+                              <tr>
+                                  <th>展开详细</th>
+                                  <th>游戏服类型</th>
+                                  <th>平台名</th>
+                                  <th>区服名</th>
+                                  <th>区服ID</th>
+                                  <th>IP</th>
+                                  <!--<th>更新结果</th>-->
+                                  <th>更新状态</th>
+                                  <!--<th>erl结果</th>-->
+                                  <th>erl状态</th>
+                                  <th>更新状态隐藏</th>
+                                  <th>erl状态隐藏</th>
+                              </tr>
+                          </thead>
+                      </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{%endblock%}
+{%block bodyjs%}
+    <script src="/static/js/jquery.dataTables.js" ></script>
+    {{ django_context_varable }}
+    {% verbatim %}
+    <script id="tpl" type="text/x-handlebars-template">
+          {{#each func}}
+          <button type="button" class="btn btn-{{this.type}} btn-sm" onclick="{{this.fn}}">{{this.name}}</button>
+          {{/each}}
+    </script>
+    {% endverbatim %}
+    <script src="/static/js/handlebars-v3.0.1.js"></script>
+    <script src="/static/js/progressbar.js"></script>
+    <script src="/static/js/reconnecting-websocket.js"></script>
+    <script src="/static/js/hot_server_detail.js?v=20190621001"></script>
+{%endblock%}
+{%block css%}
+<link href="/static/css/jquery.dataTables.css" rel="stylesheet" type="text/css">
+<link href="/static/css/hot_server_detail.css?v=dsfj0jergn0gjwfklsf2tu20932" rel="stylesheet" type="text/css">
+{%endblock%}

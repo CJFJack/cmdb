@@ -1,0 +1,194 @@
+{%extends 'template.html'%}
+
+{%block username%}
+{{head.username}}
+{%endblock%}
+
+{%block content%}
+<div id="page-wrapper">
+    <div class="row">
+        <div class="col-lg-12">
+            <h1 class="page-header">{{head.value}}</h1>
+            <input type="hidden" class="form-control " id="group_id" value= {{ head.group_id }}>
+            <input type="hidden" class="form-control " id="upper_group_leader" value= {{ data.upper_group_leader }}>
+            <input type="hidden" class="form-control " id="is_superuser" value= {{ request.user.is_superuser }}>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <div class="btn-group">
+                      {% if request.user.is_superuser %}
+                      <a>
+                        <button id='bt-add' type="button" class="btn btn-primary" aria-label="Left Align">
+                          <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>增加部门
+                        </button>
+                      </a>
+                      {% endif %}
+
+                      {% if request.user.is_superuser %}
+                      <a>
+                        <button id='bt-del' data-text="确定删除部门? 0个" type="button" class="btn btn-danger" aria-label="Left Align">
+                          <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>删除部门
+                        </button>
+                      </a>
+                      {% endif %}
+
+                      <a>
+                       <button id='bt-org' type="button" class="btn btn-default" aria-label="Left Align">
+                          <span class="glyphicon glyphicon-indent-left" aria-hidden="true">组织架构图</span>
+                        </button>
+                      </a>
+                    </div>
+                </div>
+                <div class="panel-body">
+                      <table id="mytable" class="display" width="100%" cellspacing="0">
+                          <thead>
+                              <tr>
+                                  <th class="center sorting_disabled">
+                                    <label class="pos-rel">
+                                      <input id='chb-all' type="checkbox"/>
+                                    </label>
+                                  </th>
+                                  <th>组id</th>
+                                  <th>所在公司</th>
+                                  <th>部门名称</th>
+                                  <th>上级部门</th>
+                                  <th>部门负责人</th>
+                                  <th>游戏项目</th>
+                                  <th>是否公共部门</th>
+                                  <th>操作</th>
+                              </tr>
+                          </thead>
+                      </table>
+                </div>
+            </div>
+        </div>
+        <!-- Modal -->
+        <div class="modal fade" id="myModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel"></h4>
+              </div>
+              <div class="modal-body">
+                <div class="alert alert-danger alert-dismissable" id='modal-notify'>
+                  <button type="button" class="close" id="bt-modal-notify">&times;</button>
+                  <label id='lb-msg'></label>
+                </div>
+                <form class="form-horizontal" role="form">
+                  <div class="form-group" id="show_id">
+                      <label class="col-sm-3 control-label">id</label>
+                      <div class="col-sm-8">
+                        <input type="text" class="form-control " id="id">
+                      </div>
+                  </div>
+                  <div class="form-group">
+                      <label class="col-sm-3 control-label">部门名称</label>
+                      <div class="col-sm-8">
+                        <input type="text" class="form-control " id="name">
+                      </div>
+                  </div>
+                  <div class="form-group">
+                    <label class="col-sm-3 control-label">所在公司</label>
+                    <div class="col-sm-8">
+                      <select id="company" style="width: 100%">
+                        <option selected="selected" value="0">所在公司</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label class="col-sm-3 control-label">父级部门</label>
+                    <div class="col-sm-8">
+                      <select id="parent_group" style="width: 100%">
+                        <option selected="selected" value="0">无</option>
+                      </select>
+                    </div>
+                      <button class="button-primay" id="reset_parent_group" type="button">X</button>
+                  </div>
+                  <div class="form-group">
+                    <label class="col-sm-3 control-label">部门负责人</label>
+                    <div class="col-sm-8">
+                      <select id="group_leader" style="width: 100%">
+                        <option selected="selected" value="0">选择负责人</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                      <label class="col-sm-3 control-label">是否公共部门</label>
+                      <div class="col-sm-8">
+                        <label class="radio-inline">
+                          <input type="radio" name="is_public" value="true" /> 是
+                        </label>
+                        <label class="radio-inline">
+                          <input type="radio" name="is_public" checked="checked" value="false" /> 否
+                        </label>
+                      </div>
+                  </div>
+                </form>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button id='bt-save' type="button" class="btn btn-primary">保存</button>
+              </div>
+            </div><!-- /.modal-content -->
+          </div><!-- /.modal-dialog -->
+        </div><!-- /.modal -->
+        <div class="modal fade" id="Modal-file" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">组织架构图</h4>
+              </div>
+              <div class="modal-body">
+                <form role="form" class="form-horizontal">
+                    <select id="demo1" multiple="multiple" style="display: none">
+                      <!--<option value="运维部" data-section="广州创娱/产品研发部" selected="selected">运维部</option>
+                      <option value="运营部" data-section="广州创娱/产品研发部" selected="selected">运营部</option>
+                      <option value="管理分组1" data-section="广州创娱/产品研发部/前端技术部" selected="selected" data-linkurl="<a href='/users/group_section/?group_id=45'>管理分组1</a>">管理分组1</option>
+                      <option value="管理分组12" data-section="广州创娱/产品研发部/前端技术部" selected="selected">管理分组12</option>
+                      <option value=OA组 data-section=广州创娱/产品研发部/前端技术部 data-linkurl="<a href='/users/group_section/?group_id=45'>OA组</a>">OA组</option>
+                      <option value="心源-前端技术部" data-section="广州创娱/心源工作室" selected="selected">心源-前端技术部</option>
+                      <option value="美术中心" data-section="广州创娱" selected="selected">美术中心</option>
+                      <option value="人事行政部" data-section="广州创娱" selected="selected">人事行政部</option>
+                      <option value="商务部" data-section="广州创娱" selected="selected">商务部</option>
+                      <option value="财务部" data-section="广州创娱" selected="selected">财务部</option>
+                      <option value="行政部" data-section="广州创娱" selected="selected">行政部</option>
+                      <option value="心源-后端技术部" data-section="广州创娱/心源工作室" selected="selected">心源-后端技术部</option>-->
+                    </select>
+                    <p id='before_group_org' style="display: none">获取中...</p>
+                </form>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <!--<button type="submit" class="btn btn-primary" name='action'>保存</button>-->
+              </div>
+            </div><!-- /.modal-content -->
+          </div><!-- /.modal-dialog -->
+        </div>
+    </div>
+</div>
+{%endblock%}
+{%block bodyjs%}
+    <script src="/static/js/jquery.dataTables.js" ></script>
+    {{ django_context_varable }}
+    {% verbatim %}
+    <script id="tpl" type="text/x-handlebars-template">
+          {{#each func}}
+          <button type="button" class="btn btn-{{this.type}} btn-sm" onclick="{{this.fn}}">{{this.name}}</button>
+          {{/each}}
+    </script>
+    {% endverbatim %}
+    <script src="/static/js/handlebars-v3.0.1.js"></script>
+    <script src="/static/js/group_list.js?v=116ea4cf71704e32ace48d50523410ee8491d823"></script>
+    <script src="/static/js/jquery.tree-multiselect.js"></script>
+{%endblock%}
+{%block css%}
+<link href="/static/css/jquery.dataTables.css" rel="stylesheet" type="text/css">
+<link href="/static/css/mycss.css" rel="stylesheet" type="text/css">
+<link href="/static/css/jquery.tree-multiselect.css?v=116ea4cf71704e32ace48d50523410ee8491d823" rel="stylesheet" type="text/css">
+<link href="/static/css/group_list.css?v=a71685d713d10d9023261903ed6947e582f6916c" rel="stylesheet" type="text/css">
+{%endblock%}

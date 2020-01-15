@@ -1,0 +1,188 @@
+{% extends 'template.html' %}
+
+{% block username %}
+    {{ head.username }}
+{% endblock %}
+
+{% block content %}
+    <div id="page-wrapper">
+        <div class="row">
+            <div class="col-lg-12">
+                <h1 class="page-header">{{ head.value }}</h1>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="panel panel-default">
+                    {% if request.user.is_superuser %}
+                        <div class="panel-heading">
+                            <div class="btn-group">
+                                <a>
+                                    <button id='bt-add' type="button" class="btn btn-primary">增加</button>
+                                </a>
+                                <a>
+                                    <button id='bt-del' data-text="确定删除数据库实例? 0个" type="button" class="btn btn-danger">
+                                        删除
+                                    </button>
+                                </a>
+                            </div>
+                        </div>
+                    {% endif %}
+                    <div class="panel-body">
+                        <table id="mytable" class="display" width="100%" cellspacing="0">
+                            <thead>
+                            <tr>
+                                <th class="center sorting_disabled">
+                                    <label class="pos-rel">
+                                        <input id='chb-all' type="checkbox"/>
+                                    </label>
+                                </th>
+                                <th>id</th>
+                                <th>项目</th>
+                                <th>地区</th>
+                                <th>用途</th>
+                                <th>地址</th>
+                                <th>端口</th>
+                                <th>帐号</th>
+                                <th>白名单IP</th>
+                                <th>状态</th>
+                                <th>操作</th>
+                            </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modal -->
+            <div class="modal fade" id="myModal" role="dialog" aria-labelledby="myModalLabel"
+                 aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                            <h4 class="modal-title" id="myModalLabel"></h4>
+                        </div>
+                        <div class="modal-body">
+                            <div class="alert alert-danger alert-dismissable" id='modal-notify'>
+                                <button type="button" class="close" id="bt-modal-notify">&times;</button>
+                                <label id='lb-msg'></label>
+                            </div>
+                            <form class="form-horizontal" role="form">
+                                <input id="id" class="hidden" value="">
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">项目</label>
+                                    <div class="col-sm-8">
+                                        <select id="project" style="width: 100%">
+                                            <option value="0" selected disabled>请选择项目</option>
+                                            {% for p in projects %}
+                                                <option value="{{ p.id }}">{{ p.project_name }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">地区</label>
+                                    <div class="col-sm-8">
+                                        <select id="cmdb_area" style="width: 100%">
+                                            <option value="0" selected disabled>请选择地区</option>
+                                            {% for a in areas %}
+                                                <option value="{{ a.id }}">{{ a.chinese_name }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">用途</label>
+                                    <div class="col-sm-8">
+                                        <input id="purpose" class="form-control" placeholder="请填写用途">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">主机地址</label>
+                                    <div class="col-sm-8">
+                                        <input id="host" class="form-control" placeholder="请填写主机地址">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">端口</label>
+                                    <div class="col-sm-8">
+                                        <input id="port" class="form-control" placeholder="请填写端口">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">用户</label>
+                                    <div class="col-sm-8">
+                                        <input id="user" class="form-control" placeholder="请填写用户">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">密码</label>
+                                    <div class="col-sm-8">
+                                        <input id="password" type="password" class="form-control" placeholder="请填写密码">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">白名单</label>
+                                    <div class="col-sm-8">
+                                        <input id="white_list" class="form-control" placeholder="请填写白名单，用英文逗号分隔">
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                            <button id='bt-save' type="button" class="btn btn-primary">保存</button>
+                        </div>
+                    </div><!-- /.modal-content -->
+                </div><!-- /.modal-dialog -->
+            </div><!-- /.modal -->
+
+
+            <!-- Modal -->
+            <div class="modal fade" id="myModalHistory" role="dialog" aria-labelledby="myModalLabelHistory"
+                 aria-hidden="true">
+                <div class="modal-dialog" style="width:600px">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                            <h4 class="modal-title" id="myModalLabelHistory"></h4>
+                        </div>
+                        <div class="modal-body">
+                            <p id="myModalHistoryContent"></p>
+                        </div>
+                    </div><!-- /.modal-content -->
+                </div><!-- /.modal-dialog -->
+            </div><!-- /.modal -->
+
+
+            <input id="password_visible" value="{{ password_visible }}" class="hidden">
+
+        </div>
+    </div>
+{% endblock %}
+{% block bodyjs %}
+    <script src="/static/js/jquery.dataTables.js"></script>
+
+    {{ django_context_varable }}
+    {% verbatim %}
+    <script id="tpl" type="text/x-handlebars-template">
+        {{#each func}}
+        <button type="button" class="btn btn-{{this.type}} btn-sm" onclick="{{this.fn}}">{{this.name}}</button>
+        {{/each}}
+    </script>
+    {% endverbatim %}
+    <script src="/static/js/handlebars-v3.0.1.js"></script>
+    <script src="/static/js/mysqlinstance.js?v=20190928001"></script>
+    <script type="text/javascript" src="/static/js/zebra_datepicker.js"></script>
+    <script src="/static/js/reconnecting-websocket.js"></script>
+    <script src="/static/js/showloading.min.js"></script>
+{% endblock %}
+
+{% block css %}
+    <link href="/static/css/jquery.dataTables.css" rel="stylesheet" type="text/css">
+    <link href="/static/css/mycss.css" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" type="text/css" href="/static/css/datetimepicker.css">
+    <link href="/static/css/select2-bootstrap.css" rel="stylesheet" type="text/css">
+    <link href="/static/css/showloading.css" rel="stylesheet" media="screen">
+{% endblock %}

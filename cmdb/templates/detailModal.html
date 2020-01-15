@@ -1,0 +1,146 @@
+Modal -->
+<div class="modal fade" id="detailModal" tabindex="-1" role="dialog" aria-labelledby="detailModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" id="detailModalLabel">详细信息</h4>
+      </div>
+      <div class="modal-body">
+        <ul id='detail-approve' class="hide">
+          <li class="form-group ">
+            <label class="col-md-3 control-label" for="username">流程号</label>
+            <div class="col-md-7">
+              <input class="form-control" type="text" id="name" value="" />
+            </div>
+          </li>
+          <li class="form-group ">
+            <label class="col-md-3 control-label" for="username">姓名</label>
+            <div class="col-md-7">
+              <input class="form-control" disabled="true" type="text" id="proposer" value="" />
+            </div>
+          </li>
+          <li class="form-group ">
+            <label class="col-md-3 control-label" for="username">项目</label>
+            <div class="col-md-7">
+              <input class="form-control" disabled="true" type="text" id="project" value="" />
+            </div>
+          </li>
+          <li class="form-group ">
+            <label class="col-md-3 control-label" for="start_time">申请时间</label>
+            <div class="col-md-7">
+              <input disabled="true" class="form-control" type="text" id="start_time">
+            </div>
+          </li>
+          <li class="form-group ">
+            <label class="col-md-3 control-label" for="resource_type">资源类型</label>
+            <div class="col-md-7">
+              <input class="form-control" disabled="true" type="text" id="resource_type" value="" />
+            </div>
+          </li>
+          <li class="form-group">
+            <label class="col-md-3 control-label" for="number">申请数量</label>
+            <div class="col-md-7">
+              <input type="text" disabled="true" class="form-control "  id='number'>
+            </div>
+          </li>
+          <li class="form-group">
+            <label class="col-md-3 control-label">服务器信息</label>
+            <div class="col-md-7" id="div-servers-app">
+            <!-- <input type="text" disabled="true" class="form-control"  id='return_server'> -->
+            </div>
+          </li>
+          <!-- <li class="form-group">
+            <label class="col-md-3 control-label">序列号</label>
+            <div class="col-md-7">
+              <input type="text" disabled="true" class="form-control"  id='server_number'>
+            </div>
+          </li>
+          <li class="form-group">
+            <label class="col-md-3 control-label">IP</label>
+            <div class="col-md-7">
+              <input type="text" disabled="true" class="form-control"  id='server_ip'>
+            </div>
+          </li> -->
+          <!--<li class="form-group">
+            <label class="col-md-3 control-label">审批通过时间</label>
+            <div class="col-md-7">
+              <input type="text" disabled="true" class="form-control"  id='approve_time'>
+            </div>
+          </li>
+          <li class="form-group">
+            <label class="col-md-3 control-label">内存大小</label>
+            <div class="col-md-7">
+              <input type="text" disabled="true" class="form-control"  id='memory'>
+            </div>
+          </li>
+          <li class="form-group">
+            <label class="col-md-3 control-label">硬盘大小</label>
+            <div class="col-md-7">
+              <input type="text" disabled="true" class="form-control"  id='harddrive'>
+            </div>
+          </li> -->
+          <li class="form-group ">
+            <label class="col-md-3 control-label" for="reason">申请理由</label>
+            <div class="col-md-7">
+              <input class="form-control" disabled="true" type="text" id="reason" value="" />
+            </div>
+          </li>
+        </ul>
+        <ul id='detail-return' class="hide">
+          <li class="form-group ">
+            <label class="col-md-3 control-label" for="return-name">流程号</label>
+            <div class="col-md-7">
+              <input class="form-control" disabled="true" type="text" id="return-name" value="" />
+            </div>
+          </li>
+          <li class="form-group ">
+            <label class="col-md-3 control-label" for="return-proposer">姓名</label>
+            <div class="col-md-7">
+              <input class="form-control" disabled="true" type="text" id="return-proposer" value="" />
+            </div>
+          </li>
+          <li class="form-group ">
+            <label class="col-md-3 control-label" for="return-start_time">退还时间</label>
+            <div class="col-md-7">
+              <input disabled="true" class="form-control" type="text" id="return-start_time">
+            </div>
+          </li>
+          <li class="form-group">
+            <label class="col-md-3 control-label">服务器信息</label>
+            <div class="col-md-7" id="div-servers">
+              <!-- <input type="text" disabled="true" class="form-control"  id='return_server'> -->
+            </div>
+          </li>
+          <li class="form-group">
+            <label class="col-md-3 control-label">所在项目</label>
+            <div class="col-md-7">
+              <input type="text" disabled="true" class="form-control"  id='r_project'>
+            </div>
+          </li>
+          <!-- <li class="form-group">
+            <label class="col-md-3 control-label">CPU个数</label>
+            <div class="col-md-7">
+              <input type="text" disabled="true" class="form-control"  id='cpu'>
+            </div>
+          </li>
+          <li class="form-group">
+            <label class="col-md-3 control-label">内存大小</label>
+            <div class="col-md-7">
+              <input type="text" disabled="true" class="form-control"  id='memory'>
+            </div>
+          </li>
+          <li class="form-group">
+            <label class="col-md-3 control-label">硬盘大小</label>
+            <div class="col-md-7">
+              <input type="text" disabled="true" class="form-control"  id='harddrive'>
+            </div>
+          </li> -->
+        </ul>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal

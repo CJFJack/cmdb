@@ -1,0 +1,9 @@
+div.tree-multiselect input[type=checkbox]{
+	display: none;
+}
+
+td.highlight {
+    font-weight: bold;
+    font-style:oblique;
+    color: blue;
+}

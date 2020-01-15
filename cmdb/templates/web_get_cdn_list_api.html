@@ -1,0 +1,156 @@
+{% extends 'template.html' %}
+{% load staticfiles %}
+
+{% block username %}
+    {{ request.user.username }}
+{% endblock %}
+
+{% block content %}
+    <div id="page-wrapper">
+        <div class="row">
+            <div class="col-lg-12">
+                <h1 class="page-header">Web 获取cdn目录API</h1>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <div class="btn-group">
+                            <a>
+                                <button type="button" class="btn btn-success" onclick="bt_add()">新增接口信息
+                                </button>
+                            </a>
+                            <a>
+                                <button id='bt-del' data-text="确定删除接口? 0个" type="button"
+                                        class="btn btn-danger">删除
+                                </button>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="panel-body">
+                        {% if all_api %}
+                            <table id="mytable" width="100%" cellspacing="0"
+                                   class="table table-striped table-hover">
+                                <thead>
+                                <tr>
+                                    <th class="center sorting_disabled">
+                                        <label class="pos-rel">
+                                            <input id='chb-all' type="checkbox"/>
+                                        </label>
+                                    </th>
+                                    <th style="display: none;">id</th>
+                                    <th>项目</th>
+                                    <th>地区</th>
+                                    <th>api地址</th>
+                                    <th>cdn根(root)</th>
+                                    <th>客户端类型(dev_flag)</th>
+                                    <th>接口版本</th>
+                                    <th>操作</th>
+                                </tr>
+                                </thead>
+                            </table>
+                        {% else %}
+                            <p>还没有接口信息，请先添加！</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Add or Edit Modal-->
+            <div class="modal fade" id="Modal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                            <h4 class="modal-title" id="myModalLabel"></h4>
+                        </div>
+                        <form class="form-horizontal">
+                            <div class="modal-body">
+                                <input id="id_api_id" style="display: none" value="">
+                                <div class="alert alert-danger alert-dismissable" id='modal-notify'>
+                                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                                    <label id='lb-msg'></label>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-md-3">项目</label>
+                                    <div class="col-md-8">
+                                        <select id="id_project" class="form-control" style="width: 100%">
+                                            <option></option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-md-3">地区</label>
+                                    <div class="col-md-8">
+                                        <select id="id_area" class="form-control" style="width: 100%">
+                                            <option></option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-md-3">api地址</label>
+                                    <div class="col-md-8">
+                                        <input id="id_api_url" value="" class="form-control"
+                                               placeholder="请输入api地址，不要以 / 结尾">
+                                        <small class="text-danger">api地址不要以 / 结尾</small>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-md-3">cdn根(root)</label>
+                                    <div class="col-md-8">
+                                        <input id="id_root" value="" class="form-control"
+                                               placeholder="请输入cdn根(root)，多个使用英文逗号分隔">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-md-3">客户端类型(dev_flag)</label>
+                                    <div class="col-md-8">
+                                        <input id="id_dev_flag" value="" class="form-control"
+                                               placeholder="请输入客户端类型(dev_flag)，多个使用英文逗号分隔">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-md-3">接口版本</label>
+                                    <div class="col-md-8">
+                                        {% for v in all_version %}
+                                            <input id="id_version_{{ v.0 }}" type="radio" name="version" value="{{ v.0 }}"
+                                                   class="radio-info"> {{ v.1 }}&nbsp;&nbsp;&nbsp;
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                                <button type="button" class="btn btn-primary" name='action'
+                                        id="bt-save">保存
+                                </button>
+                            </div>
+                        </form>
+                    </div><!-- /.modal-content -->
+                </div><!-- /.modal-dialog -->
+            </div>
+
+        </div>
+    </div>
+{% endblock %}
+{% block bodyjs %}
+    {{ django_context_varable }}
+    {% verbatim %}
+    <script id="tpl" type="text/x-handlebars-template">
+        {{#each func}}
+        <button type="button" class="btn btn-{{this.type}} btn-sm" onclick="{{this.fn}}">{{this.name}}</button>
+        {{/each}}
+    </script>
+    {% endverbatim %}
+    <script src="/static/js/handlebars-v3.0.1.js"></script>
+    <script src="/static/js/select2.min.js"></script>
+    <script src="/static/js/jquery.dataTables.min.js"></script>
+    <script src="/static/js/dataTables.colVis.js"></script>
+    <script src="/static/js/web_get_cdn_list_api.js?v=20180802001"></script>
+{% endblock %}
+{% block css %}
+    <link href="/static/css/jquery.dataTables.css" rel="stylesheet" type="text/css">
+    <link href="/static/css/dataTables.colVis.css" rel="stylesheet" type="text/css">
+    <link href="/static/css/select2-bootstrap.css" rel="stylesheet" type="text/css">
+{% endblock %}

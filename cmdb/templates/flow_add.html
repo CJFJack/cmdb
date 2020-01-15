@@ -1,0 +1,480 @@
+{%extends 'template.html'%}
+{%block content%}
+<div id="page-wrapper">
+    <div class="row">
+        <div class="col-lg-12">
+            <h1 class="page-header">{{head.value}}</h1>                
+        </div>            
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <div class="btn-group">
+                        <a><button id="bt-upload" type="button" class="btn btn-primary">提交</button></a>
+                        <a href="/workflow/my_flow"><button id='bt-input' type="button" class="btn btn-primary">返回</button></a>
+                    </div>
+                </div>
+                <div class="panel-body">
+                    <ul id="ul-tabs" class="nav nav-tabs">
+                        <li class="active"><a href="#tab-approve" data-toggle="tab">申请流程</a></li>
+                        <li><a href="#tab-return" data-toggle="tab">退还流程</a></li>
+                    </ul>
+                    <!-- <form id="fm-flow" class="form-horizontal" method="post" action="/workflow/new_flow"> -->
+                    
+                        <div class="tab-content">
+                          <div class="tab-pane active" id="tab-approve">
+                            <div class="row form-wrapper">
+                                <div class="col-md-12 column">
+                                    <br/>
+                                    <form id="fm-approve" class="form-horizontal">
+                                    <div class="form-group ">
+                                        <label class="col-md-3 control-label" for="username">姓名<i class='fa fa-asterisk'></i></label>
+                                        <div class="col-md-7">
+                                            <input class="form-control" type="text" name="username" id="username" value="{{username}}" readonly="readonly" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group ">
+                                        <label class="col-md-3 control-label" for="project_a">项目<i class='fa fa-asterisk'></i></label>
+                                        <div class="col-md-7">
+                                            <select class="project-select2" id="project_a" style="width: 100%">
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group ">
+                                        <label class="col-md-3 control-label" for="start_time">申请时间<i class='fa fa-asterisk'></i></label>
+                                        <div class="col-md-7">
+                                            <input class="form-control" type="text" name="start_time" value="{{time}}" readonly="readonly">
+                                        </div>
+                                    </div>
+                                    <div class="form-group ">
+                                        <label class="col-md-3 control-label" for="resource_type">申请资源类型<i class='fa fa-asterisk'></i></label>
+                                        <div class="col-md-7">
+                                            <!-- <input class="form-control" type="text" name="resource_type" id="resource_type" value="" /> -->
+                                            <select id="resource_type" style="width: 100%">
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                          <label class="col-md-3 control-label" for="number">申请数量<i class='fa fa-asterisk'></i></label>
+                                          <div class="col-md-7">
+                                            <input type="text" class="form-control " placeholder="3" id="type" name='number'>
+                                          </div>
+                                      </div>
+                                      <!-- <div class="form-group">
+                                          <label class="col-md-3 control-label">服务器名字</label>
+                                          <div class="col-md-7">
+                                            <input type="text" class="form-control" placeholder="服务器名字" name='server_name'>
+                                          </div>
+                                      </div>
+                                      <div class="form-group">
+                                          <label class="col-md-3 control-label">带宽</label>
+                                          <div class="col-md-7">
+                                            <input type="text" class="form-control" placeholder="3M" name='network_bandwidth'>
+                                          </div>
+                                      </div>
+                                      <div class="form-group">
+                                          <label class="col-md-3 control-label">所在机房</label>
+                                          <div class="col-md-7">
+                                            <input type="text" class="form-control" placeholder="room1" name='belong_room'>
+                                          </div>
+                                      </div>
+                                      <div class="form-group">
+                                          <label class="col-md-3 control-label">CPU个数<i class='fa fa-asterisk'></i></label>
+                                          <div class="col-md-7">
+                                            <input type="text" class="form-control" placeholder="3u" name='cpu'>
+                                          </div>
+                                      </div>
+                                      <div class="form-group">
+                                          <label class="col-md-3 control-label">内存大小<i class='fa fa-asterisk'></i></label>
+                                          <div class="col-md-7">
+                                          <input type="text" class="form-control" placeholder="2G" name='memory'>
+                                          </div>
+                                      </div>
+                                      <div class="form-group">
+                                          <label class="col-md-3 control-label">硬盘大小<i class='fa fa-asterisk'></i></label>
+                                          <div class="col-md-7">
+                                          <input type="text" class="form-control" placeholder="500G" name='harddrive'>
+                                          </div>
+                                      </div> -->
+                                    <div class="form-group ">
+                                        <label class="col-md-3 control-label" for="reason">申请理由</label>
+                                        <div class="col-md-7">
+                                            <input class="form-control" type="text" name="reason" value="" />
+                                        </div>
+                                    </div>
+                                    </form>
+                                </div>
+                            </div>
+                          </div>
+                          <div class="tab-pane" id="tab-return">
+                            <div class="row form-wrapper">
+                              <div class="col-md-12 column">
+                                <br/>
+                                <form id="fm-return" class="form-horizontal">
+                                    <div class="form-group ">
+                                        <label class="col-md-3 control-label" for="username">姓名<i class='fa fa-asterisk'></i></label>
+                                        <div class="col-md-7">
+                                            <input class="form-control" type="text" name="username" id="username" value="{{username}}" readonly="readonly" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group ">
+                                        <label class="col-md-3 control-label" for="project">项目<i class='fa fa-asterisk'></i></label>
+                                        <div class="col-md-7">
+                                            <select class="project-select2" id="project" style="width: 100%">
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group ">
+                                      <label class="col-md-3 control-label" for="return-time">退还时间<i class='fa fa-asterisk'></i></label>
+                                      <div class="col-md-7">
+                                          <input class="form-control" type="text" id='return_time' value="{{time}}" readonly="readonly">
+                                      </div>
+                                    </div>
+                                    <div class="form-group hide">
+                                      <label class="col-md-3 control-label" for="return-server_name">退还服务器名<i class='fa fa-asterisk'></i></label>
+                                      <div class="col-md-7">
+                                          <select id="return_server" style="width: 100%" multiple="multiple">
+                                          </select>
+                                      </div>
+                                    </div>
+                                    <div class="form-group">
+                                      <label class="col-md-3 control-label" for="return-server_name">退还服务器名<i class='fa fa-asterisk'></i></label>
+                                      <div class="col-md-7">
+                                          <select id="test-multiselect" style="width: 100%" multiple="multiple">
+                                          </select>
+                                      </div>
+                                    </div>
+                                </form>
+                            </div>
+                          </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title" id="myModalLabel">确认退还服务器</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="panel panel-default">
+                        <!-- Default panel contents -->
+                        <div class="panel-heading" id="pl-head"></div>
+                        <div class="panel-body">
+                            <!-- Table -->
+                            <table class="table">
+                            <thead>
+                                <th>序列号</th>
+                                <th>服务器名</th>
+                                <th>IP地址</th>
+                            </thead>
+                            <tbody id='modal-tb-body'>
+                            </tbody>
+                            </table>
+                        </div>
+                    </div>                   
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" id="bt-modal-confirm">确认提交</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取消提交</button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+</div>
+{%endblock%}
+{%block bodyjs%}
+<script type="text/javascript">
+    var lastServerData;
+    function formatRepo (repo) {
+        // if (repo.loading) return repo.text;
+
+        // var markup = '<div class="clearfix">' +
+        // '<div class="col-sm-1">' +
+        // '<img src="' + repo.owner.avatar_url + '" style="max-width: 100%" />' +
+        // '</div>' +
+        // '<div clas="col-sm-10">' +
+        // '<div class="clearfix">' +
+        // '<div class="col-sm-6">' + repo.full_name + '</div>' +
+        // '<div class="col-sm-3"><i class="fa fa-code-fork"></i> ' + repo.forks_count + '</div>' +
+        // '<div class="col-sm-2"><i class="fa fa-star"></i> ' + repo.stargazers_count + '</div>' +
+        // '</div>';
+
+        // if (repo.description) {
+        //   markup += '<div>' + repo.description + '</div>';
+        // }
+
+        // markup += '</div></div>';
+        var markup = '<div class="clearfix"><div clas="col-sm-7">' + repo.text + '</div></div>';
+
+        return markup;
+    };
+
+    function formatRepoSelection (repo) {
+        return repo.text || repo.id;
+    };
+    function initSelect2(){
+        var $projectSelect2 = $('.project-select2').select2( {
+            ajax: {
+                type: "POST",
+                url: "/project/get_project",
+                dataType: 'json',
+                delay: 250,
+                data: function (){
+                    return $.toJSON({'username': $('#username').val()})
+                },
+                processResults: function (data, params) {
+                    // parse the results into the format expected by Select2
+                    // since we are using custom formatting functions we do not need to
+                    // alter the remote JSON data, except to indicate that infinite
+                    // scrolling can be used
+                    params.page = params.page || 1;
+                    return {
+                        results: $.map(data, function(item){
+                            return {
+                                id: item.id,
+                                text: item.text,
+                            }
+                        })
+                        // pagination: {
+                        //     more: (params.page * 30) < data.total_count
+                        // };
+                    }
+                },
+                cache: true,
+            },
+            minimumResultsForSearch: Infinity,
+            escapeMarkup: function (markup) { return markup; }, // let our custom formatter work
+            // minimumInputLength: 1,
+            templateResult: formatRepo, // omitted for brevity, see the source of this page
+            templateSelection: formatRepoSelection, // omitted for brevity, see the source of this page
+        });
+        var $resourceType = $('#resource_type').select2( {
+            ajax: {
+                type: "POST",
+                url: "/project/resource_type",
+                dataType: 'json',
+                delay: 250,
+                processResults: function (data, params) {
+                    // parse the results into the format expected by Select2
+                    // since we are using custom formatting functions we do not need to
+                    // alter the remote JSON data, except to indicate that infinite
+                    // scrolling can be used
+                    params.page = params.page || 1;
+                    return {
+                        results: $.map(data, function(item){
+                            return {
+                                id: item.id,
+                                text: item.text,
+                            }
+                        })
+                        // pagination: {
+                        //     more: (params.page * 30) < data.total_count
+                        // };
+                    }
+                },
+                cache: true,
+            },
+            minimumResultsForSearch: Infinity,
+            escapeMarkup: function (markup) { return markup; }, // let our custom formatter work
+            // minimumInputLength: 1,
+            templateResult: formatRepo, // omitted for brevity, see the source of this page
+            templateSelection: formatRepoSelection, // omitted for brevity, see the source of this page
+        });
+        
+        var $serverSelect2 = $('#return_server').select2( {
+            ajax: {
+                url: "/assets/list_devices",
+                dataType: 'json',
+                delay: 250,
+                data: function () {
+                    if ($('#project').select2('data') != ''){
+                        var pdata = {'name': $('#project').select2('data')[0].id}
+                    }else{
+                        var pdata = {'name': ''}
+                    };
+                    return pdata;
+                },
+                processResults: function (data, params) {
+                    // parse the results into the format expected by Select2
+                    // since we are using custom formatting functions we do not need to
+                    // alter the remote JSON data, except to indicate that infinite
+                    // scrolling can be used
+                    params.page = params.page || 1;
+                    return {
+                        results: $.map(data, function(item){
+                            return {
+                                id: item.id,
+                                text: item.text,
+                            }
+                        })
+                        // pagination: {
+                        //     more: (params.page * 30) < data.total_count
+                        // };
+                    }
+                },
+                cache: true,
+            },
+            minimumResultsForSearch: Infinity,
+            escapeMarkup: function (markup) { return markup; }, // let our custom formatter work
+            // minimumInputLength: 1,
+            templateResult: formatRepo, // omitted for brevity, see the source of this page
+            templateSelection: formatRepoSelection, // omitted for brevity, see the source of this page
+        });
+    };
+    function initMultiSelect (url) {
+      // $.get('/project/test_multiselect',function(data){
+      //     console.log(data);
+      //     $('#test-multiselect').multiselect('dataprovider', data);
+      //     $('#test-multiselect').multiselect('rebuild');
+      // });
+        if ($('#project').select2('data') != ''){
+            var pdata = {'name': $('#project').select2('data')[0].id}
+        }else{
+            var pdata = {'name': ''}
+        };
+        $.ajax({
+            url: '/project/test_multiselect', 
+            type: 'GET', 
+            dataType: 'json',
+            data: pdata,
+            success: function(data){
+                if (pdata.name != ''){
+                    if ($.toJSON(lastServerData) != $.toJSON(data)){
+                        lastServerData = data;
+                        $('#test-multiselect').multiselect('dataprovider', data);
+                        $('#test-multiselect').multiselect('rebuild');
+                    }
+                }else{
+                    alert('请选择用户项目！')
+                }
+                
+            }
+        });
+    };
+    $(document).ready(function() {
+        $('#test-multiselect').multiselect({
+            maxHeight: 400,
+            includeSelectAllOption: true,
+            enableFiltering: true,
+            numberDisplayed: 4,
+            allSelectedText: '全部选中',
+            // filterBehavior: 'value',
+            onDropdownShow: function(event) {
+                initMultiSelect();
+            },
+        });
+        initSelect2();
+        $('#bt-upload').click(function(){
+            var activeTabs = $('#ul-tabs li.active a').attr('href');
+            if (activeTabs == '#tab-approve'){
+              $('#fm-approve').submit();
+            };
+            if (activeTabs == '#tab-return'){
+              // $('#fm-return').submit();
+              var selected = [];
+              $('#test-multiselect option:selected').each(function() {
+                selected.push($(this).attr('label'));
+              });
+              $('#modal-tb-body').empty();
+              if (selected.length > 0){
+                for (var i = 0; i < selected.length; i++) {
+                    detail = selected[i].split('/')
+                    $('#modal-tb-body').append('<tr><td>'+detail[0]+'</td><td>'+detail[1]+'</td><td>'+detail[2]+'</td></tr>');
+                };
+                $("#pl-head").text('已经选择机器数量为:'+selected.length);
+                $("#myModal").modal('show');
+              }else{
+                alert('请选择退还机器!');
+              }
+              
+            };            
+            
+        });
+        $("#bt-modal-confirm").click(function () {
+            $('#fm-return').submit();
+        });
+        $('#fm-approve').on('submit', function(e){
+          e.preventDefault();
+          if ($('#project_a').select2('data') != ''){
+              var project_data = {'text':$('#project_a').select2('data')[0].text,'id':$('#project_a').select2('data')[0].id}
+          }else{
+              alert('项目不能为空');
+              return false
+          };
+          if ($('#resource_type').select2('data') != ''){
+              var resource_type = {'text':$('#resource_type').select2('data')[0].text,'id':$('#resource_type').select2('data')[0].id}
+          }else{
+              alert('项目不能为空');
+              return false
+          };
+          var mdata = {"data": $('#fm-approve').serialize(),"project": project_data,"resource_type": resource_type}
+          // var pdata = new FormData($('#submit-file-form').get(0));
+          console.log(mdata);
+          $.ajax({
+              url: '/workflow/new_flow_approve', //this is the submit URL
+              type: 'POST', //or POST
+              data: $.toJSON(mdata),
+              success: function(data){
+                  if (data['data']){
+                      alert('上传成功！')
+                  }
+                  else{
+                      alert(data['msg'])
+                  }
+              }
+          });
+        } );
+        $('#fm-return').on('submit', function(e){
+          e.preventDefault();
+          // var mdata = $('#fm-return').serialize();
+          // var pdata = new FormData($('#submit-file-form').get(0));
+          if ($('#project').select2('data') != ''){
+              var project_data = {'text':$('#project').select2('data')[0].text,'id':$('#project').select2('data')[0].id}
+          }else{
+              var project_data = {"text": '','id':''}
+          };
+          if ($('#return_server').select2('data') != ''){
+              var serverList = $('#return_server').select2('data').map(function(i,n){
+                  return i.text;
+              });
+          }else{
+              var serverList = ''
+          };
+          var selected = [];
+          $('#test-multiselect option:selected').each(function() {
+            selected.push($(this).attr('label'));
+          });
+          var mdata= {
+              "username": $("#username").val(),
+              "project": project_data,
+              "return_time": $("#return_time").val(),
+              "return_server": selected,
+          }
+          console.log(mdata);
+          $.ajax({
+              url: '/workflow/new_flow_return', //this is the submit URL
+              type: 'POST', //or POST
+              data: $.toJSON({'data':mdata}),
+              success: function(data){
+                  if (data['data']){
+                      alert('上传成功！')
+                  }
+                  else{
+                     alert(data['msg'])
+                  }
+              }
+          });
+        });
+    });
+</script>
+<script type="text/javascript" src="/static/js/zebra_datepicker.js"></script>
+{%endblock%}
+{%block css%}
+<link rel="stylesheet" type="text/css" href="/static/css/datetimepicker.css">
+{%endblock%}

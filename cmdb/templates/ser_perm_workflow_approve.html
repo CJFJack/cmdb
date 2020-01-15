@@ -1,0 +1,266 @@
+{% extends 'template.html' %}
+
+{% block username %}
+    {{ head.username }}
+{% endblock %}
+
+{% block content %}
+    <div id="page-wrapper">
+        <div class="row">
+            <div class="col-lg-12">
+                <h1 class="page-header">{{ head.value }}</h1>
+                <h1 class="page-header" id="wse_id" style="display: none;">{{ head.wse }}</h1>
+                <h1 class="page-header" id="ips_value" style="display: none;">{{ data.ips_value }}</h1>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="panel panel-green">
+                    <div class="panel-heading">
+                        <i class="fa fa-user fa-fw"></i> 申请人信息
+                    </div>
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <form>
+                                    <div class="form-row">
+                                        <div class="form-group col-md-4">
+                                            <label>申请人</label>
+                                            <input type="text" class="form-control" readonly
+                                                   value="{{ data.applicant }}">
+                                        </div>
+                                        <div class="form-group col-md-4">
+                                            <label>申请人部门</label>
+                                            <input type="text" class="form-control" readonly
+                                                   value="{{ data.one_group }}">
+                                        </div>
+                                        <!--<div class="form-group col-md-4">
+                                            <label>申请人部门管理分组</label>
+                                            <input type="text" class="form-control" readonly
+                                                   value="{{ data.group_section }}">
+                                        </div>-->
+                                    </div>
+                                    <div class="form-group col-md-12">
+                                        <label for="inputAddress">注意事项</label>
+                                        <div class="alert alert-danger" role="alert">
+                                            请部门负责人注意申请人的部门和管理分组，不是自己部门的，或者部门内管理分组有错的，就拒绝，然后联系运维
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-6">
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        <i class="fa fas fa-info-circle fa-fw"></i> 申请信息
+                    </div>
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-lg-10">
+                                <form role="form">
+                                    <div class="form-group">
+                                        <label>项目</label>
+                                        <div>
+                                            <input class="form-control" id="project" readonly
+                                                   value={{ data.project_name }}/>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>标题</label>
+                                        <div>
+                                            <input class="form-control" id="title" readonly
+                                                   value={{ data.title }}/>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>原因</label>
+                                        <div>
+                                            <textarea class="form-control" id="reason"
+                                                      readonly>{{ data.reason }}</textarea>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="TextArea">key</label>
+                                        <div>
+                                            <textarea class="form-control" rows="7" id="key"
+                                                      style="word-break: break-all" readonly>{{ data.key }}</textarea>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>key类型</label>
+                                        <div class="radio radio-danger radio-inline">
+                                            {% if data.is_root %}
+                                                <input type="radio" id="is_root" value=true name="keyType"
+                                                       checked="checked" disabled>
+                                            {% else %}
+                                                <input type="radio" id="is_root" value=true name="keyType" disabled>
+                                            {% endif %}
+                                            <label for="is_root"> root </label>
+                                        </div>
+                                        <div class="radio radio-success radio-inline">
+                                            {% if data.is_root %}
+                                                <input type="radio" id="is_normal" value=false name="keyType" disabled>
+                                            {% else %}
+                                                <input type="radio" id="is_normal" value=false name="keyType"
+                                                       checked="checked" disabled>
+                                            {% endif %}
+                                            <label for="is_normal"> 普通 </label>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>分组</label>
+                                        <input class="form-control" id="group" readonly value={{ data.group }}/>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label>时效性</label>
+                                        <div class="radio radio-danger radio-inline">
+                                            {% if data.temporary %}
+                                                <input type="radio" id="permanent" value=true name="timeliness"
+                                                       disabled>
+                                            {% else %}
+                                                <input type="radio" id="permanent" value=true name="timeliness"
+                                                       checked="checked" disabled>
+                                            {% endif %}
+                                            <label for="permanent">永久</label>
+                                        </div>
+                                        <div class="radio radio-success radio-inline">
+                                            {% if data.temporary %}
+                                                <input type="radio" id="temporary" value=false name="timeliness"
+                                                       checked="checked" disabled>
+                                            {% else %}
+                                                <input type="radio" id="temporary" value=false name="timeliness"
+                                                       disabled>
+                                            {% endif %}
+                                            <label for="temporary">临时</label>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group row">
+                                        <div class="col-sm-4">
+                                            <label>起止时间(以北京时间为准)</label>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            {% if data.recommit %}
+                                                <input class="flatpickr flatpickr-input" type="text"
+                                                       placeholder="选择开始时间" data-time="{{ data.start_time }}"
+                                                       id="start_time" readonly="readonly">
+                                            {% else %}
+                                                <input class="flatpickr flatpickr-input" type="text"
+                                                       placeholder="选择开始时间" data-time="{{ data.start_time }}"
+                                                       id="start_time" disabled>
+                                            {% endif %}
+                                        </div>
+                                        <div class="col-sm-4">
+                                            {% if data.recommit %}
+                                                <input class="flatpickr flatpickr-input" type="text"
+                                                       placeholder="选择结束时间" data-time="{{ data.end_time }}"
+                                                       id="end_time" readonly="readonly">
+                                            {% else %}
+                                                <input class="flatpickr flatpickr-input" type="text"
+                                                       placeholder="选择结束时间" data-time="{{ data.end_time }}"
+                                                       id="end_time" disabled>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                    <div class="form-group" style="display: none;">
+                                        <label>机房的全部IP</label>
+                                        <div>
+                                            <input class="form-control" id="room" readonly
+                                                   value={{ data.room_name }}/>
+                                        </div>
+                                    </div>
+
+                                    <br>
+
+                                    <div class="form-group" id='insert_after'>
+                                        <div>
+                                            <label>选择的IP</label>
+                                        </div>
+                                    </div>
+
+                                    {% for t in data.ips %}
+                                        <div class="form-group">
+                                            <div>
+                                                <input class="form-control" readonly value={{ t.ip }}/>
+                                            </div>
+                                        </div>
+                                    {% endfor %}
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-6">
+                <div class="panel panel-success">
+                    <div class="panel-heading">
+                        <i class="fa fas fa-mail-reply-all fa-fw"></i> 审批操作
+                    </div>
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-lg-10">
+                                <form role="form">
+                                    <div class="form-group">
+                                        <label>审核流程步骤</label>
+                                        <div>
+                                            <div class="ystep1"></div>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label>审批意见</label>
+                                        <div>
+                                            {% if data.has_approved %}
+                                                <p>{{ data.state_value }}</p>
+                                            {% else %}
+                                                {% for t in transitions %}
+                                                    <label class="radio-inline {% if t.condition == '同意' %}text-success{% else %}text-danger{% endif %}">
+                                                        <input type="radio" name='transitions'
+                                                               id={{ t.id }} condition={{ t.condition }} {% if t.condition == '同意' %}checked{% endif %}>{{ t.condition }}
+                                                    </label>
+                                                {% endfor %}
+                                            {% endif %}
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label>审批意见(可选)</label>
+                                        <div>
+                                            <textarea class="form-control" rows="3" id='opinion'
+                                                      placeholder="你拒绝本次申请的理由是?"></textarea>
+                                        </div>
+                                    </div>
+
+                                    {% if data.has_approved %}
+                                    {% else %}
+                                        <div class="form-group">
+                                            <div>
+                                                <button type="button" class="btn btn-primary" id='bt-commit'>提交</button>
+                                            </div>
+                                        </div>
+                                    {% endif %}
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block bodyjs %}
+    <script src="/static/js/ser_perm_workflow_approve.js?v=aed25423b9115132cbda315e72563c399aa32ed4"></script>
+    <script src="/static/js/ystep.js"></script>
+    <script src="/static/js/flatpickr.js"></script>
+{% endblock %}
+{% block css %}
+    <link href="/static/css/ystep.css" rel="stylesheet" type="text/css">
+    <link href="/static/css/awesome-bootstrap-checkbox.css" rel="stylesheet" type="text/css">
+    <link href="/static/css/flatpickr.css" rel="stylesheet" type="text/css">
+{% endblock %}

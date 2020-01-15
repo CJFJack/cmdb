@@ -1,0 +1,184 @@
+{% extends 'template.html' %}
+
+{% block username %}
+    {{ request.user.username }}
+{% endblock %}
+
+{% block content %}
+    <div id="page-wrapper">
+        <div class="alert alert-danger alert-dismissable" style="display: none" id="modal-edit-state">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+            <label id='lb-msg-edit-state'></label>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <h1 class="page-header">流程配置</h1>
+                <input style="display: none" value="{{ workflow.id }}" id="workflow_id">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <form action="/myworkflows/change_workflow_explain/{{ workflow.id }}/" method="post">
+                            <div class="form-group row">
+                                <h4 class="control-label col-md-1"><strong>描述说明</strong></h4>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-md-5">
+                                    <textarea class="form-control" type="text" rows="3" maxlength="100"
+                                              name="workflow_explain">{{ workflow.describtion }}</textarea>
+                                </div>
+                            </div>
+                            <button class="btn btn-primary form-horizontal" type="submit" id="bt-save-explain">保存</button>
+                        </form>
+                    </div>
+                </div>
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <div class="form-group">
+                            <h4><strong>审批节点及顺序</strong></h4>
+                            <h5 class="text-danger">1. 必须保证“完成”节点为最后步骤</h5>
+                            <h5 class="text-danger">2. “完成”节点不需要审批人，只代表流程结束</h5>
+                            <div>
+                                {% if step %}
+                                    <table id="mytable" width="100%" cellspacing="0"
+                                           class="table table-striped table-hover">
+                                        <thead>
+                                        <tr>
+                                            <th>顺序</th>
+                                            <th>节点名称</th>
+                                            <th>操作</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        {% for s in step %}
+                                            <tr>
+                                                <td>
+                                                    <input style="background-color:transparent;border:0;"
+                                                           readonly="readonly" type="number" class="state_order"
+                                                           value="{{ s.order }}">
+                                                </td>
+                                                <td>{{ s.name }}</td>
+                                                <td>
+                                                    <button class="btn btn-sm btn-danger" id="del_state{{ s.id }}">
+                                                        删除
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        {% endfor %}
+                                        </tbody>
+                                    </table>
+                                {% else %}
+                                    <p>还没有节点数据，请先添加!</p>
+                                {% endif %}
+                                <button class="btn btn-success" id="bt-add-state">添加</button>
+                                <button class="btn btn-primary" id="bt-edit-state">编辑</button>
+                                <button class="btn btn-default" id="bt-save-state">保存</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <div class="form-group">
+                            <h4><strong>审核流程步骤</strong></h4>
+                            <div>
+                                <div class="ystep1"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- State INFO Modal-->
+    <div class="modal fade" id="Modal-State" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title" id="myModalLabel-State"></h4>
+                </div>
+                <form>
+                    <div class="modal-body">
+                        <div class="alert alert-danger alert-dismissable" id="modal-add-state">
+                            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                            <label id='lb-msg-add-state'></label>
+                        </div>
+                        <div class="form-group row">
+                            <label class="control-label col-md-2">节点名称</label>
+                            <div class="col-md-8">
+                                <select id="state_name" style="width: 100%" class="form-control">
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                        <button type="button" class="btn btn-primary" id="add_state">保存</button>
+                    </div>
+                </form>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div>
+
+
+{% endblock %}
+{% block bodyjs %}
+    <script src="/static/js/ystep.js"></script>
+    <script src="/static/js/workflow_node_config.js?v=02hgogkj02jgegkg2g32sdkldffb3"></script>
+    <script src="/static/js/jquery.dataTables.min.js"></script>
+    <script src="/static/js/dataTables.colVis.js"></script>
+    <!-- showloading.js-->
+    <script src="/static/js/showloading.min.js"></script>
+    <script>
+        //删除流程状态
+        {% for s in step %}
+            $("#del_state" + {{ s.id }}).confirm({
+                confirm: function () {
+                    let state_id = {{ s.id }};
+                    let input = {
+                        'state_id': state_id,
+                    };
+                    let encoded = $.toJSON(input);
+                    let pdata = encoded;
+                    let url = '/myworkflows/del_state/';
+                    $.ajax({
+                        type: "POST",
+                        url: url,
+                        contentType: "application/json; charset=utf-8",
+                        data: pdata,
+                        success: function (data) {
+                            if (data.success) {
+                                location.reload()
+                            }
+                            else {
+                                alert(data.msg)
+                            }
+                        },
+                        error: function (data) {
+                            alert('内部错误')
+                        }
+                    });
+                },
+                cancel: function (button) {
+                },
+                text: '确定要删除吗? ',
+                confirmButton: "确定",
+                cancelButton: "取消",
+            });
+        {% endfor %}
+    </script>
+{% endblock %}
+{% block css %}
+    <link href="/static/css/ystep.css" rel="stylesheet" type="text/css">
+    <link href="/static/css/jquery.dataTables.css" rel="stylesheet" type="text/css">
+    <link href="/static/css/dataTables.colVis.css" rel="stylesheet" type="text/css">
+    <!-- showloading.css-->
+    <link href="/static/css/showloading.css" rel="stylesheet" media="screen">
+{% endblock %}
+
+

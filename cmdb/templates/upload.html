@@ -1,0 +1,83 @@
+{% extends 'template.html' %}
+
+{% block username %}
+    {{ head.username }}
+{% endblock %}
+
+{% block headjs %}
+    <script src="/static/js/progress.js"></script>
+{% endblock %}
+
+{% block css %}
+
+{% endblock %}
+
+
+{% block content %}
+    <div id="page-wrapper">
+        <div class="row">
+            <div class="col-lg-12">
+                <h1 class="page-header">{{ head.value }}</h1>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+
+                    </div>
+                    <div class="panel-body">
+                        {% if form %}
+                            <form enctype="multipart/form-data" action="/assets/upload/" method="POST">
+                                <div class="form-group">
+                                    {{ form }}
+                                </div>
+                                <div class="form-group">
+                                    <button type="submit" class="btn btn-primary">上传</button>
+                                </div>
+                            </form>
+                        {% endif %}
+                        {% if fpath %}
+                            <div class="table-responsive">
+                                <table class="table" id="mytable">
+                                    <thead>
+                                    <tr>
+                                        <th>文件位置</th>
+                                        <th>MD5</th>
+                                        <th>上传时间</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr class="success">
+                                        <td>{{ fpath }}</td>
+                                        <td>{{ fmd5 }}</td>
+                                        <td>{{ ftime }}</td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                                <div class="form-group">
+                                    <button type="submit" id="add" class="btn btn-primary">新增导入</button>
+                                    <!--<button type="submit" id="update" class="btn btn-primary">更新导入</button>-->
+                                </div>
+                            </div>
+                            <div class="form-group" id='pro-bar'>
+                                <!--<div class="pro"></div>
+                                <div class="result"></div>-->
+                            </div>
+                            <div class="form-group">
+                                <label>导入结果</label>
+                                <button type="button" id="clear" class="btn btn-outline btn-info btn-xs">清除</button>
+                                <textarea class="form-control" id="ImportResult" rows="15"></textarea>
+                            </div>
+                        {% endif %}
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block bodyjs %}
+    {{ django_context_varable }}
+    <script src="/static/js/upload.js"></script>
+{% endblock %}

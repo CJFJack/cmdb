@@ -1,0 +1,218 @@
+{% extends 'template.html' %}
+
+{% block username %}
+    {{ head.username }}
+{% endblock %}
+
+{% block content %}
+    <div id="page-wrapper">
+        <div class="row">
+            <div class="col-lg-12">
+                <h1 class="page-header">{{ head.value }}</h1>
+                <h1 class="page-header" id="wse_id" style="display: none;">{{ data.id }}</h1>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="panel panel-green">
+                    <div class="panel-heading">
+                        <i class="fa fa-user fa-fw"></i> 申请人信息
+                    </div>
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <form>
+                                    <div class="form-row">
+                                        <div class="form-group col-md-4">
+                                            <label>申请人</label>
+                                            <input type="text" class="form-control" readonly
+                                                   value="{{ data.applicant }}">
+                                        </div>
+                                        <div class="form-group col-md-4">
+                                            <label>申请人部门</label>
+                                            <input type="text" class="form-control" readonly
+                                                   value="{{ data.group }}">
+                                        </div>
+                                        <!--<div class="form-group col-md-4">
+                                            <label>申请人部门管理分组</label>
+                                            <input type="text" class="form-control" readonly
+                                                   value="{{ data.group_section }}">
+                                        </div>-->
+                                    </div>
+                                    <div class="form-group col-md-12">
+                                        <label for="inputAddress">注意事项</label>
+                                        <div class="alert alert-danger" role="alert">
+                                            请部门负责人注意申请人的部门和管理分组，不是自己部门的，或者部门内管理分组有错的，就拒绝，然后联系运维
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-6">
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        <i class="fa fas fa-info-circle fa-fw"></i> 申请信息
+                    </div>
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-lg-10">
+                                <form role="form">
+                                    <div class="form-group">
+                                        <label>申请人</label>
+                                        <div>
+                                            <input type="text" readonly class="form-control" value={{ data.applicant }}>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>申请人部门</label>
+                                        <div>
+                                            <input class="form-control" readonly value={{ data.group }}></input>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>申请的SVN项目</label>
+                                        <div>
+                                            <input type="text" readonly class="form-control"
+                                                   value={{ data.project_name }}>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>标题</label>
+                                        <div>
+                                            <input type="text" readonly class="form-control" value={{ data.title }}>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>原因</label>
+                                        <div>
+                                            <textarea class="form-control" rows="5" id='reason'
+                                                      readonly>{{ data.reason }}</textarea>
+                                        </div>
+                                    </div>
+                                    <div class="form-group" id="insert_svn_scheme">
+                                        <div>
+                                            <label>SVN套餐方案</label>
+                                            <div>
+                                                <select id="svn_scheme" style="width: 70%" disabled>
+                                                    <option value='{{ data.svn_scheme_id }}'>{{ data.svn_scheme }}</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div>
+                                            <label>自定义方案</label>
+                                        </div>
+                                    </div>
+
+                                    {% for t in data.content %}
+                                        <div class="form-group row">
+                                            <div class="col-sm-4">
+                                                <input type="text" class="form-control" readonly value="{{ t.repo }}">
+                                            </div>
+                                            <div class="col-sm-6">
+                                                <input type="text" class="form-control" readonly value="{{ t.path }}">
+                                            </div>
+                                            <div class="col-sm-2">
+                                                <input type="text" class="form-control" readonly value="{{ t.perm }}">
+                                            </div>
+                                        </div>
+                                    {% endfor %}
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-6">
+                <div class="panel panel-success">
+                    <div class="panel-heading">
+                        <i class="fa fas fa-mail-reply-all fa-fw"></i> 审批操作
+                    </div>
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-lg-10">
+                                <form role="form">
+
+                                    <div class="form-group">
+                                        <label>审核流程步骤</label>
+                                        <div>
+                                            <div class="ystep1"></div>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group" id='append_before'>
+                                        <div>
+                                            {% if data.recommit %}
+                                                <button type="button" class="btn btn-primary" id='bt-commit'>提交</button>
+                                            {% endif %}
+                                            {% if data.can_execute %}
+                                                <button type="button" class="btn btn-success" id='bt-load'>执行</button>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+
+                                    {% if data.opinion %}
+                                        <div class="form-group">
+                                            <label>审批意见(可选)</label>
+                                            <div>
+                                                <textarea class="form-control" rows="3" id="opinion"
+                                                          readonly="readonly">{{ data.opinion }}</textarea>
+                                            </div>
+                                        </div>
+                                    {% endif %}
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="myModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title" id="myModalLabel">执行中...请勿关闭或者刷新页面</h4>
+                    </div>
+                    <div class="modal-body">
+                        <form class="form-horizontal" role="form">
+                            {% if data.can_execute %}
+                                {% if not data.has_approved %}
+                                    <div class="form-group" id='load' style="display: none;">
+                                        <label class="col-sm-12"></label>
+                                        <div class="col-sm-12">
+                                            <div class="ball"></div>
+                                        </div>
+                                    </div>
+                                {% endif %}
+                            {% endif %}
+                            <div class="form-group" id='show-msg'>
+                                <label class="col-sm-3 control-label"></label>
+                                <div class="col-sm-8">
+                                    <p id='load-msg'></p>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer" id="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                    </div>
+                </div><!-- /.modal-content -->
+            </div><!-- /.modal-dialog -->
+        </div>
+    </div>
+{% endblock %}
+{% block bodyjs %}
+    <script src="/static/js/myworkflow.js?v=ad0ea8395afa185a47e108dbce8d28d8c2ebb9ba"></script>
+    <script src="/static/js/ystep.js"></script>
+{% endblock %}
+{% block css %}
+    <link href="/static/css/ystep.css" rel="stylesheet" type="text/css">
+    <link href="/static/css/load.css" rel="stylesheet" type="text/css">
+{% endblock %}

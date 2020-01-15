@@ -1,0 +1,69 @@
+{%extends 'template.html'%}
+
+{%block username%}
+{{head.username}}
+{%endblock%}
+
+{%block content%}
+<div id="page-wrapper">
+    <div class="row">
+        <div class="col-lg-12">
+            <h1 class="page-header">{{head.value}}</h1>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <i class="fa fa-bar-chart-o fa-fw"></i> 权限类型
+                </div>
+                <div class="panel-body">
+                    <div class='row'>
+                        <div class='col-lg-6'>
+                            <div id="flotcontainer_key_user" style="width:400px;height:300px"></div>
+                            <p id='test'></p>
+                        </div>
+                        <div class='col-lg-6'>
+                            <div id="flotcontainer_key_time" style="width:400px;height:300px"></div>
+                            <p id='test2'></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% for data_structure in all_data_structure %}
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <i class="fa fa-bar-chart-o fa-fw"></i> {{data_structure.title}}
+                </div>
+                <div class="panel-body">
+                    <div class='col-lg-8'>
+                        <div id={{data_structure.id}}  filter-name={{data_structure.filter_name}} class='bar-example' style="height:350px; padding-bottom:60px;"></div>
+                    </div>
+                    <div class='col-lg-4'>
+                        <div id={{data_structure.flotcontainer}} class='myflotcontainer' style="width:500px;height:300px"></div>
+                        <p></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+    
+</div>
+{%endblock%}
+{%block bodyjs%}
+    <script src="/static/js/jquery.flot.js"></script>
+    <script src="/static/js/jquery.flot.pie.js"></script>
+    <script src="/static/js/raphael-min.js"></script>
+    <script src="/static/js/morris.js"></script>
+    <script src="/static/js/key_permission.js"></script>
+{%endblock%}
+{%block css%}
+    <link href="/static/css/morris.css" rel="stylesheet" type="text/css">
+{%endblock%}

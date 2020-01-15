@@ -1,0 +1,264 @@
+{% extends 'template.html' %}
+
+{% block username %}
+    {{ head.username }}
+{% endblock %}
+
+{% block content %}
+    <div id="page-wrapper">
+        <div class="row">
+            <div class="col-lg-12">
+                <h1 class="page-header">{{ head.value }}</h1>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <div class="btn-group">
+                            <a>
+                                <button id='bt-add' type="button" class="btn btn-primary">增加</button>
+                            </a>
+                            <a>
+                                <button id='bt-del' data-text="确定删除机房? 0个" type="button" class="btn btn-danger">删除
+                                </button>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="panel-body">
+                        <form>
+                            <div class="form-group">
+                                <label class="checkbox-inline">
+                                    <input type="checkbox" value="7" class="toggle-visiable">代理url
+                                </label>
+                                <label class="checkbox-inline">
+                                    <input type="checkbox" value="8" class="toggle-visiable">token
+                                </label>
+                            </div>
+                        </form>
+                        <table id="mytable" class="display" width="100%" cellspacing="0">
+                            <thead>
+                            <tr>
+                                <th class="center sorting_disabled">
+                                    <label class="pos-rel">
+                                        <input id='chb-all' type="checkbox"/>
+                                    </label>
+                                </th>
+                                <th>id</th>
+                                <th>项目</th>
+                                <th>区域</th>
+                                <th>机房</th>
+                                <th>管理机url</th>
+                                <th>是否启用代理</th>
+                                <th>代理url</th>
+                                <th>token</th>
+                                <th>状态</th>
+                                <th>rsync模块</th>
+                                <th>rsync用户</th>
+                                <th>rsync密码路径</th>
+                                <th>rsync-ip</th>
+                                <th>rsync端口</th>
+                                <th>是否启用</th>
+                                <th>操作</th>
+                            </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <!-- Modal -->
+            <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+                 aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                            <h4 class="modal-title" id="myModalLabel">运维管理机</h4>
+                        </div>
+                        <div class="modal-body">
+                            <div class="alert alert-danger alert-dismissable" id='modal-notify'>
+                                <button type="button" class="close" id="bt-modal-notify">&times;</button>
+                                <label id='lb-msg'></label>
+                            </div>
+                            <form class="form-horizontal" role="form">
+                                <div class="form-group" id='show_id'>
+                                    <label class="control-label">id</label>
+                                    <input type="text" class="form-control " placeholder="id" id="id">
+                                    <div class="col-sm-8">
+                                        <input type="text" class="form-control ">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">项目</label>
+                                    <div class="col-sm-8">
+                                        <select id="project" style="width: 100%">
+                                            <option selected="selected" value="0">选择项目</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <!--<div class="form-group">
+                                    <label class="col-sm-3 control-label">区域</label>
+                                    <div class="col-sm-8">
+                                        <div class="form-group row">
+                                            <div class="col-sm-8">
+                                                <input type="text" class="form-control " id="area" style="width: 160%">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>-->
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">机房</label>
+                                    <div class="col-sm-8">
+                                        <select id="room" style="width: 100%">
+                                            <option selected="selected" value="0">选择机房</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">url</label>
+                                    <div class="col-sm-8">
+                                        <div class="form-group row">
+                                            <div class="col-sm-8">
+                                                <input type="text" class="form-control " id="url" style="width: 160%"
+                                                       placeholder="https://xx.xx.xx.xx/api/">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">token</label>
+                                    <div class="col-sm-8">
+                                        <div class="form-group row">
+                                            <div class="col-sm-8">
+                                                <input type="text" class="form-control " id="token" style="width: 160%">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">rsync模块</label>
+                                    <div class="col-sm-8">
+                                        <div class="form-group row">
+                                            <div class="col-sm-8">
+                                                <input type="text" class="form-control" id="rsync_module"
+                                                       style="width: 160%" placeholder="cmdb_hot_server">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">rsync用户</label>
+                                    <div class="col-sm-8">
+                                        <div class="form-group row">
+                                            <div class="col-sm-8">
+                                                <input type="text" class="form-control" id="rsync_user"
+                                                       style="width: 160%" placeholder="cmdb_user">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">rsync密码路径</label>
+                                    <div class="col-sm-8">
+                                        <div class="form-group row">
+                                            <div class="col-sm-8">
+                                                <input type="text" class="form-control" id="rsync_pass_file"
+                                                       style="width: 160%" placeholder="/etc/ssss.password">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">rsync ip</label>
+                                    <div class="col-sm-8">
+                                        <div class="form-group row">
+                                            <div class="col-sm-8">
+                                                <input type="text" class="form-control" id="rsync_ip"
+                                                       style="width: 160%" placeholder="xx.xx.xx.xx">
+                                            </div>
+                                            <label class="text-danger col-sm-8" style="width: 100%">默认可输入运维管理机的外网IP，若遇到网络问题，可以填写其他中转机IP</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">rsync端口</label>
+                                    <div class="col-sm-8">
+                                        <div class="form-group row">
+                                            <div class="col-sm-8">
+                                                <input type="text" class="form-control " id="rsync_port"
+                                                       style="width: 160%" placeholder="10022">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">是否启用代理</label>
+                                    <div class="col-sm-8">
+                                        <label class="radio-inline">
+                                            <input type="radio" name="is_proxy" checked="checked"
+                                                   value="1"/> 是
+                                        </label>
+                                        <label class="radio-inline">
+                                            <input type="radio" name="is_proxy" value="0"/> 否
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">代理url</label>
+                                    <div class="col-sm-8">
+                                        <div class="form-group row">
+                                            <div class="col-sm-8">
+                                                <input type="text" class="form-control " id="proxy_url"
+                                                       style="width: 160%" placeholder="https://xx.xx.xx.xx/api/">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">是否启用</label>
+                                    <div class="col-sm-8">
+                                        <label class="radio-inline">
+                                            <input type="radio" name="enable" checked="checked"
+                                                   value="1"/> 启用
+                                        </label>
+                                        <label class="radio-inline">
+                                            <input type="radio" name="enable" value="0"/> 禁用
+                                        </label>
+                                        <label class="text-danger" style="width: 100%">禁用运维管理机可能会影响热更新等操作，请谨慎操作！</label>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                            <button id='bt-save' type="button" class="btn btn-primary">保存</button>
+                        </div>
+                    </div><!-- /.modal-content -->
+                </div><!-- /.modal-dialog -->
+            </div><!-- /.modal -->
+        </div>
+    </div>
+{% endblock %}
+{% block bodyjs %}
+    <script src="/static/js/jquery.dataTables.js"></script>
+
+    {{ django_context_varable }}
+    {% verbatim %}
+    <script id="tpl" type="text/x-handlebars-template">
+        {{#each func}}
+        <button type="button" class="btn btn-{{this.type}} btn-sm" onclick="{{this.fn}}">{{this.name}}</button>
+        {{/each}}
+    </script>
+    {% endverbatim %}
+    <script src="/static/js/handlebars-v3.0.1.js"></script>
+    <script src="/static/js/ops_manager_list.js?v=20190729001"></script>
+    <script type="text/javascript" src="/static/js/zebra_datepicker.js"></script>
+
+{% endblock %}
+
+{% block css %}
+    <link href="/static/css/jquery.dataTables.css" rel="stylesheet" type="text/css">
+    <link href="/static/css/mycss.css" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" type="text/css" href="/static/css/datetimepicker.css">
+    <link href="/static/css/select2-bootstrap.css" rel="stylesheet" type="text/css">
+{% endblock %}

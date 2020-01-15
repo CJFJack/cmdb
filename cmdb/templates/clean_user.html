@@ -1,0 +1,146 @@
+{% extends 'template.html' %}
+
+{% block username %}
+    {{ head.username }}
+{% endblock %}
+
+{% block content %}
+    <div id="page-wrapper">
+        <div class="row">
+            <div class="col-lg-12">
+                <h1 class="page-header">{{ head.value }}</h1>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <!--<div class="form-group">
+                            <button id='bt-add' type="button" class="btn btn-primary xm">新增分组</button>
+                            <button id='group_info' type="button" class="btn btn-primary xm">分组信息</button>
+                            <button id='bt-del' type="button" class="btn btn-danger xm">删除分组</button>
+                        </div>-->
+                        <div class="form-group">
+                            <label class="control-label">选择要清除的类型</label>
+                        </div>
+                        <form class="form-inline">
+                            <div class="form-group">
+                                <label class="checkbox-inline">
+                                    <input type="checkbox" id="clean_server"
+                                           {% if clean_option.server_permission %}checked{% endif %}>服务器权限
+                                </label>
+                            </div>
+                            <div class="radio {% if not clean_option.server_permission %}hidden{% endif %}"
+                                 id="server_clean_type">
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                <label>
+                                    <input type="radio" name="server_project" id="input_server_project" value="all"
+                                           {% if not clean_option.server_permission %}checked{% endif %}> 所有项目
+                                </label>
+                                &nbsp;&nbsp;
+                                <label>
+                                    <input type="radio" name="server_project" id="input_server_project" value="section"
+                                           {% if clean_option.server_permission %}checked{% endif %}> 选择项目
+                                </label>
+                            </div>
+                        </form>
+                        <div class="form-group {% if not clean_option.server_permission %}hidden{% endif %}"
+                             id="div_server_project">
+                            <select class="form-control" id="select_server_project" multiple
+                                    style="width: 30%;">
+                                {% for p in projects %}
+                                    <option value="{{ p.id }}"
+                                            {% if p.id in clean_option.server_permission %}selected{% endif %}>{{ p.project_name }}</option>
+                                {% endfor %}
+                            </select>
+                            <button class="btn btn-success" id="server_clean_all_select">全选项目</button>
+                            <button class="btn btn-warning" id="server_clean_inverse_select">反选项目</button>
+                        </div>
+                        <form class="form-inline">
+                            <div class="form-group">
+                                <label class="checkbox-inline">
+                                    <input type="checkbox" id="clean_svn" {% if clean_option.svn %}checked{% endif %}>SVN
+                                </label>
+                                <!--<label class="checkbox-inline">
+                                    <input type="checkbox" id="clean_svn2">SVN2
+                                </label>-->
+                            </div>
+                            <div class="radio {% if not clean_option.svn %}hidden{% endif %}" id="svn_clean_type">
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                <label>
+                                    <input type="radio" name="svn_project" id="input_svn_project" value="all"
+                                           {% if not clean_option.svn %}checked{% endif %}> 所有项目
+                                </label>
+                                &nbsp;&nbsp;
+                                <label>
+                                    <input type="radio" name="svn_project" id="input_svn_project" value="section"
+                                           {% if clean_option.svn %}checked{% endif %}> 选择项目
+                                </label>
+                            </div>
+                        </form>
+                        <div class="form-group {% if not clean_option.svn %}hidden{% endif %}"
+                             id="div_svn_project">
+                            <select class="form-control" id="select_svn_project" multiple
+                                    style="width: 30%;">
+                                {% for p in projects %}
+                                    <option value="{{ p.id }}"
+                                            {% if p.id in clean_option.svn %}selected{% endif %}>{{ p.project_name }}</option>
+                                {% endfor %}
+                            </select>
+                            <button class="btn btn-success" id="svn_clean_all_select">全选项目</button>
+                            <button class="btn btn-warning" id="svn_clean_inverse_select">反选项目</button>
+                        </div>
+                        <div class="form-group">
+                            <label class="checkbox-inline">
+                                <input type="checkbox" id="clean_mysql"
+                                       {% if clean_option.mysql_permission %}checked{% endif %}>MySQL
+                            </label>
+                            <label class="checkbox-inline">
+                                <input type="checkbox" id="clean_samba" {% if clean_option.samba %}checked{% endif %}>SAMBA
+                            </label>
+                            <label class="checkbox-inline">
+                                <input type="checkbox" id="clean_ldap" {% if clean_option.ldap %}checked{% endif %}>LDAP
+                            </label>
+                            <label class="checkbox-inline">
+                                <input type="checkbox" id="clean_mysql_force">MySQL强制清除
+                            </label>
+                            <label class="checkbox-inline">
+                                <input type="checkbox" id="delete_ent_qq"
+                                       {% if clean_option.ent_qq %}checked{% endif %}>删除企业QQ
+                            </label>
+                            <label class="checkbox-inline">
+                                <input type="checkbox" id="delete_ent_email"
+                                       {% if clean_option.ent_email %}checked{% endif %}>删除企业邮箱
+                            </label>
+                            <label class="checkbox-inline">
+                                <input type="checkbox" id="delete_user_wifi"
+                                       {% if clean_option.wifi %}checked{% endif %}>删除wifi
+                            </label>
+                            <label class="checkbox-inline">
+                                <input type="checkbox" id="delete_openvpn_user"
+                                       {% if clean_option.openvpn %}checked{% endif %}>删除openvpn
+                            </label>
+                            <button id="check_all" type="button" class="btn btn-primary">全选</button>
+                            <button id="check_last_time_option" type="button" class="btn btn-success">勾选上一次清除选项</button>
+                            <button id='clean_user' type="button" class="btn btn-danger">清除</button>
+                            <a type="button" class="btn btn-default" href="/users/organization/">返回</a>
+                        </div>
+                        <div class="form-group">
+                            <label>清除结果</label>
+                            <div class="form-control" id="results"
+                                 style="height:500px; overflow:auto">{{ data |safe }}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block bodyjs %}
+    <script src="/static/js/jquery.toast.min.js"></script>
+    <script src="/static/js/reconnecting-websocket.js"></script>
+    <script src="/static/js/clean_user.js?v=201901029001"></script>
+{% endblock %}
+{% block css %}
+    <link href="/static/css/jquery.toast.min.css" rel="stylesheet" type="text/css">
+{% endblock %}

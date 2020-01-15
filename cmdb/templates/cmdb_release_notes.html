@@ -1,0 +1,29 @@
+{% extends 'template.html' %}
+
+{% block username %}
+    {{ request.user.username }}
+{% endblock %}
+
+{% block content %}
+    <div id="page-wrapper">
+        <div class="row">
+            <div class="col-lg-12">
+                <h2 class="page-header"><i>CMDB release notes</i></h2>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        {{ content | safe }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+{% block bodyjs %}
+{% endblock %}
+{% block css %}
+{% endblock %}

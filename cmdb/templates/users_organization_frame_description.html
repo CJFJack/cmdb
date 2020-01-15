@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>原力互娱运维管理系统</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="/static/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- MetisMenu CSS -->
+    <link href="/static/css/metisMenu.min.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link href="/static/css/sb-admin-2.css" rel="stylesheet">
+
+    <!-- 公司logo -->
+    <link rel="shortcut icon" href="/static/img/logo.png?v=c2b4b0669d2669211fbddaf825655942aa8cb33e"
+          type="image/x-icon">
+
+    <!-- Custom Fonts -->
+    <link href="/static/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href="/static/css/select2.css" rel="stylesheet" type="text/css">
+    <script src="/static/js/jquery.js"></script>
+    <script type="text/javascript" src="/static/js/select2.min.js"></script>
+</head>
+<body>
+{% load staticfiles %}
+{% load mptt_tags %}
+
+<!-- 组织架构编辑方法提示区域 -->
+<div class="col-lg-8">
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <h3 class="text-center">请选中左侧树状菜单相应节点进行编辑<br>
+                <small>点击左侧树状菜单 “+” “-” 可进行伸缩</small>
+            </h3>
+            <h4 class="text-center text-danger">
+                注意：完成编辑后，请等待页面自动刷新完成后再继续编辑！
+            </h4>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

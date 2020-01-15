@@ -1,0 +1,48 @@
+{% extends 'template.html' %}
+
+{% block username %}
+    {{ request.user.username }}
+{% endblock %}
+
+{% block content %}
+    <div id="page-wrapper">
+        <div class="row">
+            <div class="col-lg-12">
+                <h1 class="page-header">入职信息模板</h1>
+            </div>
+        </div>
+        <div class="alert alert-info">
+            <h5><strong>模板说明：</strong></h5>
+            <p> 新员工确认入职后会自动发送以下信息到前台的企业微信</p>
+            <p> 前台员工在“cmdb-工单流程-配置汇总-特殊人员配置”中设置</p>
+            <p> 模板中以大括号{}包裹的参数将会替换成新员工的相关信息</p>
+            <h5><strong>参数说明：</strong></h5>
+            <p> {chinese_name} - 中文姓名</p>
+            <p> {pinyin} - 姓名拼音</p>
+            <p> {ent_qq} - 企业QQ号码</p>
+            <p> {ent_email} - 企业邮箱</p>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <div class="form-group">
+                            <textarea style="width: 100%;font-size: large" rows="15" class="form-control"
+                                      id="text_template_content">{{ template_content }}</textarea>
+                        </div>
+                        <div class="form-group">
+                            <button class="btn btn-primary" id="bt-save">保存</button>
+                            <button class="btn btn-success" id="bt-preview">保存并预览（企业微信）</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+{% block bodyjs %}
+    <script type="text/javascript" src="/static/js/users_share_info_template.js?v=20191022001"></script>
+{% endblock %}
+{% block css %}
+{% endblock %}

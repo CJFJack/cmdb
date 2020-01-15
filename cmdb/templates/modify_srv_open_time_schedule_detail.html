@@ -1,0 +1,133 @@
+{% extends 'template.html' %}
+
+{% block username %}
+    {{ request.user.username }}
+{% endblock %}
+
+{% block content %}
+
+    <div id="page-wrapper">
+        <div class="row">
+            <div class="col-lg-12">
+                <h3 class="page-header">{{ modify_schedule.uuid }}</h3>
+                <input style="display: none;" id="obj_id" value="{{ modify_schedule.id }}">
+                <input style="display: none;" id="status" value="{{ modify_schedule.status }}">
+                <input style="display: none;" id="total" value="{{ total }}">
+                <input style="display: none;" id="finish" value="{{ finish }}">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="panel panel-green" id="show_result_panel">
+                    <div class="panel-heading">
+                        <span id="total">总数：{{ total }}</span>&nbsp;&nbsp;<span id="finish">已完成：{{ finish }}</span>&nbsp;&nbsp;
+                        <span id="success">成功：{{ success }}</span>&nbsp;&nbsp;<span id="failure">失败：{{ failure }}</span>
+                    </div>
+                    <div class="panel-body">
+                        <div id="container"></div>
+                    </div>
+                    <a href="#">
+                        <div class="panel-footer">
+                            <span class="pull-left" id="show_result_success">
+                                {% if modify_schedule.status == 1 %}
+                                    <span>等待修改中......</span>
+                                {% endif %}
+                                {% if modify_schedule.status == 2 %}
+                                    <span>正在执行中......</span>
+                                {% endif %}
+                                {% if modify_schedule.status == 3 %}
+                                    <span>修改成功</span>
+                                {% endif %}
+                                {% if modify_schedule.status == 4 %}
+                                    <span>修改失败</span>
+                                {% endif %}
+                                {% if modify_schedule.status == 5 %}
+                                    <span>已取消</span>
+                                {% endif %}
+                            </span>
+                            <div class="clearfix"></div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+            <div class="col-lg-12">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <div class="btn-group">
+                            <a>
+                                <button id='bt-failed' type="button" class="btn btn-outline btn-danger btn-sm">
+                                    查看失败区服
+                                </button>
+                            </a>
+                            <a>
+                                <button id='bt-success' type="button" class="btn btn-outline btn-success btn-sm">
+                                    查看成功区服
+                                </button>
+                            </a>
+                            <a>
+                                <button id='bt-clear' type="button" class="btn btn-outline btn-primary btn-sm">
+                                    重置过滤区服
+                                </button>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="panel-body">
+                        <table id="mytable" class="display" width="100%" cellspacing="0">
+                            <thead>
+                            <tr>
+                                <th>展开详细</th>
+                                <th>项目</th>
+                                <th>机房</th>
+                                <th>地区</th>
+                                <th>cmdb区服id</th>
+                                <th>web区服id</th>
+                                <th>IP</th>
+                                <th>所属运维管理机</th>
+                                <th>修改结果</th>
+                                <th>修改结果隐藏</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for detail in modify_schedule.modifyopensrvscheduledetail_set.all %}
+                                <tr>
+                                    <td></td>
+                                    <td>{{ detail.game_server.project.project_name }}</td>
+                                    <td>{{ detail.game_server.room.room_name }}</td>
+                                    <td>{{ detail.game_server.room.area.chinese_name }}</td>
+                                    <td>{{ detail.game_server.srv_id }}</td>
+                                    <td>{{ detail.game_server.sid }}</td>
+                                    <td>{{ detail.game_server.host.telecom_ip }}</td>
+                                    <td>{{ detail.game_server.host.opsmanager }}</td>
+                                    <td>
+                                        {% if detail.status == 1 %}
+                                            <label class="label label-success">
+                                                成功
+                                            </label>
+                                        {% endif %}
+                                        {% if detail.status == 0 %}
+                                            <label class="label label-danger">
+                                                失败
+                                            </label>
+                                        {% endif %}
+                                    </td>
+                                    <td>{% if detail.remark %}{{ detail.remark }}{% else %}{% endif %}</td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block bodyjs %}
+    <script src="/static/js/jquery.dataTables.js"></script>
+    <script src="/static/js/modify_srv_open_time_schedule_detail.js?v=20190513001"></script>
+    <script src="/static/js/progressbar.js"></script>
+    <script src="/static/js/reconnecting-websocket.js"></script>
+{% endblock %}
+{% block css %}
+    <link href="/static/css/jquery.dataTables.css" rel="stylesheet" type="text/css">
+    <link href="/static/css/hot_server_detail.css?v=23hf893hghnafh1hegh289gh" rel="stylesheet" type="text/css">
+{% endblock %}

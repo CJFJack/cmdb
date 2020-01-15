@@ -1,0 +1,35 @@
+td.details-control {
+    background: url('/static/img/details_open.png') no-repeat center center;
+    cursor: pointer;
+}
+tr.shown td.details-control {
+    background: url('/static/img/details_close.png') no-repeat center center;
+}
+
+#container {
+  margin: 20px;
+  width: 400px;
+  height: 8px;
+  position: relative;
+}
+
+#recover_container {
+  margin: 20px;
+  width: 400px;
+  height: 8px;
+  position: relative;
+}
+
+#action_container {
+  margin: 20px;
+  width: 400px;
+  height: 8px;
+  position: relative;
+}
+
+#recover_container {
+  margin: 20px;
+  width: 400px;
+  height: 8px;
+  position: relative;
+}

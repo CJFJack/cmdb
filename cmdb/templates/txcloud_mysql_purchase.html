@@ -1,0 +1,320 @@
+{% extends 'template.html' %}
+
+{% block username %}
+    {{ request.user.username }}
+{% endblock %}
+
+{% block content %}
+    <div id="page-wrapper">
+        <div class="row">
+            <div class="col-lg-12">
+                <h1 class="page-header">购买腾讯云数据库</h1>
+            </div>
+        </div>
+        <!--alert-->
+        <div class="alert alert-danger alert-dismissable" style="display: none;">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;
+            </button>
+            <span class="alert_text"></span>
+        </div>
+        <div class="row" style="overflow-y:auto; overflow-x:auto; width:100%; height:580px">
+            <div class="col-lg-12">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <form class="form-horizontal">
+
+                            <div class="form-group">
+                                <label class="control-label col-sm-1">cmdb项目</label>
+                                <div class="col-sm-3">
+                                    <select id="project" style="width: 100%;">
+                                        <option value="0" disabled selected>请选择项目</option>
+                                        {% for p in projects %}
+                                            <option title="{{ p.cloud_account }}"
+                                                    value="{{ p.id }}">{{ p.text }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-sm-1">地区</label>
+                                <div class="col-sm-3">
+                                    <select id="area" style="width: 100%;">
+                                        <option value="0" disabled selected>请选择地区</option>
+                                        {% for a in areas %}
+                                            <option value="{{ a.id }}">{{ a.text }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-sm-1">用途</label>
+                                <div class="col-sm-3">
+                                    <input class="form-control" id="purpose" placeholder="请填写数据库用途"/>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-sm-1">计费模式</label>
+                                <div class="col-sm-11">
+                                    <span class="donate-now">
+                                        <li>
+                                            <input checked type="radio" name="pay_type" id="PRE_PAID"
+                                                   value="PRE_PAID"/>
+                                            <label class="label_pay_type" for="PRE_PAID">包年包月</label>
+                                        </li>
+                                        <li>
+                                            <input type="radio" name="pay_type" id="HOUR_PAID"
+                                                   value="HOUR_PAID"/>
+                                            <label class="label_pay_type" for="HOUR_PAID">按量计费</label>
+                                        </li>
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-sm-1">地域</label>
+                                <div class="col-sm-11">
+                                    <span class="donate-now" id="region">
+
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-sm-1">可用区</label>
+                                <div class="col-sm-11">
+                                    <span class="donate-now" id="zone">
+
+                                    </span>
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="form-group">
+                                <label class="control-label col-sm-1">架构</label>
+                                <div class="col-sm-11">
+                                    <span class="donate-now" id="framework">
+
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-sm-1">数据库版本</label>
+                                <div class="col-sm-11">
+                                    <span class="donate-now" id="engine_version">
+
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-sm-1">实例规格</label>
+                                <div class="col-sm-3">
+                                    <select id="memory" style="width: 100%;">
+
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-sm-1">硬盘</label>
+                                <div class="col-sm-11 inline">
+                                    <div class="col-sm-2 input-group">
+                                        <input type="number" min="5" max="6000" step="5" id="volume"
+                                               class="form-control" placeholder="请输入硬盘大小" value="200"/>
+                                        <span class="input-group-addon">GB</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group" id="div_protect_mode">
+                                <label class="control-label col-sm-1">数据复制方式</label>
+                                <div class="col-sm-11">
+                                    <span class="donate-now" id="protect_mode">
+
+                                    </span>
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="form-group">
+                                <label class="control-label col-sm-1">腾讯云所属项目</label>
+                                <div class="col-sm-11">
+                                    <select style="width: 30%;" id="ProjectId">
+
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-sm-1">安全组</label>
+                                <div class="col-sm-11">
+                                    <select style="width: 50%;" id="SecurityGroupId">
+
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-sm-1">实例名称</label>
+                                <div class="col-sm-3">
+                                    <input type="text" id="instance_name" class="form-control" placeholder="请输入实例名称"/>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-sm-1">购买数量</label>
+                                <div class="col-sm-3">
+                                    <input type="number" id="goods_num" class="form-control"
+                                           placeholder="请输入购买数量" value="1" min="1" oninput="if(value<1)value=1"/>
+                                </div>
+                            </div>
+                            <div class="form-group" id="div_protect_mode">
+                                <label class="control-label col-sm-1">购买时长</label>
+                                <div class="col-sm-11">
+                                    <span class="donate-now" id="period">
+                                        {% for p in purchase_period %}
+                                            {% if p.id == 1 %}
+                                                <li>
+                                                    <input checked type="radio" name="period" id="period_{{ p.id }}"
+                                                           value="{{ p.id }}"/>
+                                                    <label class="label_period"
+                                                           for="period_{{ p.id }}">{{ p.text }}</label>
+                                                </li>
+                                            {% else %}
+                                                <li>
+                                                    <input type="radio" name="period" id="period_{{ p.id }}"
+                                                           value="{{ p.id }}"/>
+                                                    <label class="label_period"
+                                                           for="period_{{ p.id }}">{{ p.text }}</label>
+                                                </li>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-sm-1">自动续费</label>
+                                <div class="col-sm-11 checkbox">
+                                    <label>
+                                        <input id="AutoRenewFlag" type="checkbox" value="1">账户余额足够时，设备到期后按月自动续费
+                                    </label>
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="form-group" style="display: none">
+                                <label class="control-label col-sm-1">是否初始化</label>
+                                <div class="col-sm-11 radio">
+                                    <label>
+                                        <input type="radio" value="1" name="is_init">是
+                                    </label>&nbsp;&nbsp;&nbsp;
+                                    <label>
+                                        <input type="radio" value="0" name="is_init">否
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="form-group is_init" style="display: none;">
+                                <label class="control-label col-sm-1">支持字符集</label>
+                                <div class="col-sm-11 radio" id="character">
+
+                                </div>
+                            </div>
+                            <div class="form-group is_init" style="display: none;">
+                                <label class="control-label col-sm-1">表名大小写敏感</label>
+                                <div class="col-sm-11 radio">
+                                    <label>
+                                        <input type="radio" value="0" name="lower_case_table_names">是
+                                    </label>&nbsp;&nbsp;&nbsp;
+                                    <label>
+                                        <input type="radio" value="1" name="lower_case_table_names">否
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="form-group is_init" style="display: none;">
+                                <label class="control-label col-sm-1">自定义端口</label>
+                                <div class="col-sm-2">
+                                    <input min="1024" max="65535" class="form-control" type="number" id="port"/>
+                                </div>
+                            </div>
+                            <div class="form-group is_init" style="display: none;">
+                                <label class="control-label col-sm-1">root密码</label>
+                                <div class="col-sm-1 control-label">
+                                    <span>cmdb随机生成</span>
+                                </div>
+                            </div>
+
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <div class="form-horizontal">
+                            <div class="form-group">
+                                <label class="control-label col-sm-1">费用</label>
+                                <div class="col-sm-9">
+                                    <div class="form-inline">
+                                        <div class="col-sm-2">
+                                            <span>配置费用</span>
+                                            <h3 class="text-danger"><span id="config_price">0.00</span></h3>
+                                            <button class="btn btn-danger" id="purchase_info_check">立即购买</button>
+                                        </div>
+                                        <div class="col-sm-2">
+                                            <span>流量费用</span>
+                                            <h3 class="text-danger"><span id="traffic_price">0.00</span> 元/GB</h3>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+    <!-- 购买信息确认modal-->
+    <!-- Modal -->
+    <div class="modal fade" id="myModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4>核对信息</h4>
+                </div>
+                <div class="modal-body">
+                    cmdb项目：<span id="info_cmdb_project"></span><br>
+                    地区：<span id="info_area"></span><br>
+                    用途：<span id="info_purpose"></span><br>
+                    计费方式：<span id="info_pay_type"></span><br>
+                    地域：<span id="info_region"></span><br>
+                    可用区：<span id="info_zone"></span><br>
+                    数据库版本：<span id="info_engine_version"></span><br>
+                    配置：<span id="info_configs"></span><br>
+                    数据复制方式：<span id="info_protect_mode"></span><br>
+                    腾讯云所属项目：<span id="info_ProjectId"></span><br>
+                    安全组：<span id="info_SecurityGroupId"></span><br>
+                    实例名称：<span id="info_instance_name"></span><br>
+                    购买数量：<span id="info_goods_num"></span><br>
+                    购买时长：<span id="info_period"></span><br>
+                    自动续费：<span id="info_auto_renew"></span><br>
+                    是否初始化：<span id="info_is_init"></span><br>
+                    支持字符集：<span id="info_character"></span><br>
+                    大小写敏感：<span id="info_lower_case_table_names"></span><br>
+                    自定义端口：<span id="info_port"></span><br>
+                </div>
+                <div class="modal-footer">
+                    <button id="purchase_action" hidden type="button" class="btn btn-primary">确认购买
+                    </button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                </div>
+            </div>  <!-- /.modal-content -->
+        </div>  <!-- /.modal-dialog -->
+    </div>  <!-- /.modal -->
+
+
+{% endblock %}
+
+{% block bodyjs %}
+    <script src="/static/js/txcloud_mysql_purchase.js?v=20190926001"></script>
+    <script src="/static/js/showloading.min.js"></script>
+{% endblock %}
+{% block css %}
+    <link href="/static/css/select2-bootstrap.css" rel="stylesheet" type="text/css">
+    <link href="/static/css/txcloud_mysql_purchase.css" rel="stylesheet" type="text/css">
+    <link href="/static/css/showloading.css" rel="stylesheet" media="screen">
+{% endblock %}

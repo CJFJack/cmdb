@@ -1,0 +1,89 @@
+{%extends 'template.html'%}
+
+{%block username%}
+{{head.username}}
+{%endblock%}
+
+{%block content%}
+<div id="page-wrapper">
+    <div class="row">
+        <div class="col-lg-12">
+            <h1 class="page-header">{{head.value}}</h1>
+            <h1 class="page-header" id="wse_id" style="display: none;">{{data.id}}</h1>
+            <h1 class="page-header" id="current_state_name" style="display: none;">{{data.current_state_name}}</h1>
+            <h1 class="page-header" id="workflow_name" style="display: none;">{{data.workflow_name}}</h1>
+            <h1 class="page-header" id="project_id" style="display: none;">{{data.project_id}}</h1>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                  <div class="row">
+                    <div class="col-lg-6">
+                      <div class="container">
+                          <form role="form" class="form-horizontal">
+                            <div class="form-group">
+                              <label class="col-sm-12">申请人</label>
+                              <div class="col-sm-6">
+                                <input class="form-control" id="applicant" readonly="readonly" value={{data.applicant}}></input>
+                              </div>
+                            </div>
+                            
+                            <div class="form-group">
+                              <label class="col-sm-12" for="TextArea">标题</label>
+                              <div class="col-sm-6">
+                                  <input class="form-control" id="title" readonly="readonly" value={{data.title}}></input>
+                              </div>
+                            </div>
+
+                            <div class="form-group">
+                              <label class="col-sm-12" for="TextArea">当前审批节点</label>
+                              <div class="col-sm-6">
+                                  <input class="form-control" id="users" readonly="readonly" value={{data.users}}></input>
+                              </div>
+                            </div>
+
+                            <div class="form-group">
+                              <label class="col-sm-12">更改审批人</label>
+                              <div class="col-sm-6">
+                                <select id="change_approve" style="width: 100%">
+                                  <option value="0" selected="selected">选择新的审批人</option>
+                                </select>
+                              </div>
+                            </div>
+
+                            <div class="form-group">
+                              <label class="col-sm-12">审核流程步骤</label>
+                              <div class="col-sm-6" id="append_ystep">
+                                <div class="ystep1"></div>
+                              </div>
+                            </div>
+
+                            
+
+                            <div class="form-group" id='append_before'>
+                              <div class="col-sm-6">
+                                  <button type="button" class="btn btn-primary" id='bt-commit'>提交</button>
+                              </div>
+                            </div>
+
+                          </form>
+                          <hr>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+{%endblock%}
+{%block bodyjs%}
+  <script src="/static/js/hot_update_change_approve.js?v=0f34ef3b1090773110c7b2a6a12324ba88"></script>
+  <script src="/static/js/ystep.js"></script>
+{%endblock%}
+{%block css%}
+  <link href="/static/css/ystep.css" rel="stylesheet" type="text/css">
+{%endblock%}

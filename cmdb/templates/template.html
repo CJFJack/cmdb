@@ -1,0 +1,857 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>原力互娱运维管理系统</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="/static/css/bootstrap.min.css?v=20190905001" rel="stylesheet">
+
+    <!-- MetisMenu CSS -->
+    <link href="/static/css/metisMenu.min.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link href="/static/css/sb-admin-2.css" rel="stylesheet">
+
+    <!-- 公司logo -->
+    <link rel="shortcut icon" href="/static/img/logo.png?v=c2b4bd66tk78669211fsdf5655942aa8cb33e"
+          type="image/x-icon">
+
+    <!-- Custom Fonts -->
+    <link href="/static/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href="/static/css/select2.css" rel="stylesheet" type="text/css">
+    <script src="/static/js/jquery.js"></script>
+    <script type="text/javascript" src="/static/js/select2.min.js"></script>
+    <!--<script type="text/javascript" src="/static/js/bootstrap-multiselect.js"></script>-->
+    <!--<link rel="stylesheet" href="/static/css/bootstrap-multiselect.css" type="text/css"/>-->
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    {% block css %}{% endblock %}
+    {% block headjs %}{% endblock %}
+
+</head>
+
+<body id="loading">
+
+<div id="wrapper">
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+
+            <a id="navopt" class="navbar-brand"> 隐藏导航</a>
+        </div>
+        <!-- /.navbar-header -->
+        <!--{%block navigation_top%}-->
+            <ul class="nav navbar-top-links navbar-right">
+                <li class="dropdown hide">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                        <span class="badge">3</span><i class="fa fa-envelope fa-fw"></i> <i
+                            class="fa fa-caret-down"></i>
+                    </a>
+                    <ul class="dropdown-menu dropdown-messages">
+                        <li>
+                            <a href="#">
+                                <div>
+                                    <strong>John Smith</strong>
+                                    <span class="pull-right text-muted">
+                                        <em>Yesterday</em>
+                                    </span>
+                                </div>
+                                <div>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque eleifend...
+                                </div>
+                            </a>
+                        </li>
+                        <li class="divider"></li>
+                        <li>
+                            <a href="#">
+                                <div>
+                                    <strong>John Smith</strong>
+                                    <span class="pull-right text-muted">
+                                        <em>Yesterday</em>
+                                    </span>
+                                </div>
+                                <div>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque eleifend...
+                                </div>
+                            </a>
+                        </li>
+                        <li class="divider"></li>
+                        <li>
+                            <a href="#">
+                                <div>
+                                    <strong>John Smith</strong>
+                                    <span class="pull-right text-muted">
+                                        <em>Yesterday</em>
+                                    </span>
+                                </div>
+                                <div>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque eleifend...
+                                </div>
+                            </a>
+                        </li>
+                        <li class="divider"></li>
+                        <li>
+                            <a class="text-center" href="#">
+                                <strong>Read All Messages</strong>
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+                        </li>
+                    </ul>
+                    <!-- /.dropdown-messages -->
+                </li>
+                <!-- /.dropdown -->
+                <li class="dropdown hide">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                        <span class="badge">4</span><i class="fa fa-tasks fa-fw"></i> <i class="fa fa-caret-down"></i>
+                    </a>
+                    <ul class="dropdown-menu dropdown-tasks">
+                        <li>
+                            <a href="#">
+                                <div>
+                                    <p>
+                                        <strong>流程1</strong>
+                                        <span class="pull-right text-muted">40% Complete</span>
+                                    </p>
+                                    <div class="progress progress-striped active">
+                                        <div class="progress-bar progress-bar-success" role="progressbar"
+                                             aria-valuenow="40" aria-valuemin="0" aria-valuemax="100"
+                                             style="width: 40%">
+                                            <span class="sr-only">40% Complete (success)</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                        </li>
+                        <li class="divider"></li>
+                        <li>
+                            <a href="#">
+                                <div>
+                                    <p>
+                                        <strong>流程2</strong>
+                                        <span class="pull-right text-muted">20% Complete</span>
+                                    </p>
+                                    <div class="progress progress-striped active">
+                                        <div class="progress-bar progress-bar-info" role="progressbar"
+                                             aria-valuenow="20" aria-valuemin="0" aria-valuemax="100"
+                                             style="width: 20%">
+                                            <span class="sr-only">20% Complete</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                        </li>
+                        <li class="divider"></li>
+                        <li>
+                            <a href="#">
+                                <div>
+                                    <p>
+                                        <strong>流程3</strong>
+                                        <span class="pull-right text-muted">60% Complete</span>
+                                    </p>
+                                    <div class="progress progress-striped active">
+                                        <div class="progress-bar progress-bar-warning" role="progressbar"
+                                             aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"
+                                             style="width: 60%">
+                                            <span class="sr-only">60% Complete (warning)</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                        </li>
+                        <li class="divider"></li>
+                        <li>
+                            <a href="#">
+                                <div>
+                                    <p>
+                                        <strong>流程4</strong>
+                                        <span class="pull-right text-muted">80% Complete</span>
+                                    </p>
+                                    <div class="progress progress-striped active">
+                                        <div class="progress-bar progress-bar-danger" role="progressbar"
+                                             aria-valuenow="80" aria-valuemin="0" aria-valuemax="100"
+                                             style="width: 80%">
+                                            <span class="sr-only">80% Complete (danger)</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                        </li>
+                        <li class="divider"></li>
+                        <li>
+                            <a class="text-center" href="#">
+                                <strong>See All Tasks</strong>
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+                        </li>
+                    </ul>
+                    <!-- /.dropdown-tasks -->
+                </li>
+                <!-- /.dropdown -->
+                <li class="dropdown hide">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                        <span class="badge">5</span><i class="fa fa-bell fa-fw"></i> <i class="fa fa-caret-down"></i>
+                    </a>
+                    <ul class="dropdown-menu dropdown-alerts hide">
+                        <li>
+                            <a href="#">
+                                <div>
+                                    <i class="fa fa-comment fa-fw"></i> New Comment
+                                    <span class="pull-right text-muted small">4 minutes ago</span>
+                                </div>
+                            </a>
+                        </li>
+                        <li class="divider"></li>
+                        <li>
+                            <a href="#">
+                                <div>
+                                    <i class="fa fa-twitter fa-fw"></i> 3 New Followers
+                                    <span class="pull-right text-muted small">12 minutes ago</span>
+                                </div>
+                            </a>
+                        </li>
+                        <li class="divider"></li>
+                        <li>
+                            <a href="#">
+                                <div>
+                                    <i class="fa fa-envelope fa-fw"></i> Message Sent
+                                    <span class="pull-right text-muted small">4 minutes ago</span>
+                                </div>
+                            </a>
+                        </li>
+                        <li class="divider"></li>
+                        <li>
+                            <a href="#">
+                                <div>
+                                    <i class="fa fa-tasks fa-fw"></i> New Task
+                                    <span class="pull-right text-muted small">4 minutes ago</span>
+                                </div>
+                            </a>
+                        </li>
+                        <li class="divider"></li>
+                        <li>
+                            <a href="#">
+                                <div>
+                                    <i class="fa fa-upload fa-fw"></i> Server Rebooted
+                                    <span class="pull-right text-muted small">4 minutes ago</span>
+                                </div>
+                            </a>
+                        </li>
+                        <li class="divider"></li>
+                        <li>
+                            <a class="text-center" href="#">
+                                <strong>See All Alerts</strong>
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+                        </li>
+                    </ul>
+                    <!-- /.dropdown-alerts -->
+                </li>
+                <!-- /.dropdown -->
+                <li class="dropdown hide">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                        <i class="fa fa-gear fa-fw"></i> <i class="fa fa-caret-down"></i>
+                    </a>
+                    <ul class="dropdown-menu dropdown-user">
+                        <li><a href="#"><i class="fa fa-gear fa-fw"></i>cmdb</a></li>
+                        <li><a href="#"><i class="fa fa-gear fa-fw"></i>devops</a></li>
+                    </ul>
+                </li>
+            </ul>
+
+            <ul class="nav navbar-top-links navbar-left">
+                <li class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                        <i class="fa fa-link"></i><i class="fa fa-caret-down"></i>
+                    </a>
+                    <ul class="dropdown-menu dropdown-messages">
+                        <li>
+                            <a href="/users/organization/">
+                                <div>
+                                    <strong>公司组织架构图</strong>
+                                    <span class="pull-right text-muted">
+                                        <!--<em>Yesterday</em>-->
+                                    </span>
+                                </div>
+                                <div>公司部门，项目，公司人员的关联</div>
+                            </a>
+                        </li>
+                        <li class="divider"></li>
+                    </ul>
+                    <!-- /.dropdown-messages -->
+                </li>
+                <li class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                        <i class="fa fa-user fa-fw"></i> {% block username %}{{ request.user.username }}{% endblock %}
+                        <i class="fa fa-caret-down"></i>
+                    </a>
+                    <ul class="dropdown-menu dropdown-user">
+                        <li><a href="/users/user_profile"><i class="fa fa-user fa-fw"></i>用户设置 / 密码重置</a>
+                        </li>
+                        <li class="divider"></li>
+                        <li><a href="/user_logout"><i class="fa fa-sign-out fa-fw"></i> 登出</a></li>
+                    </ul>
+                    <!-- /.dropdown-user -->
+                </li>
+                {% if request.user.is_superuser %}
+                    <li class="dropdown">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                            <i class="fa fa-cogs fa-fw"></i> Jenkins
+                            <i class="fa fa-caret-down"></i>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a href="http://{{ request.get_host }}/jenkins/jenkins_40_8/"
+                                   onclick="alert('即将跳转到Jenkins_40.8，若希望自动登录jenkins，请将cmdb密码改成与ldap密码一致！  若打开新窗口失败，请设置浏览允许新窗口弹出！')"
+                                   target="_blank"><i class="fa fa-sign-in fa-fw"></i> Jenkins_40.8</a>
+                            </li>
+                            <li class="divider"></li>
+                            <li><a href="http://{{ request.get_host }}/jenkins/jenkins_40_15/"
+                                   onclick="alert('即将跳转到Jenkins_40.15，若希望自动登录jenkins，请将cmdb密码改成与ldap密码一致！  若打开新窗口失败，请设置浏览允许新窗口弹出！')"
+                                   target="_blank"><i class="fa fa-sign-in fa-fw"></i> Jenkins_40.15</a></li>
+                            <li class="divider"></li>
+                            <li><a href="https://jenkins.yl666.yl/login?from=%2F"
+                                   target="_blank"><i class="fa fa-sign-in fa-fw"></i> Jenkins_原力外网</a></li>
+                        </ul>
+                    </li>
+                    <li class="dropdown">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                            <i class="fa fa-bar-chart-o fa-fw"></i> zabbix
+                            <i class="fa fa-caret-down"></i>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a href="http://{{ request.get_host }}/zabbix/zabbix/"
+                                   onclick="alert('即将跳转到zabbix，若希望自动登录jenkins，请将zabbix密码改成与cmdb密码一致！  若打开新窗口失败，请设置浏览允许新窗口弹出！')"
+                                   target="_blank"><i class="fa fa-sign-in fa-fw"></i> zabbix</a>
+                            </li>
+                        </ul>
+                    </li>
+                {% endif %}
+            </ul>
+            <!--{%endblock%}-->
+        <!-- /.navbar-top-links -->
+        {% block navigation %}
+            <div class="navbar-default sidebar" role="navigation">
+                <div class="sidebar-nav navbar-collapse">
+                    <ul class="nav in" id="side-menu">
+                        <li>
+                            <a href="/dashboard/"><i class="fa fa-home fa-fw"></i> 首页</a>
+                        </li>
+                        <li>
+                            <a href="#"><i class="fa fa-desktop fa-fw"></i> 服务器资源<span class="fa arrow"></span></a>
+                            <ul class="nav nav-second-level">
+                                {% if request.user.is_superuser %}
+                                    <li>
+                                        <a href="#">基础信息 <span class="fa arrow"></span></a>
+                                        <ul class="nav nav-third-level">
+                                            <li>
+                                                <a href="/assets/area/">地区表</a>
+                                                <a href="/assets/room/">机房表</a>
+                                                <a href="/assets/business/">业务类型</a>
+                                                <a href="/assets/cloud/">云供应商</a>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                    <li>
+                                        <a href="/assets/ops_manager_list/">运维管理机</a>
+                                    </li>
+                                {% endif %}
+                                <li>
+                                    <a href="/assets/host/">主机列表</a>
+                                </li>
+                                <li>
+                                    {% if request.user.is_superuser %}
+                                        <a href="/assets/host_trace/">主机变更汇总</a>
+                                        <a href="/txcloud/purchase_server/">主机购买</a>
+                                        <a href="/assets/host_initialize/">主机初始化</a>
+                                    {% endif %}
+                                    <a href="/assets/host_usage/">主机使用率</a>
+                                    <a href="/myworkflows/host_compression_apply_list/">迁服 / 回收控制台</a>
+                                </li>
+                                {% if request.user.is_superuser %}
+                                    <li>
+                                        <a href="/assets/ops_manager_lock/">项目地区锁</a>
+                                    </li>
+                                    <li>
+                                        <a href="#">统计汇总 <span class="fa arrow"></span></a>
+                                        <ul class="nav nav-third-level">
+                                            <li>
+                                                <a href="/assets/user_host_list/">服务器权限汇总</a>
+                                                <a href="/assets/key_permission_type/">权限分布类型图表</a>
+                                                <a href="/assets/host_statistics/">主机数量统计图表</a>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                {% endif %}
+                                </li>
+                            </ul>
+                            <!-- /.nav-second-level -->
+                        </li>
+                        <li>
+                            <a href="#"><i class="fa fa-info-circle fa-fw"></i> IT设备管理<span class="fa arrow"></span></a>
+                            <ul class="nav nav-second-level">
+                                {% if request.user.is_superuser %}
+                                    <li>
+                                        <a href="/it_assets/supplier/">资产供应商</a>
+                                    </li>
+                                    <li>
+                                        <a href="/it_assets/pos/">资产位置</a>
+                                    </li>
+                                    <li>
+                                        <a href="/it_assets/assets_warehousing_region/">资产仓库区域</a>
+                                    </li>
+                                    <li>
+                                        <a href="/it_assets/log_assets/">资产变更</a>
+                                    </li>
+                                    <li>
+                                        <a href="/it_assets/assets_batch_alter/">资产批量修改</a>
+                                    </li>
+                                {% endif %}
+                                <li>
+                                    <a href="#">资产查询 <span class="fa arrow"></span></a>
+                                    <ul class="nav nav-third-level">
+                                        <li>
+                                            <a href="/it_assets/assets_reception/">固定资产查询</a>
+                                        </li>
+                                        <li>
+                                            <a href="/it_assets/sub_assets_reception/">主机配件查询</a>
+                                        </li>
+                                        <li>
+                                            <a href="/it_assets/shell_assets_reception/">列管资产查询</a>
+                                        </li>
+                                    </ul>
+                                </li>
+                                {% if request.user.is_superuser %}
+                                    <li>
+                                        <a href="/it_assets/assets_trace/">资产追踪</a>
+                                    </li>
+                                    <li>
+                                        <a href="/it_assets/assets_template/">资产模板</a>
+                                    </li>
+                                    <li>
+                                        <a href="/it_assets/assets_collect/">资产图表汇总</a>
+                                    </li>
+                                    <li>
+                                        <a href="/it_assets/company_code/">公司代号</a>
+                                    </li>
+                                {% endif %}
+                            </ul>
+                        </li>
+                        <li>
+                            <a href="#"><i class="fa fa-cogs fa-fw"></i> 游戏项目管理<span class="fa arrow"></span></a>
+                            <ul class="nav nav-second-level">
+                                <li>
+                                    <a href="/assets/game_project_list/">项目列表</a>
+                                </li>
+                                <li>
+                                    <a href="/myworkflows/game_server_type/">区服类型表</a>
+                                </li>
+                                <li>
+                                    <a href="/myworkflows/game_server_list/">区服列表</a>
+                                </li>
+                                {% if request.user.is_superuser %}
+                                    <li>
+                                        <a href="/myworkflows/game_server_action_record/">区服操作记录</a>
+                                    </li>
+                                {% endif %}
+                                <li>
+                                    <a href="/ops/game_server_off_list/">项目下架计划</a>
+                                </li>
+                                <li>
+                                    <a href="/ops/modify_srv_open_time_schedule_list/">修改开服时间</a>
+                                </li>
+                                <li>
+                                    <a href="/ops/game_server_merge_list/">合服计划</a>
+                                </li>
+                                <li>
+                                    <a href="#">装 / 卸服管理 <span class="fa arrow"></span></a>
+                                    <ul class="nav nav-third-level">
+                                        <li>
+                                            <a href="/ops/install_gameserver_list/">装 / 卸服列表</a>
+                                        </li>
+                                        <li>
+                                            <a href="/ops/install_gameserver_record_list/">操作记录</a>
+                                        </li>
+                                    </ul>
+                                </li>
+                                {% if request.user.is_superuser %}
+                                    <li>
+                                        <a href="/myworkflows/game_server_ops_manager_lock/">项目地区锁</a>
+                                    </li>
+                                {% endif %}
+                            </ul>
+                            <!-- /.nav-second-level -->
+                        </li>
+                        {% if request.user.is_superuser %}
+                            <li>
+                                <a href="#"><i class="fa fa-clock-o fa-fw"></i> <i>SaltStack</i> 管理<span
+                                        class="fa arrow"></span></a>
+                                <ul class="nav nav-second-level">
+                                    <li>
+                                        <a href="/assets/system_cron_list/"><i>sls</i> 文件管理</a>
+                                    </li>
+                                    <li>
+                                        <a href="/assets/execute_salt_command_page/">执行 <i>salt</i> 命令</a>
+                                    </li>
+                                </ul>
+                                <!-- /.nav-second-level -->
+                            </li>
+                        {% endif %}
+                        {% if perms.mysql.view_mysql_instance %}
+                            <li>
+                                <a href="#"><i class="fa fa-database fa-fw"></i> 数据库实例<span
+                                        class="fa arrow"></span></a>
+                                <ul class="nav nav-second-level">
+                                    <li>
+                                        <a href="/mysql/instance/">实例列表</a>
+                                        {% if request.user.is_superuser %}
+                                            <a href="/txcloud/mysql_purchase/">购买实例</a>
+                                            <a href="/mysql/mysql_history/">变更记录</a>
+                                        {% endif %}
+                                    </li>
+                                </ul>
+                                <!-- /.nav-second-level -->
+                            </li>
+                        {% endif %}
+                        <li>
+                            <a href="#"><i class="fa fa-calendar fa-fw"></i> 值班安排管理<span
+                                    class="fa arrow"></span></a>
+                            <ul class="nav nav-second-level">
+                                <li>
+                                    <a href="/assets/duty_schedule/">值班表</a>
+                                </li>
+                            </ul>
+                            <!-- /.nav-second-level -->
+                        </li>
+                        <li>
+                            <a href="#"><i class="fa fa-cloud fa-fw"></i> CDN 管理<span class="fa arrow"></span></a>
+                            <ul class="nav nav-second-level">
+                                {% if request.user.is_superuser %}
+                                    <li>
+                                        <a href="/assets/cdn_api_info/">CDN 接口信息</a>
+                                    </li>
+                                {% endif %}
+                                <li>
+                                    <a href="/assets/cdn_refresh_page/">CDN 刷新</a>
+                                </li>
+                                <li>
+                                    <a href="/assets/cdn_refresh_record/">CDN 刷新记录查询</a>
+                                </li>
+                            </ul>
+                        </li>
+                        {% if request.user.is_superuser %}
+                            <li>
+                                <a href="/myworkflows/celery_worker_status/"><i class="fa fa-random fa-fw"></i> Celery
+                                    监控</a>
+                            </li>
+                            <li>
+                                <a href="#"><i class="fa fa-cube fa-fw"></i> SVN 管理<span class="fa arrow"></span></a>
+                                <ul class="nav nav-second-level">
+                                    <li>
+                                        <a href="/myworkflows/svn_repo/">SVN 仓库</a>
+                                    </li>
+                                    <li>
+                                        <a href="/myworkflows/svn_perm_scheme/">SVN 权限方案</a>
+                                    </li>
+                                </ul>
+                            </li>
+                        {% endif %}
+                        <li>
+                            <a href="#"><i class="fa fa-exchange fa-fw"></i> 工单流程<span class="fa arrow"></span></a>
+                            <ul class="nav nav-second-level">
+                                <li>
+                                    <a href="/myworkflows/workflow_list/">工单列表</a>
+                                </li>
+                                <li>
+                                    <a href="/myworkflows/apply_history/">我的申请</a>
+                                </li>
+                                <li>
+                                    <a href="/myworkflows/approved_list/">我的审批记录</a>
+                                </li>
+                                <li>
+                                    <a href="/myworkflows/approve_list/">我的待审批</a>
+                                </li>
+                                {% if request.user.is_superuser %}
+                                    <li>
+                                        <a href="/myworkflows/apply_history_all/">申请工单汇总</a>
+                                    </li>
+                                {% endif %}
+                                <li>
+                                    <a href="#">项目更新单汇总 <span class="fa arrow"></span></a>
+                                    <ul class="nav nav-third-level">
+                                        <li>
+                                            <a href="/myworkflows/version_update_summarize/">版本更新单</a>
+                                        </li>
+                                    </ul>
+                                </li>
+                                {% if request.user.is_superuser %}
+                                    <li>
+                                        <a href="#">配置汇总 <span class="fa arrow"></span></a>
+                                        <ul class="nav nav-third-level">
+                                            <li>
+                                                <a href="/myworkflows/workflow_state_specified_user/">流程审批人配置</a>
+                                            </li>
+                                            <li>
+                                                <a href="/myworkflows/special_user_config/">特殊人员配置</a>
+                                            </li>
+                                            <li>
+                                                <a href="/myworkflows/project_celery_queue_map/">celery队列配置</a>
+                                            </li>
+                                            <li>
+                                                <a href="/webapi/web_get_cdn_list_api/">web-获取cdn目录API</a>
+                                            </li>
+                                            <li>
+                                                <a href="/myworkflows/wechat_account_transfer/">企业微信帐号配置</a>
+                                            </li>
+                                            <li>
+                                                <a href="/admin/myworkflows/hotupdatetemplate/"
+                                                   target="_blank">热更新模板</a>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                {% endif %}
+                            </ul>
+                        </li>
+                        <li>
+                            <a href="#"><i class="fa fa-tasks fa-fw"></i> 热更新任务<span
+                                    class="fa arrow"></span></a>
+                            <ul class="nav nav-second-level">
+                                {% if request.user.is_superuser %}
+                                    <li>
+                                        <a href="/myworkflows/ops_manager_lock/">项目地区锁</a>
+                                    </li>
+                                {% endif %}
+                                <!--<li>
+                                    <a href="#">热更新任务 <span class="fa arrow"></span></a>
+                                    <ul class="nav nav-third-level">
+                                        <li>
+                                            <a href="/myworkflows/hot_client_list/">前端热更新任务</a>
+                                        </li>
+                                        <li>
+                                            <a href="/myworkflows/hot_server_list/">后端热更新任务</a>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li>
+                                    <a href="/myworkflows/hot_client_list/">前端热更新任务</a>
+                                </li>-->
+                                <li>
+                                    <a href="/myworkflows/hot_server_list/">热更新控制台</a>
+                                </li>
+                                <li>
+                                    <a href="/myworkflows/myhotupdate/">我的热更新任务</a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li>
+                            <a href="#"><i class="fa fa-user fa-fw"></i> 用户管理<span class="fa arrow"></span></a>
+                            <ul class="nav nav-second-level">
+                                <li>
+                                    <a href="{% url 'organization' %}">用户管理</a>
+                                </li>
+                                {% if request.user.is_superuser %}
+                                    <li>
+                                        <a href="/users/users_change_record/">用户变更记录</a>
+                                    </li>
+                                    <li>
+                                        <a href="/users/batch_user_desert_page/">批量离职</a>
+                                    </li>
+                                    <li>
+                                        <a href="/users/recently_clean_user/">清除结果汇总</a>
+                                    </li>
+                                    <li>
+                                        <a href="/users/users_share_info_template/">入职信息模板</a>
+                                    </li>
+                                {% endif %}
+                                <!--<li>
+                                    <a href="/it_assets/company_code/">公司代号</a>
+                                </li>
+                                <li>
+                                    <a href="/users/group_list/">部门列表</a>
+                                </li>
+                                <li>
+                                    <a href="/users/user_list/">用户列表</a>
+                                </li>-->
+                            </ul>
+                            <!-- /.nav-second-level -->
+                        </li>
+                        {% if request.user.is_superuser %}
+                            <li>
+                                <a href="#"><i class="fa fa-key fa-fw"></i> 权限管理<span class="fa arrow"></span></a>
+                                <ul class="nav nav-second-level">
+                                    <li>
+                                        <a href="{% url 'new_department_permission' %}">部门权限</a>
+                                    </li>
+                                    <li>
+                                        <a href="/users/user_permission/">用户权限</a>
+                                    </li>
+                                    <li>
+                                        <a href="{% url 'permission_change_record' %}">权限更改记录</a>
+                                    </li>
+                                    <!--<li>
+                                        <a href="/users/api_permission/">API权限</a>
+                                    </li>
+                                    <!--<li>
+                                        <a href="/users/project_permission/">项目权限</a>
+                                    </li>-->
+                                </ul>
+                            </li>
+                        {% endif %}
+                        <li>
+                            <a href="#"><i class="fa fa-file fa-fw"></i> API文档<span class="fa arrow"></span></a>
+                            <ul class="nav nav-second-level">
+                                <li>
+                                    <a href="/ops/cmdb_release_doc/" target="_blank">cmdb部署文档</a>
+                                </li>
+                                <li>
+                                    <a href="#">用户管理文档 <span class="fa arrow"></span></a>
+                                    <ul class="nav nav-third-level">
+                                        <li>
+                                            <a href="/users/group_users_api/" target="_blank">部门用户</a>
+                                        </li>
+                                        <li>
+                                            <a href="/users/get_not_active_user/" target="_blank">离职人员</a>
+                                        </li>
+                                        <li>
+                                            <a href="/users/cmdb_user_add_api/" target="_blank">cmdb帐号</a>
+                                        </li>
+                                        <li>
+                                            <a href="/users/cmdb_get_role_user_info_api/" target="_blank">运维角色分组</a>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li>
+                                    <a href="/assets/project_svn_api/" target="_blank">项目SVN文档</a>
+                                </li>
+                                <li>
+                                    <a href="#">主机管理文档 <span class="fa arrow"></span></a>
+                                    <ul class="nav nav-third-level">
+                                        <li>
+                                            <a href="/assets/hostAPI/" target="_blank">主机API文档</a>
+                                        </li>
+                                        <li>
+                                            <a href="/assets/host_migration_callback_api_doc/"
+                                               target="_blank">主机迁服API文档</a>
+                                        </li>
+                                        <li>
+                                            <a href="/assets/host_recover_callback_api_doc/"
+                                               target="_blank">主机回收API文档</a>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li>
+                                    <a href="/assets/server_permission_api/" target="_blank">服务器权限接口文档</a>
+                                </li>
+                                <li>
+                                    <a href="#">区服管理文档 <span class="fa arrow"></span></a>
+                                    <ul class="nav nav-third-level">
+                                        <li>
+                                            <a href="/myworkflows/game_server_list_api/" target="_blank">区服列表</a>
+                                        </li>
+                                        <li>
+                                            <a href="/ops/cmdb_add_gameserveroff_doc/" target="_blank">项目下架计划</a>
+                                        </li>
+                                        <li>
+                                            <a href="/myworkflows/game_server_off_callback_api_doc/" target="_blank">项目下架回调</a>
+                                        </li>
+                                        <li>
+                                            <a href="/ops/cmdb_modsrv_opentime_api_doc/" target="_blank">修改开服时间</a>
+                                        </li>
+                                        <li>
+                                            <a href="/ops/cmdb_modsrv_opentime_callback_api_doc/" target="_blank">修改开服时间回调</a>
+                                        </li>
+                                        <li>
+                                            <a href="/myworkflows/cmdb_game_server_action_callback_api_doc/"
+                                               target="_blank">区服管理操作回调</a>
+                                        </li>
+                                        <li>
+                                            <a href="/ops/cmdb_game_server_merge_api_doc/" target="_blank">合服计划</a>
+                                        </li>
+                                        <li>
+                                            <a href="/ops/install_gameserver_api/" target="_blank">装 / 卸服</a>
+                                        </li>
+                                        <li>
+                                            <a href="/ops/in_or_uninstall_gamesrv_callback_api_doc/" target="_blank">装 /
+                                                卸服回调</a>
+                                        </li>
+                                        <li>
+                                            <a href="/myworkflows/recv_web_maintenance_api_doc/" target="_blank">同步挂维护消息</a>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li>
+                                    <a href="#">热更新文档 <span class="fa arrow"></span></a>
+                                    <ul class="nav nav-third-level">
+                                        <li>
+                                            <a href="/myworkflows/hot_update_api/" target="_blank">热更新API文档</a>
+                                            <a href="/myworkflows/cmdb_hotupdate_join_project_doc/" target="_blank">热更新对接新项目</a>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li>
+                                    <a href="/mysql/mysql_instance_api/" target="_blank">数据库实例文档</a>
+                                </li>
+                                <li>
+                                    <a href="#">版本更新文档 <span class="fa arrow"></span></a>
+                                    <ul class="nav nav-third-level">
+                                        <li>
+                                            <a href="/myworkflows/help_doc?workflow=7" target="_blank">版本更新审核流程</a>
+                                            <a href="/myworkflows/version_update_plan_doc/" target="_blank">获取版本更新计划</a>
+                                        </li>
+                                    </ul>
+                                </li>
+
+                            </ul>
+                            <!-- /.nav-second-level -->
+                        </li>
+                        <!--
+                        <li>
+                            <a href="/myworkflows/real_time_log">实时log测试</a>
+                        </li>-->
+                        <!--<li>
+                            <a href="/assets/upload/"><i class="fa fa-download fa-fw"></i> 导入数据</a>
+                        </li>-->
+                    </ul>
+                    <br/><br/><br/><br/><br/>
+                </div>
+                <!-- /.sidebar-collapse -->
+            </div>
+        {% endblock %}
+        <!-- /.navbar-static-side -->
+    </nav>
+
+    <!-- Page Content -->
+    {% block content %}{% endblock %}
+    <!-- /#page-wrapper -->
+
+</div>
+<!-- /#wrapper -->
+
+{% block custom-body-js %}
+    <script src="/static/js/jquery.json.min.js"></script>
+    <script src="/static/js/bootstrap.min.js"></script>
+    <script src="/static/js/metisMenu.min.js"></script>
+    <script src="/static/js/sb-admin-2.js"></script>
+    <script src="/static/js/jquery.confirm.js"></script>
+    <script src="/static/js/common.js"></script>
+{% endblock %}
+
+{% block bodyjs %}{% endblock %}
+{% block bodycss %}{% endblock %}
+</body>
+
+</html>

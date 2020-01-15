@@ -1,0 +1,310 @@
+{%extends 'template.html'%}
+
+{%block content%}
+<div id="page-wrapper">
+    <div class="row">
+        <div class="col-lg-12">
+            <h1 class="page-header">新增平台向导</h1>
+        </div>
+    </div>
+    <div class="row">
+        <div id="platform_wizard_step" class="col-lg-12">
+            <h3>新增平台</h3>
+            <section>
+                <form class="form-horizontal">
+                  <div class="form-group">
+                    <label class="col-sm-2 control-label" for="room_name">机房</label>
+                    <div class="col-sm-4">
+                        <select id="room_name" style="width: 100%">
+                        </select>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label class="col-sm-2 control-label" for="platform_type">平台类型</label>
+                    <div class="col-sm-4">
+                        <select id="platform_type" style="width: 100%">
+                        </select>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label class="col-sm-2 control-label" for="company_name">公司名</label>
+                    <div class="col-sm-4">
+                        <select id="company_name" style="width: 100%">
+                        </select>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label class="col-sm-2 control-label" for="platform_name">平台名称</label>
+                    <div class="col-sm-4">
+                        <input type="text" class="form-control" style="width: 100%" id="platform_name" placeholder="请填写平台名称">
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label class="col-sm-2 control-label" for="project-manager">项目经理</label>
+                    <div class="col-sm-4">
+                        <input type="text" class="form-control" id="project_manager" placeholder="请填写项目经理名称">
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label class="col-sm-2 control-label" for="development_manager">研发经理</label>
+                    <div class="col-sm-4">
+                        <input type="text" class="form-control" id="development_manager" placeholder="请填写研发经理名称">
+                    </div>
+                  </div>
+{#                  <div>#}
+{#                      <a >主机命名规则：</a>#}
+{#                      <pre>#}
+{#                        主机名规则： 平台类型+公司名+机房序号+OS类型+业务类型+数字序号   共十位#}
+{#                        平台类型： {U:UAT, S:SIT, P:PRD, O:运维, D:灾备}#}
+{#                        公司名: {A:网金, B:钱端, C:钱途, D:大数据}#}
+{#                        机房序号: {0:亚太, 1:化龙}//按照CMDB中机房的ID字段#}
+{#                        机器业务类型： {W:WEB, A:APP, S:SER, C:CACHE,M:MAG, G:MSG, D:DB, }#}
+{#                        保留位: 三位#}
+{#                        数字位: 三位，按照顺序自增</pre>#}
+{#                  </div>#}
+                  <div class=" col-md-8 col-md-offset-1">
+                      <div class="panel panel-default">
+                        <div class="panel-heading">
+                           <h4 class="panel-title">
+                              <a data-toggle="collapse" data-parent="#accordion" href="#name_rule">主机命名规则</a>
+                           </h4>
+                        </div>
+                        <div id="name_rule" class="panel-collapse collapse">
+                          <div class="panel-body">
+                            主机名规则： 平台类型+公司名+机房序号+OS类型+业务类型+数字序号   共十位<br />
+                            平台类型： {U:UAT, S:SIT, P:PRD, O:运维, D:灾备}<br />
+                            公司名: {A:网金, B:钱端, C:钱途, D:大数据}<br />
+                            机房序号: {0:亚太, 1:化龙}//按照CMDB中机房的ID字段<br />
+                            机器业务类型： {W:WEB, A:APP, S:SER, C:CACHE,M:MAG, G:MSG, D:DB, }<br />
+                            保留位: 三位<br />
+                            数字位: 三位，按照顺序自增<br />
+                          </div>
+                        </div>
+                      </div>
+                 </div>
+                </form>
+            </section>
+            <h3>新增主机</h3>
+            <section>
+                <table id="add_host_datatable" class="table table-bordered  table-striped "  style="text-align: center" cellspacing="0" width="100%" style="background: white ">
+                    <thead>
+                        <tr>
+                            <th>类型</th>
+                            <!--<th>业务类型</th>-->
+                            <th>数量</th>
+                            <th>配置</th>
+                            <th>机器类型</th>
+                            <th>网络区域</th>
+                            <th>绑定vip</th>
+{#                            <th>VIP区域</th>#}
+{#                            <th>获取VIP</th>#}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>WEB</td>
+                            <!--<td><select id="web" style="width: 100%"></select></td>-->
+                            <td><input id="web_count" value="0" style="width:100%" type="text"></td>
+                            <td><select id="web_conf" class="os_conf" style="width: 100%"></select></td>
+                            <td><select id="web_host_type" class="host_type" style="width: 100%"></select></td>
+                            <td><select id="web_network_area" class="area_iptype" style="width: 100%"></select></td>
+                            <td><input type="checkbox" class="host_with_ip" id="web_with_vip"></td>
+{#                            <td><select id="web_vip_area" class="vip_area_iptype" style="width: 100%"></select></td>#}
+{#                            <td style="width: 16%"><input value="0" style="width: 100%"  type="text" id="web_vip"></td>#}
+{#                            <td style="width: 16%"><input value="0" style="width:100%"  type="text" id="web_ip"></td>#}
+                        </tr>
+                        <tr>
+                            <td>APP</td>
+                            <!--<td><select id="app" style="width: 100%"></select></td>-->
+                            <td><input id="app_count" name="app-count" style="width:100%" value="0" type="text"></td>
+                            <td><select id="app_conf" class="os_conf" style="width: 100%"></select></td>
+                            <td><select id="app_host_type" class="host_type" style="width: 100%"></select></td>
+                            <td><select id="app_network_area" class="area_iptype" style="width: 100%"></select></td>
+                            <td><input type="checkbox" class="host_with_ip" id="app_with_vip"></td>
+{#                            <td><select id="app_vip_area" class="vip_area_iptype" style="width: 100%"></select></td>#}
+{#                            <td style="width: 16%"><input value="0" style="width:100%"  type="text"  id="app_vip"></td>#}
+{#                            <td style="width: 16%"><input value="0" style="width:100%"  type="text"  id="app_ip"></td>#}
+                        </tr>
+                        <tr>
+                            <td>MAG</td>
+                            <!--<td><select style="width: 100%" id="mag"></select></td>-->
+                            <td><input id="mag_count" name="mag-count" style="width:100%" value="0" type="text"></td>
+                            <td><select style="width: 100%" class="os_conf" id="mag_conf"></select></td>
+                            <td><select style="width: 100%" class="host_type" id="mag_host_type"></select></td>
+                            <td><select style="width: 100%" class="area_iptype" id="mag_network_area"></select></td>
+                            <td><input type="checkbox" class="host_with_ip" id="mag_with_vip"></td>
+{#                            <td><select style="width: 100%" class="vip_area_iptype" id="mag_vip_area"></select></td>#}
+{#                            <td style="width: 16%"><input value="0" style="width:100%"  type="text"  id="mag_vip"></td>#}
+{#                            <td style="width: 16%"><input value="0" style="width:100%"  type="text" id="mag_ip"></td>#}
+                        </tr>
+                        <tr>
+                            <td>SER</td>
+                            <!--<td><select style="width: 100%" id="ser"></select></td>-->
+                            <td><input id="ser_count" name="ser-count" style="width:100%" value="0" type="text"></td>
+                            <td><select style="width: 100%" class="os_conf" id="ser_conf"></select></td>
+                            <td><select style="width: 100%" class="host_type" id="ser_host_type"></select></td>
+                            <td><select style="width: 100%" class="area_iptype" id="ser_network_area"></select></td>
+                            <td><input type="checkbox" class="host_with_ip" id="ser_with_vip"></td>
+{#                            <td><select style="width: 100%" class="vip_area_iptype" id="ser_vip_area"></select></td>#}
+{#                            <td style="width: 16%"><input value="0" style="width:100%"  type="text"  id="ser_vip"></td>#}
+{#                            <td style="width: 16%"><input value="0" style="width:100%"  type="text"  id="ser_ip"></td>#}
+                        </tr>
+                        <tr>
+                            <td>MSG</td>
+                            <!--<td><select style="width: 100%" id="msg"></select></td>-->
+                            <td><input id="msg_count" name="msg-count" style="width:100%" value="0" type="text"></td>
+                            <td><select style="width: 100%" class="os_conf" id="msg_conf"></select></td>
+                            <td><select style="width: 100%" class="host_type" id="msg_host_type"></select></td>
+                            <td><select style="width: 100%" class="area_iptype" id="msg_network_area"></select></td>
+                            <td><input type="checkbox" class="host_with_ip" id="msg_with_vip"></td>
+{#                            <td><select style="width: 100%" class="vip_area_iptype" id="msg_vip_area"></select></td>#}
+{#                            <td style="width: 16%"><input value="0" style="width:100%"  type="text"  id="msg_vip"></td>#}
+{#                            <td style="width: 16%"><input value="0" style="width:100%"  type="text"  id="msg_ip"></td>#}
+                        </tr>
+                        <tr>
+                            <td>CACHE</td>
+                            <!--<td><select style="width: 100%" id="cache"></select></td>-->
+                            <td><input id="cache_count" name="cache-count" style="width:100%" value="0" type="text"></td>
+                            <td><select style="width: 100%" class="os_conf" id="cache_conf"></select></td>
+                            <td><select style="width: 100%" class="host_type" id="cache_host_type"></select></td>
+                            <td><select style="width: 100%" class="area_iptype" id="cache_network_area"></select></td>
+                            <td><input type="checkbox" class="host_with_ip" id="cache_with_vip"></td>
+{#                            <td><select style="width: 100%" class="vip_area_iptype" id="cache_vip_area"></select></td>#}
+{#                            <td style="width: 16%"><input value="0" style="width:100%"  type="text"  id="cache_vip"></td>#}
+{#                            <td style="width: 16%"><input value="0" style="width:100%"  type="text"  id="cache_ip"></td>#}
+                        </tr>
+                        <tr>
+                            <td>JUMP</td>
+                            <!--<td><select style="width: 100%" id="jump"></select></td>-->
+                            <td><input id="jump_count" style="width:100%" value="0" type="text"></td>
+                            <td><select style="width: 100%" class="os_conf" id="jump_conf"></select></td>
+                            <td><select style="width: 100%" class="host_type" id="jump_host_type"></select></td>
+                            <td><select style="width: 100%" class="area_iptype" id="jump_network_area"></select></td>
+                            <td><input type="checkbox" class="host_with_ip" id="jump_with_vip"></td>
+{#                            <td><select style="width: 100%" class="vip_area_iptype" id="jump_vip_area"></select></td>#}
+{#                            <td style="width: 16%"><input value="0" style="width:100%"  type="text"  id="jump_vip"></td>#}
+{#                            <td style="width: 16%"><input value="0" style="width:100%"  type="text"  id="jump_vip"></td>#}
+                        </tr>
+                        <tr>
+                            <td>DB</td>
+                            <!--<td><select style="width: 100%" id="db"></select></td>-->
+                            <td><input id="db_count" style="width:100%" value="0" type="text"></td>
+                            <td><select style="width: 100%" class="os_conf" id="db_conf"></select></td>
+                            <td><select style="width: 100%" class="host_type" id="db_host_type"></select></td>
+                            <td><select style="width: 100%" class="area_iptype" id="db_network_area"></select></td>
+                            <td><input type="checkbox" class="host_with_ip" id="db_with_vip"></td>
+{#                            <td><select style="width: 100%" class="vip_area_iptype" id="db_vip_area"></select></td>#}
+{#                            <td style="width: 16%"><input value="0" style="width:100%"  type="text"  id="db_vip"></td>#}
+{#                            <td style="width: 16%"><input value="0" style="width:100%"  type="text"  id="db_ip"></td>#}
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="jumbotron">
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">申请vip</label>
+                        <div class="col-sm-4">
+                          <select id="gen_ip_by_typeName" style="width: 100%">
+                          </select>
+                        </div>
+                        <a type="button" id="gen_ip" class="btn btn-sm btn-info">获取</a>
+                        <a type="button" id="clear_ip" class="btn btn-sm btn-danger">重置</a>
+                    </div>
+                    <div class="jumbotron" id="ip_list_info" style="background: white">
+                    </div>
+                </div>
+            </section>
+            <h3>新增策略</h3>
+            <section id="page3">
+                <table id="network_policy_table" class="display nowrap" cellspacing="0" width="100%">
+                    <thead>
+                        <tr>
+                            <th>策略名称</th>
+                            <th>源平台</th>
+                            <th>源主机</th>
+                            <th>源IP</th>
+                            <th>目的平台</th>
+                            <th>目的主机</th>
+                            <th>目的IP</th>
+                            <th>协议</th>
+                            <th>端口</th>
+                            <th>生效时间</th>
+                            <th>过期时间</th>
+                        </tr>
+                    </thead>
+                </table>
+                <div class="btn-group">
+                    <a type="button" id="network_policy_add" class="btn btn-primary">新增一行</a>
+                    <a type="button" id="network_policy_del" class="btn btn-danger">删除一行</a>
+                    <a type="button" id="page2_info" class="btn btn-info">平台信息</a>
+                </div>
+            </section>
+            <h3>信息总览</h3>
+            <section>
+                <table id="page4_host_table" class="table table-bordered table-hover table-condensed" cellspacing="0" width="100%">
+                    <thead>
+                        <tr>
+                            <th>平台名</th>
+                            <th>服务名</th>
+                            <th>主机名</th>
+                            <th>业务类型</th>
+                            <th>IP地址</th>
+                            <th>VIP</th>
+                        </tr>
+                    </thead>
+                    <tbody id="host_table_body">
+                    </tbody>
+                </table>
+                <table id="page4_policy_table" class="table table-bordered table-hover table-condensed" cellspacing="0" width="100%">
+                    <thead>
+                        <tr>
+                            <th>策略名称</th>
+                            <th>源平台</th>
+                            <th>源主机</th>
+                            <th>源IP</th>
+                            <th>目的平台</th>
+                            <th>目的主机</th>
+                            <th>目的IP</th>
+                            <th>协议</th>
+                            <th>端口</th>
+                            <th>生效时间</th>
+                            <th>过期时间</th>
+                        </tr>
+                    </thead>
+                    <tbody id="policy_table_body">
+                    </tbody>
+                </table>
+            </section>
+        </div>
+
+
+    </div>
+</div>
+{%endblock%}
+{%block bodyjs%}
+    <script src="/static/js/jquery.dataTables.js" ></script>
+    {{ django_context_varable }}
+    {% verbatim %}
+    <script id="tpl" type="text/x-handlebars-template">
+          {{#each func}}
+          <button type="button" class="btn btn-{{this.type}} btn-sm" onclick="{{this.fn}}">{{this.name}}</button>
+          {{/each}}
+    </script>
+    {% endverbatim %}
+    <script src="/static/js/handlebars-v3.0.1.js"></script>
+    <script src="/static/js/cabinet.js"></script>
+    <script type="text/javascript" src="/static/js/zebra_datepicker.js"></script>
+    <script src="/static/js/jquery.steps.js"></script>
+    <script src="/static/js/jquery.dataTables.min.js"></script>
+    <script src="/static/js/jquery-confirm.min.js"></script>
+{#    <script src="/static/js/dataTables.bootstrap.min.js"></script>#}
+    <script src="/static/js/wizard.js"></script>
+{%endblock%}
+
+{%block css%}
+{#<link href="/static/css/dataTables.bootstrap.min.css" rel="stylesheet" type="text/css">#}
+<link href="/static/css/jquery.dataTables.css" rel="stylesheet" type="text/css">
+<link href="/static/css/mycss.css" rel="stylesheet" type="text/css">
+<link rel="stylesheet" type="text/css" href="/static/css/datetimepicker.css">
+<link rel="stylesheet" type="text/css" href="/static/css/jquery.steps.css">
+<link rel="stylesheet" type="text/css" href="/static/css/jquery-confirm.min.css">
+{%endblock%}

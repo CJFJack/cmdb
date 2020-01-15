@@ -1,0 +1,49 @@
+{% extends 'template.html' %}
+
+{% block username %}
+    {{ head.username }}
+{% endblock %}
+
+{% block content %}
+    <div id="page-wrapper">
+        <div class="row">
+            <div class="col-lg-12">
+                <h1 class="page-header">{{ head.value }}</h1>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <div class="container">
+                                    <form role="form" class="form-horizontal">
+
+                                        <div class="form-group">
+                                            <label class="col-lg-12" for="TextArea">日志</label>
+                                            <div class="col-lg-12">
+                                                <textarea id="log" style="min-width: 130%" readonly="readonly"
+                                                          rows="28"></textarea>
+                                            </div>
+                                        </div>
+
+                                    </form>
+                                    <hr>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+{% endblock %}
+{% block bodyjs %}
+    <script src="/static/js/reconnecting-websocket.js"></script>
+    <script src="/static/js/hotupdate_cmdb_log.js"></script>
+{% endblock %}
+{% block css %}
+    <link href="/static/css/hotupdate_cmdb_log.css" rel="stylesheet" type="text/css">
+{% endblock %}

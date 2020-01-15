@@ -1,0 +1,62 @@
+{%extends 'template.html'%}
+
+{%block username%}
+{{head.username}}
+{%endblock%}
+
+{%block content%}
+<div id="page-wrapper">
+    <div class="row">
+        <div class="col-lg-12">
+            <h1 class="page-header" id="company_name">{{head.value}}</h1>
+            <h1 class="page-header" id="company_id" style="display: none;">{{company_id}}</h1>
+        </div>
+    </div>
+
+    <!--<div class="row">
+        <div class="col-lg-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <i class="fa fa-bar-chart-o fa-fw"></i> 库存
+                </div>
+                <div class="panel-body">
+                    <div id="bar-example" ></div>
+                </div>
+            </div>
+        </div>
+    </div>-->
+
+    {% for data_structure in all_data_structure %}
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <i class="fa fa-bar-chart-o fa-fw"></i> {{data_structure.title}}
+                    </div>
+                    <div class="panel-body">
+                        <div id={{data_structure.status_code}} class={{data_structure.class}} style="height:350px; padding-bottom:60px;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+
+</div>
+{%endblock%}
+{%block bodyjs%}
+    {{ django_context_varable }}
+    {% verbatim %}
+    <script id="tpl" type="text/x-handlebars-template">
+          {{#each func}}
+          <button type="button" class="btn btn-{{this.type}} btn-sm" onclick="{{this.fn}}">{{this.name}}</button>
+          {{/each}}
+    </script>
+    {% endverbatim %}
+    <script src="/static/js/raphael-min.js"></script>
+    <script src="/static/js/morris.js"></script>
+    <script src="/static/js/assets_detail.js"></script>
+    <!--<script type="text/javascript" src="/static/js/log_assets.js"></script>-->
+{%endblock%}
+{%block css%}
+    <link href="/static/css/morris.css" rel="stylesheet" type="text/css">
+{%endblock%}

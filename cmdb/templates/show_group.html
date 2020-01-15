@@ -1,0 +1,497 @@
+{%extends 'template.html'%}
+{%block css%}
+<link href="/static/css/jquery.dataTables.css" rel="stylesheet" type="text/css">
+<link rel="stylesheet" type="text/css" href="/static/css/users.css">
+{%endblock%}
+{%block content%}
+<div id="page-wrapper">
+    <div class="row">
+        <div class="col-lg-12">
+            <h1 class="page-header">{{head.value}}</h1>                
+        </div>            
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <div class="btn-group">
+                        <a><button id='bt-add' type="button" class="btn btn-primary">新增</button></a>
+                        <a><button id='bt-del' type="button" class="btn btn-primary">删除</button></a>
+                    </div>
+                </div>
+            </div>
+            <div class="panel-body">
+                <table id="example" class="display" width="100%" cellspacing="0">
+                    <thead>
+                        <tr>
+                            <th>组名</th>
+                            <th>故障表</th>
+                            <th>设备表</th>
+                            <th>机柜表</th>
+                            <th>IDC表</th>
+                            <th>IP表</th>
+                            <th>日志表</th>
+                            <th>用户组表</th>
+                            <th>用户项目表</th>
+                            <th>用户表</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>               
+                </table>
+            </div>
+        </div>
+    <div class="modal fade" id="Modal-file" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title" id="myModalLabel"></h4>
+                </div>
+                <div class="modal-body" id="tab-permissions">
+                    <form id="fm-permissions" class="form-horizontal">
+                        <fieldset>
+                            <legend>用户组名</legend>
+                            <div class="form-group">
+                                <label class="col-md-2 control-label"></label>
+                                {{forms.name}}
+                            </div>
+                        </fieldset>
+                        <fieldset>
+                            <legend>服务器列表</legend>
+                            <div class="form-group">
+                                <label class="col-md-3 control-label">增加</label>
+                                {{forms.devices_add}}
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-3 control-label">修改</label>
+                                {{forms.devices_edit}}
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-3 control-label">删除</label>
+                                {{forms.devices_del}}
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-3 control-label">查看</label>
+                                {{forms.devices_view}}
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-3 control-label">全部</label>
+                                {{forms.devices_all}}
+                            </div>
+                        </fieldset>
+                        <fieldset>
+                            <legend>IDC列表</legend>
+                            <div class="form-group">
+                                <label class="col-md-3 control-label">增加</label>
+                                {{forms.idc_add}}
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-3 control-label">修改</label>
+                                {{forms.idc_edit}}
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-3 control-label">删除</label>
+                                {{forms.idc_del}}
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-3 control-label">查看</label>
+                                {{forms.idc_view}}
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-3 control-label">全部</label>
+                                {{forms.idc_all}}
+                            </div>
+                        </fieldset>
+                        <fieldset>
+                            <legend>机柜列表</legend>
+                            <div class="form-group">
+                                <label class="col-md-3 control-label">增加</label>
+                                {{forms.cabinets_add}}
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-3 control-label">修改</label>
+                                {{forms.cabinets_edit}}
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-3 control-label">删除</label>
+                                {{forms.cabinets_del}}
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-3 control-label">查看</label>
+                                {{forms.cabinets_view}}
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-3 control-label">全部</label>
+                                {{forms.cabinets_all}}
+                            </div>
+                        </fieldset>
+                        <fieldset>
+                            <legend>服务器故障管理列表</legend>
+                            <div class="form-group">
+                                <label class="col-md-3 control-label">增加</label>
+                                {{forms.accident_add}}
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-3 control-label">修改</label>
+                                {{forms.accident_edit}}
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-3 control-label">删除</label>
+                                {{forms.accident_del}}
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-3 control-label">查看</label>
+                                {{forms.accident_view}}
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-3 control-label">全部</label>
+                                {{forms.accident_all}}
+                            </div>
+                        </fieldset>
+                        <fieldset>
+                            <legend>游戏项目管理列表</legend>
+                            <div class="form-group">
+                                <label class="col-md-3 control-label">增加</label>
+                                {{forms.project_add}}
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-3 control-label">修改</label>
+                                {{forms.project_edit}}
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-3 control-label">删除</label>
+                                {{forms.project_del}}
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-3 control-label">查看</label>
+                                {{forms.project_view}}
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-3 control-label">全部</label>
+                                {{forms.project_all}}
+                            </div>
+                        </fieldset>
+                        <fieldset>
+                            <legend>ip列表</legend>
+                            <div class="form-group">
+                                <label class="col-md-3 control-label">增加</label>
+                                {{forms.ips_add}}
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-3 control-label">修改</label>
+                                {{forms.ips_edit}}
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-3 control-label">删除</label>
+                                {{forms.ips_del}}
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-3 control-label">查看</label>
+                                {{forms.ips_view}}
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-3 control-label">全部</label>
+                                {{forms.ips_all}}
+                            </div>
+                        </fieldset>
+                        <fieldset>
+                            <legend>用户管理</legend>
+                            <div class="form-group">
+                                <label class="col-md-3 control-label">增加</label>
+                                {{forms.users_add}}
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-3 control-label">修改</label>
+                                {{forms.users_edit}}
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-3 control-label">删除</label>
+                                {{forms.users_del}}
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-3 control-label">查看</label>
+                                {{forms.users_view}}
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-3 control-label">全部</label>
+                                {{forms.users_all}}
+                            </div>
+                        </fieldset>
+
+                        <!-- <fieldset>
+                            <legend>设备内部</legend>
+                            <div class="form-group">
+                                <label class="col-md-3 control-label">增加</label>
+                                {{forms.deviceinside_add}}
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-3 control-label">修改</label>
+                                {{forms.deviceinside_edit}}
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-3 control-label">删除</label>
+                                {{forms.deviceinside_del}}
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-3 control-label">查看</label>
+                                {{forms.deviceinside_view}}
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-3 control-label">全部</label>
+                                {{forms.deviceinside_all}}
+                            </div>
+                        </fieldset> -->
+                        <fieldset>
+                            <legend>用户组管理</legend>
+                            <div class="form-group">
+                                <label class="col-md-3 control-label">增加</label>
+                                {{forms.group_add}}
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-3 control-label">修改</label>
+                                {{forms.group_edit}}
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-3 control-label">删除</label>
+                                {{forms.group_del}}
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-3 control-label">查看</label>
+                                {{forms.group_view}}
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-3 control-label">全部</label>
+                                {{forms.group_all}}
+                            </div>
+                        </fieldset>
+                        
+                        <!-- <fieldset>
+                            <legend>服务器统计查询</legend>
+                            <div class="form-group">
+                                <label class="col-md-3 control-label">增加</label>
+                                {{forms.idc_add}}
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-3 control-label">修改</label>
+                                {{forms.idc_edit}}
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-3 control-label">删除</label>
+                                {{forms.idc_del}}
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-3 control-label">查看</label>
+                                {{forms.idc_view}}
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-3 control-label">全部</label>
+                                {{forms.idc_all}}
+                            </div>
+                        </fieldset> -->
+                        <fieldset>
+                            <legend>操作日志列表</legend>
+                            <div class="form-group">
+                                <label class="col-md-3 control-label">删除</label>
+                                {{forms.syslogs_del}}
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-3 control-label">查看</label>
+                                {{forms.syslogs_view}}
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-3 control-label">全部</label>
+                                {{forms.syslogs_all}}
+                            </div>
+                        </fieldset>
+                        <!-- <fieldset>
+                            <legend>项目信息列表</legend>
+                            <div class="form-group">
+                                <label class="col-md-3 control-label">修改</label>
+                                {{forms.projectdevice_edit}}
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-3 control-label">查看</label>
+                                {{forms.projectdevice_view}}
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-3 control-label">全部</label>
+                                {{forms.projectdevice_all}}
+                            </div>
+                        </fieldset> -->
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                    <button id='file-save' type="button" class="btn btn-primary">保存</button>
+                  </div>
+                </div><!-- /.modal-content -->
+          </div><!-- /.modal-dialog -->          
+        </div>
+    </div>
+</div>
+{%endblock%}
+
+{%block bodyjs%}
+<script src="/static/js/jquery.dataTables.js" ></script>
+<script src="/static/js/handlebars-v3.0.1.js"></script>
+{{ django_context_varable }}
+{% verbatim %}
+<script id="tpl" type="text/x-handlebars-template">
+      {{#each func}}
+      <button type="button" class="btn btn-{{this.type}} btn-sm" onclick="{{this.fn}}">{{this.name}}</button>
+      {{/each}}
+</script>
+{% endverbatim %}
+<script type="text/javascript">
+    var editTag=false;
+    var table;
+    var tpl = $("#tpl").html();
+    var template = Handlebars.compile(tpl);
+    function edit(name){
+        $("#myModalLabel").text("修改用户组");
+        $('#id_name').attr('readonly','readonly');
+        pdata = $.toJSON({'name': name});
+        var inputIds=$('#fm-permissions input:radio').map(function(i,n){
+            return $(n).prop("checked",false);
+        }).get();
+        editTag = true;
+        $.ajax({
+            type: "POST",
+            url: "/users/permissions_group",
+            contentType: "application/json; charset=utf-8",
+            data: pdata,
+            success: function (data) {
+                console.log(data);
+                if (data['data']) {
+                    $('#id_name').val(name);
+                    for (var i = 0; i < data['data'].length; i++) {
+                        $("#fm-permissions input[name="+data['data'][i]['name']+"][value="+data['data'][i]['value']+"]").prop('checked',true)
+                    };
+                    $('#Modal-file').modal('show')
+                }else{
+                    alert(data['msg'])
+                };
+            }
+        });
+    };
+    $('#bt-add').click(function(){
+        $("#myModalLabel").text("增加用户组");
+        $('#id_name').removeAttr('readonly');
+        $('#id_name').val('');
+        editTag = false;
+        var inputIds=$('#fm-permissions input:radio').map(function(i,n){
+            if ($(n).val() == 0){
+                return $(n).prop("checked",true);
+            };
+        }).get();
+        $('#Modal-file').modal('show')
+    });
+    $(document).ready(function() {
+        table = $('#example').DataTable({
+            "ajax": "/users/groups_show",
+            "columns": [
+                {"data": "name"},
+                {"data": "accident"},
+                {"data": "devices"},
+                {"data": "cabinets"},
+                {"data": "idc"},
+                {"data": "ips"},
+                {"data": "syslogs"},
+                {"data": "group"},
+                {"data": "project"},
+                {"data": "users"},
+                {"data": null},
+            ],
+            "order": [[0, 'asc']],
+            columnDefs: [
+                {
+                    targets: 10,
+                    render: function (a, b, c, d) {
+                        var context =
+                        {
+                            func: [
+                                {"name": "修改", "fn": "edit(\'" + c.name + "\')", "type": "primary"},
+                            ]
+                        };
+                        var html = template(context);
+                        return html;
+                    }
+                }
+            ],
+            "language": {
+                "url": "/static/js/i18n/Chinese.json"
+            },
+        });
+     
+        $('#example tbody').on( 'click', 'tr', function () {
+            if ( $(this).hasClass('selected') ) {
+                $(this).removeClass('selected');
+            }
+            else {
+                table.$('tr.selected').removeClass('selected');
+                $(this).addClass('selected');
+            }
+        } );
+     
+        //删除
+        $('#bt-del').click( function () {
+            if (table.row('.selected')[0].length == ''){
+                alert('请选择服务器')
+            }
+            else{
+                if(confirm("您确定要执行删除操作吗？")){
+                    var length=table.rows('.selected').data().length;
+                    var raw=[];
+                    for (var i=0; i<length; i++){
+                        raw[i] = table.rows('.selected').data()[i]
+                    };
+                    var encoded=$.toJSON( raw );
+                    var pdata = encoded;
+                    console.log(pdata);
+                    $.ajax({
+                        type: "POST",
+                        url: "/users/groups_delete",
+                        contentType: "application/json; charset=utf-8",
+                        data: pdata,
+                        success: function (data) {
+                            if (data){
+                                table.ajax.reload();
+                            }
+                            else{
+                                alert(msg)
+                            }
+                        }
+                    });
+                }else{
+                    return false;
+                }
+            }
+        } );
+        $('#file-save').click( function () {
+            $('#fm-permissions').submit();
+        } );
+
+        $('#fm-permissions').on('submit', function(e){
+            e.preventDefault();
+            var mdata = $('#fm-permissions').serialize();
+            // var pdata = new FormData($('#submit-file-form').get(0));
+            console.log(mdata);
+            $.ajax({
+                url: "/users/manage_group", 
+                type: 'POST', 
+                data: mdata,
+                success: function(data){
+                    if (data['data']){
+                        alert('执行成功');
+                        $('#Modal-file').modal('hide');
+                        table.ajax.reload();
+                    }
+                    else{
+                        alert(data['msg'])
+                    }
+                }
+            });
+        } );
+    } );
+</script>
+{%endblock%}

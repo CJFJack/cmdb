@@ -1,0 +1,146 @@
+{%extends 'template.html'%}
+
+{%block username%}
+{{head.username}}
+{%endblock%}
+
+{%block content%}
+<div id="page-wrapper">
+    <div class="row">
+        <div class="col-lg-12">
+            <h1 class="page-header">{{head.value}}</h1>
+            <h1 class="page-header" id="workflow_id" style="display: none;">{{head.workflow}}</h1>
+            <h1 class="page-header" id="first_name" style="display: none;">{{first_name}}</h1>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                  <div class="row">
+                    <div class="col-lg-6">
+                        <div class="container">
+                          <form role="form" class="form-horizontal">
+                            <div class="form-group">
+                              <label class="col-sm-12">申请人</label>
+                              <div class="col-sm-6">
+                                <div class="well" id="applicant">{{head.username}}</div>
+                              </div>
+                            </div>
+                            <div class="form-group">
+                              <label class="col-sm-12" for="TextArea">标题</label>
+                              <div class="col-sm-6">
+                                  <input class="form-control" id="title"></input>
+                              </div>
+                            </div>
+                            <div class="form-group">
+                              <label class="col-sm-12" for="TextArea">原因</label>
+                              <div class="col-sm-6">
+                                  <textarea class="form-control" id="reason"></textarea>
+                              </div>
+                            </div>
+                            <div class="form-group">
+                              <label class="col-sm-12" for="TextArea">注意事项(可选)</label>
+                              <div class="col-sm-6">
+                                  <textarea class="form-control" id="attention"></textarea>
+                              </div>
+                            </div>
+                            <div class="form-group">
+                              <label class="col-sm-12" for="TextArea">项目</label>
+                              <div class="col-sm-6">
+                                <select id="project" style="width: 100%">
+                                  <option value="0" selected="selected">选择项目</option>
+                                </select>
+                              </div>
+                            </div>
+                            <div class="form-group">
+                              <label class="col-sm-12" for="TextArea">区域</label>
+                              <div class="col-sm-6">
+                                <select id="area" style="width: 100%">
+                                  <option value="0" selected="selected">选择区域</option>
+                                </select>
+                              </div>
+                            </div>
+                            <div class="form-group">
+                              <label class="col-sm-12" for="TextArea">指定测试负责人审批</label>
+                              <div class="col-sm-6">
+                                <select id="test_head" style="width: 100%">
+                                  <option value="0" selected="selected">选择测试负责人</option>
+                                </select>
+                              </div>
+                            </div>
+                            <div class="form-group">
+                              <label class="col-sm-12" for="TextArea">指定运营负责人审批</label>
+                              <div class="col-sm-6">
+                                <select id="operation_head" style="width: 100%">
+                                  <option value="0" selected="selected">选择运营负责人</option>
+                                </select>
+                              </div>
+                            </div>
+                            <div class="form-group">
+                              <label class="col-sm-12" for="TextArea">更新类型</label>
+                              <div class="col-sm-6">
+                                <select id="update_type" style="width: 100%">
+                                  <option value="0" selected="selected">前端</option>
+                                  <option value="1">后端</option>
+                                </select>
+                              </div>
+                            </div>
+                            <div class="form-group">
+                              <label class="col-sm-12" for="TextArea">更新版本号</label>
+                              <div class="col-sm-6">
+                                <select id="update_version" style="width: 100%">
+                                  <option value="0" selected="selected">选择更新版本号</option>
+                                </select>
+                              </div>
+                            </div>
+                            <div class="form-group" id="update_backend_before">
+                              <label class="col-sm-12" for="TextArea">更新时间</label>
+                              <div class="col-sm-2">
+                                  <input class="flatpickr flatpickr-input" type="text" placeholder="选择更新时间" data-id="datetime" id="update_time" readonly="readonly">
+                              </div>
+                            </div>
+                            <div class="form-group" id="choose_server_after">
+                              <label class="col-sm-12" for="TextArea">添加一个选服方式</label>
+                              <div class="col-sm-6">
+                                <select id="choose_server" style="width: 100%">
+                                  <option value="0" selected="selected">选服方式</option>
+                                  <option value="1">前端CDN</option>
+                                  <option value="2">版本号</option>
+                                </select>
+                              </div>
+                              <button id='add_server' type='button' class='btn btn-sm btn-success' >添加</button>
+                              <button id='reset_server' type='button' class='btn btn-sm btn-danger' >重置</button>
+                            </div>
+                            <div class="form-group" id="choose_server_before">
+                              <label class="col-sm-12">流程步骤</label>
+                              <div class="col-sm-6">
+                                <p>{{state_step.value}}</p>
+                              </div>
+                            </div>
+                            <div class="form-group" id='append_before'>
+                              <div class="col-sm-6">
+                                <button type="button" class="btn btn-primary" id='bt-commit'>提交</button>
+                              </div>
+                            </div>
+                          </form>
+                          <hr>
+                        </div>
+                    </div>
+                  </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{%endblock%}
+{%block bodyjs%}
+    <script src="/static/js/hot_update_workflow.js"></script>
+    <script src="/static/js/flatpickr.js"></script>
+    <script src="/static/js/zh.js"></script>
+    <script src="/static/js/jquery.tree-multiselect.js"></script>
+{%endblock%}
+{%block css%}
+    <link href="/static/css/flatpickr.css" rel="stylesheet" type="text/css">
+    <link href="/static/css/jquery.tree-multiselect.css" rel="stylesheet" type="text/css">
+{%endblock%}

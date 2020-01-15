@@ -1,0 +1,1486 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><style>body {
+  width: 45em;
+  border: 1px solid #ddd;
+  outline: 1300px solid #fff;
+  margin: 16px auto;
+}
+
+body .markdown-body
+{
+  padding: 30px;
+}
+
+@font-face {
+  font-family: fontawesome-mini;
+  src: url(data:font/woff;charset=utf-8;base64,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) format('woff');
+}
+
+@font-face {
+  font-family: octicons-anchor;
+  src: url(data:font/woff;charset=utf-8;base64,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) format('woff');
+}
+
+.markdown-body {
+  font-family: sans-serif;
+  -ms-text-size-adjust: 100%;
+  -webkit-text-size-adjust: 100%;
+  color: #333333;
+  overflow: hidden;
+  font-family: "Helvetica Neue", Helvetica, "Segoe UI", Arial, freesans, sans-serif;
+  font-size: 16px;
+  line-height: 1.6;
+  word-wrap: break-word;
+}
+
+.markdown-body a {
+  background: transparent;
+}
+
+.markdown-body a:active,
+.markdown-body a:hover {
+  outline: 0;
+}
+
+.markdown-body b,
+.markdown-body strong {
+  font-weight: bold;
+}
+
+.markdown-body mark {
+  background: #ff0;
+  color: #000;
+  font-style: italic;
+  font-weight: bold;
+}
+
+.markdown-body sub,
+.markdown-body sup {
+  font-size: 75%;
+  line-height: 0;
+  position: relative;
+  vertical-align: baseline;
+}
+.markdown-body sup {
+  top: -0.5em;
+}
+.markdown-body sub {
+  bottom: -0.25em;
+}
+
+.markdown-body h1 {
+  font-size: 2em;
+  margin: 0.67em 0;
+}
+
+.markdown-body img {
+  border: 0;
+}
+
+.markdown-body hr {
+  -moz-box-sizing: content-box;
+  box-sizing: content-box;
+  height: 0;
+}
+
+.markdown-body pre {
+  overflow: auto;
+}
+
+.markdown-body code,
+.markdown-body kbd,
+.markdown-body pre,
+.markdown-body samp {
+  font-family: monospace, monospace;
+  font-size: 1em;
+}
+
+.markdown-body input {
+  color: inherit;
+  font: inherit;
+  margin: 0;
+}
+
+.markdown-body html input[disabled] {
+  cursor: default;
+}
+
+.markdown-body input {
+  line-height: normal;
+}
+
+.markdown-body input[type="checkbox"] {
+  box-sizing: border-box;
+  padding: 0;
+}
+
+.markdown-body table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+.markdown-body td,
+.markdown-body th {
+  padding: 0;
+}
+
+.markdown-body .codehilitetable {
+  border: 0;
+  border-spacing: 0;
+}
+
+.markdown-body .codehilitetable tr {
+  border: 0;
+}
+
+.markdown-body .codehilitetable pre,
+.markdown-body .codehilitetable div.codehilite {
+  margin: 0;
+}
+
+.markdown-body .linenos,
+.markdown-body .code,
+.markdown-body .codehilitetable td {
+  border: 0;
+  padding: 0;
+}
+
+.markdown-body td:not(.linenos) .linenodiv {
+  padding: 0 !important;
+}
+
+.markdown-body .code {
+  width: 100%;
+}
+
+.markdown-body .linenos div pre,
+.markdown-body .linenodiv pre,
+.markdown-body .linenodiv {
+  border: 0;
+  -webkit-border-radius: 0;
+  -moz-border-radius: 0;
+  border-radius: 0;
+  -webkit-border-top-left-radius: 3px;
+  -webkit-border-bottom-left-radius: 3px;
+  -moz-border-radius-topleft: 3px;
+  -moz-border-radius-bottomleft: 3px;
+  border-top-left-radius: 3px;
+  border-bottom-left-radius: 3px;
+}
+
+.markdown-body .code div pre,
+.markdown-body .code div {
+  border: 0;
+  -webkit-border-radius: 0;
+  -moz-border-radius: 0;
+  border-radius: 0;
+  -webkit-border-top-right-radius: 3px;
+  -webkit-border-bottom-right-radius: 3px;
+  -moz-border-radius-topright: 3px;
+  -moz-border-radius-bottomright: 3px;
+  border-top-right-radius: 3px;
+  border-bottom-right-radius: 3px;
+}
+
+.markdown-body * {
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+.markdown-body input {
+  font: 13px Helvetica, arial, freesans, clean, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol";
+  line-height: 1.4;
+}
+
+.markdown-body a {
+  color: #4183c4;
+  text-decoration: none;
+}
+
+.markdown-body a:hover,
+.markdown-body a:focus,
+.markdown-body a:active {
+  text-decoration: underline;
+}
+
+.markdown-body hr {
+  height: 0;
+  margin: 15px 0;
+  overflow: hidden;
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid #ddd;
+}
+
+.markdown-body hr:before,
+.markdown-body hr:after {
+  display: table;
+  content: " ";
+}
+
+.markdown-body hr:after {
+  clear: both;
+}
+
+.markdown-body h1,
+.markdown-body h2,
+.markdown-body h3,
+.markdown-body h4,
+.markdown-body h5,
+.markdown-body h6 {
+  margin-top: 15px;
+  margin-bottom: 15px;
+  line-height: 1.1;
+}
+
+.markdown-body h1 {
+  font-size: 30px;
+}
+
+.markdown-body h2 {
+  font-size: 21px;
+}
+
+.markdown-body h3 {
+  font-size: 16px;
+}
+
+.markdown-body h4 {
+  font-size: 14px;
+}
+
+.markdown-body h5 {
+  font-size: 12px;
+}
+
+.markdown-body h6 {
+  font-size: 11px;
+}
+
+.markdown-body blockquote {
+  margin: 0;
+}
+
+.markdown-body ul,
+.markdown-body ol {
+  padding: 0;
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.markdown-body ol ol,
+.markdown-body ul ol {
+  list-style-type: lower-roman;
+}
+
+.markdown-body ul ul ol,
+.markdown-body ul ol ol,
+.markdown-body ol ul ol,
+.markdown-body ol ol ol {
+  list-style-type: lower-alpha;
+}
+
+.markdown-body dd {
+  margin-left: 0;
+}
+
+.markdown-body code,
+.markdown-body pre,
+.markdown-body samp {
+  font-family: Consolas, "Liberation Mono", Menlo, Courier, monospace;
+  font-size: 12px;
+}
+
+.markdown-body pre {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.markdown-body kbd {
+  background-color: #e7e7e7;
+  background-image: -moz-linear-gradient(#fefefe, #e7e7e7);
+  background-image: -webkit-linear-gradient(#fefefe, #e7e7e7);
+  background-image: linear-gradient(#fefefe, #e7e7e7);
+  background-repeat: repeat-x;
+  border-radius: 2px;
+  border: 1px solid #cfcfcf;
+  color: #000;
+  padding: 3px 5px;
+  line-height: 10px;
+  font: 11px Consolas, "Liberation Mono", Menlo, Courier, monospace;
+  display: inline-block;
+}
+
+.markdown-body>*:first-child {
+  margin-top: 0 !important;
+}
+
+.markdown-body>*:last-child {
+  margin-bottom: 0 !important;
+}
+
+.markdown-body .headeranchor-link {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  display: block;
+  padding-right: 6px;
+  padding-left: 30px;
+  margin-left: -30px;
+}
+
+.markdown-body .headeranchor-link:focus {
+  outline: none;
+}
+
+.markdown-body h1,
+.markdown-body h2,
+.markdown-body h3,
+.markdown-body h4,
+.markdown-body h5,
+.markdown-body h6 {
+  position: relative;
+  margin-top: 1em;
+  margin-bottom: 16px;
+  font-weight: bold;
+  line-height: 1.4;
+}
+
+.markdown-body h1 .headeranchor,
+.markdown-body h2 .headeranchor,
+.markdown-body h3 .headeranchor,
+.markdown-body h4 .headeranchor,
+.markdown-body h5 .headeranchor,
+.markdown-body h6 .headeranchor {
+  display: none;
+  color: #000;
+  vertical-align: middle;
+}
+
+.markdown-body h1:hover .headeranchor-link,
+.markdown-body h2:hover .headeranchor-link,
+.markdown-body h3:hover .headeranchor-link,
+.markdown-body h4:hover .headeranchor-link,
+.markdown-body h5:hover .headeranchor-link,
+.markdown-body h6:hover .headeranchor-link {
+  height: 1em;
+  padding-left: 8px;
+  margin-left: -30px;
+  line-height: 1;
+  text-decoration: none;
+}
+
+.markdown-body h1:hover .headeranchor-link .headeranchor,
+.markdown-body h2:hover .headeranchor-link .headeranchor,
+.markdown-body h3:hover .headeranchor-link .headeranchor,
+.markdown-body h4:hover .headeranchor-link .headeranchor,
+.markdown-body h5:hover .headeranchor-link .headeranchor,
+.markdown-body h6:hover .headeranchor-link .headeranchor {
+  display: inline-block;
+}
+
+.markdown-body h1 {
+  padding-bottom: 0.3em;
+  font-size: 2.25em;
+  line-height: 1.2;
+  border-bottom: 1px solid #eee;
+}
+
+.markdown-body h2 {
+  padding-bottom: 0.3em;
+  font-size: 1.75em;
+  line-height: 1.225;
+  border-bottom: 1px solid #eee;
+}
+
+.markdown-body h3 {
+  font-size: 1.5em;
+  line-height: 1.43;
+}
+
+.markdown-body h4 {
+  font-size: 1.25em;
+}
+
+.markdown-body h5 {
+  font-size: 1em;
+}
+
+.markdown-body h6 {
+  font-size: 1em;
+  color: #777;
+}
+
+.markdown-body p,
+.markdown-body blockquote,
+.markdown-body ul,
+.markdown-body ol,
+.markdown-body dl,
+.markdown-body table,
+.markdown-body pre,
+.markdown-body .admonition {
+  margin-top: 0;
+  margin-bottom: 16px;
+}
+
+.markdown-body hr {
+  height: 4px;
+  padding: 0;
+  margin: 16px 0;
+  background-color: #e7e7e7;
+  border: 0 none;
+}
+
+.markdown-body ul,
+.markdown-body ol {
+  padding-left: 2em;
+}
+
+.markdown-body ul ul,
+.markdown-body ul ol,
+.markdown-body ol ol,
+.markdown-body ol ul {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.markdown-body li>p {
+  margin-top: 16px;
+}
+
+.markdown-body dl {
+  padding: 0;
+}
+
+.markdown-body dl dt {
+  padding: 0;
+  margin-top: 16px;
+  font-size: 1em;
+  font-style: italic;
+  font-weight: bold;
+}
+
+.markdown-body dl dd {
+  padding: 0 16px;
+  margin-bottom: 16px;
+}
+
+.markdown-body blockquote {
+  padding: 0 15px;
+  color: #777;
+  border-left: 4px solid #ddd;
+}
+
+.markdown-body blockquote>:first-child {
+  margin-top: 0;
+}
+
+.markdown-body blockquote>:last-child {
+  margin-bottom: 0;
+}
+
+.markdown-body table {
+  display: block;
+  width: 100%;
+  overflow: auto;
+  word-break: normal;
+  word-break: keep-all;
+}
+
+.markdown-body table th {
+  font-weight: bold;
+}
+
+.markdown-body table th,
+.markdown-body table td {
+  padding: 6px 13px;
+  border: 1px solid #ddd;
+}
+
+.markdown-body table tr {
+  background-color: #fff;
+  border-top: 1px solid #ccc;
+}
+
+.markdown-body table tr:nth-child(2n) {
+  background-color: #f8f8f8;
+}
+
+.markdown-body img {
+  max-width: 100%;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+.markdown-body code,
+.markdown-body samp {
+  padding: 0;
+  padding-top: 0.2em;
+  padding-bottom: 0.2em;
+  margin: 0;
+  font-size: 85%;
+  background-color: rgba(0,0,0,0.04);
+  border-radius: 3px;
+}
+
+.markdown-body code:before,
+.markdown-body code:after {
+  letter-spacing: -0.2em;
+  content: "\00a0";
+}
+
+.markdown-body pre>code {
+  padding: 0;
+  margin: 0;
+  font-size: 100%;
+  word-break: normal;
+  white-space: pre;
+  background: transparent;
+  border: 0;
+}
+
+.markdown-body .codehilite {
+  margin-bottom: 16px;
+}
+
+.markdown-body .codehilite pre,
+.markdown-body pre {
+  padding: 16px;
+  overflow: auto;
+  font-size: 85%;
+  line-height: 1.45;
+  background-color: #f7f7f7;
+  border-radius: 3px;
+}
+
+.markdown-body .codehilite pre {
+  margin-bottom: 0;
+  word-break: normal;
+}
+
+.markdown-body pre {
+  word-wrap: normal;
+}
+
+.markdown-body pre code {
+  display: inline;
+  max-width: initial;
+  padding: 0;
+  margin: 0;
+  overflow: initial;
+  line-height: inherit;
+  word-wrap: normal;
+  background-color: transparent;
+  border: 0;
+}
+
+.markdown-body pre code:before,
+.markdown-body pre code:after {
+  content: normal;
+}
+
+/* Admonition */
+.markdown-body .admonition {
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  position: relative;
+  border-radius: 3px;
+  border: 1px solid #e0e0e0;
+  border-left: 6px solid #333;
+  padding: 10px 10px 10px 30px;
+}
+
+.markdown-body .admonition table {
+  color: #333;
+}
+
+.markdown-body .admonition p {
+  padding: 0;
+}
+
+.markdown-body .admonition-title {
+  font-weight: bold;
+  margin: 0;
+}
+
+.markdown-body .admonition>.admonition-title {
+  color: #333;
+}
+
+.markdown-body .attention>.admonition-title {
+  color: #a6d796;
+}
+
+.markdown-body .caution>.admonition-title {
+  color: #d7a796;
+}
+
+.markdown-body .hint>.admonition-title {
+  color: #96c6d7;
+}
+
+.markdown-body .danger>.admonition-title {
+  color: #c25f77;
+}
+
+.markdown-body .question>.admonition-title {
+  color: #96a6d7;
+}
+
+.markdown-body .note>.admonition-title {
+  color: #d7c896;
+}
+
+.markdown-body .admonition:before,
+.markdown-body .attention:before,
+.markdown-body .caution:before,
+.markdown-body .hint:before,
+.markdown-body .danger:before,
+.markdown-body .question:before,
+.markdown-body .note:before {
+  font: normal normal 16px fontawesome-mini;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  line-height: 1.5;
+  color: #333;
+  position: absolute;
+  left: 0;
+  top: 0;
+  padding-top: 10px;
+  padding-left: 10px;
+}
+
+.markdown-body .admonition:before {
+  content: "\f056\00a0";
+  color: 333;
+}
+
+.markdown-body .attention:before {
+  content: "\f058\00a0";
+  color: #a6d796;
+}
+
+.markdown-body .caution:before {
+  content: "\f06a\00a0";
+  color: #d7a796;
+}
+
+.markdown-body .hint:before {
+  content: "\f05a\00a0";
+  color: #96c6d7;
+}
+
+.markdown-body .danger:before {
+  content: "\f057\00a0";
+  color: #c25f77;
+}
+
+.markdown-body .question:before {
+  content: "\f059\00a0";
+  color: #96a6d7;
+}
+
+.markdown-body .note:before {
+  content: "\f040\00a0";
+  color: #d7c896;
+}
+
+.markdown-body .admonition::after {
+  content: normal;
+}
+
+.markdown-body .attention {
+  border-left: 6px solid #a6d796;
+}
+
+.markdown-body .caution {
+  border-left: 6px solid #d7a796;
+}
+
+.markdown-body .hint {
+  border-left: 6px solid #96c6d7;
+}
+
+.markdown-body .danger {
+  border-left: 6px solid #c25f77;
+}
+
+.markdown-body .question {
+  border-left: 6px solid #96a6d7;
+}
+
+.markdown-body .note {
+  border-left: 6px solid #d7c896;
+}
+
+.markdown-body .admonition>*:first-child {
+  margin-top: 0 !important;
+}
+
+.markdown-body .admonition>*:last-child {
+  margin-bottom: 0 !important;
+}
+
+/* progress bar*/
+.markdown-body .progress {
+  display: block;
+  width: 300px;
+  margin: 10px 0;
+  height: 24px;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
+  background-color: #ededed;
+  position: relative;
+  box-shadow: inset -1px 1px 3px rgba(0, 0, 0, .1);
+}
+
+.markdown-body .progress-label {
+  position: absolute;
+  text-align: center;
+  font-weight: bold;
+  width: 100%; margin: 0;
+  line-height: 24px;
+  color: #333;
+  text-shadow: 1px 1px 0 #fefefe, -1px -1px 0 #fefefe, -1px 1px 0 #fefefe, 1px -1px 0 #fefefe, 0 1px 0 #fefefe, 0 -1px 0 #fefefe, 1px 0 0 #fefefe, -1px 0 0 #fefefe, 1px 1px 2px #000;
+  -webkit-font-smoothing: antialiased !important;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.markdown-body .progress-bar {
+  height: 24px;
+  float: left;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
+  background-color: #96c6d7;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .5), inset 0 -1px 0 rgba(0, 0, 0, .1);
+  background-size: 30px 30px;
+  background-image: -webkit-linear-gradient(
+    135deg, rgba(255, 255, 255, .4) 27%,
+    transparent 27%,
+    transparent 52%, rgba(255, 255, 255, .4) 52%,
+    rgba(255, 255, 255, .4) 77%,
+    transparent 77%, transparent
+  );
+  background-image: -moz-linear-gradient(
+    135deg,
+    rgba(255, 255, 255, .4) 27%, transparent 27%,
+    transparent 52%, rgba(255, 255, 255, .4) 52%,
+    rgba(255, 255, 255, .4) 77%, transparent 77%,
+    transparent
+  );
+  background-image: -ms-linear-gradient(
+    135deg,
+    rgba(255, 255, 255, .4) 27%, transparent 27%,
+    transparent 52%, rgba(255, 255, 255, .4) 52%,
+    rgba(255, 255, 255, .4) 77%, transparent 77%,
+    transparent
+  );
+  background-image: -o-linear-gradient(
+    135deg,
+    rgba(255, 255, 255, .4) 27%, transparent 27%,
+    transparent 52%, rgba(255, 255, 255, .4) 52%,
+    rgba(255, 255, 255, .4) 77%, transparent 77%,
+    transparent
+  );
+  background-image: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, .4) 27%, transparent 27%,
+    transparent 52%, rgba(255, 255, 255, .4) 52%,
+    rgba(255, 255, 255, .4) 77%, transparent 77%,
+    transparent
+  );
+}
+
+.markdown-body .progress-100plus .progress-bar {
+  background-color: #a6d796;
+}
+
+.markdown-body .progress-80plus .progress-bar {
+  background-color: #c6d796;
+}
+
+.markdown-body .progress-60plus .progress-bar {
+  background-color: #d7c896;
+}
+
+.markdown-body .progress-40plus .progress-bar {
+  background-color: #d7a796;
+}
+
+.markdown-body .progress-20plus .progress-bar {
+  background-color: #d796a6;
+}
+
+.markdown-body .progress-0plus .progress-bar {
+  background-color: #c25f77;
+}
+
+.markdown-body .candystripe-animate .progress-bar{
+  -webkit-animation: animate-stripes 3s linear infinite;
+  -moz-animation: animate-stripes 3s linear infinite;
+  animation: animate-stripes 3s linear infinite;
+}
+
+@-webkit-keyframes animate-stripes {
+  0% {
+    background-position: 0 0;
+  }
+
+  100% {
+    background-position: 60px 0;
+  }
+}
+
+@-moz-keyframes animate-stripes {
+  0% {
+    background-position: 0 0;
+  }
+
+  100% {
+    background-position: 60px 0;
+  }
+}
+
+@keyframes animate-stripes {
+  0% {
+    background-position: 0 0;
+  }
+
+  100% {
+    background-position: 60px 0;
+  }
+}
+
+.markdown-body .gloss .progress-bar {
+  box-shadow:
+    inset 0 4px 12px rgba(255, 255, 255, .7),
+    inset 0 -12px 0 rgba(0, 0, 0, .05);
+}
+
+/* Multimarkdown Critic Blocks */
+.markdown-body .critic_mark {
+  background: #ff0;
+}
+
+.markdown-body .critic_delete {
+  color: #c82829;
+  text-decoration: line-through;
+}
+
+.markdown-body .critic_insert {
+  color: #718c00 ;
+  text-decoration: underline;
+}
+
+.markdown-body .critic_comment {
+  color: #8e908c;
+  font-style: italic;
+}
+
+.markdown-body .headeranchor {
+  font: normal normal 16px octicons-anchor;
+  line-height: 1;
+  display: inline-block;
+  text-decoration: none;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.headeranchor:before {
+  content: '\f05c';
+}
+
+.markdown-body .task-list-item {
+  list-style-type: none;
+}
+
+.markdown-body .task-list-item+.task-list-item {
+  margin-top: 3px;
+}
+
+.markdown-body .task-list-item input {
+  margin: 0 4px 0.25em -20px;
+  vertical-align: middle;
+}
+
+/* Media */
+@media only screen and (min-width: 480px) {
+  .markdown-body {
+    font-size:14px;
+  }
+}
+
+@media only screen and (min-width: 768px) {
+  .markdown-body {
+    font-size:16px;
+  }
+}
+
+@media print {
+  .markdown-body * {
+    background: transparent !important;
+    color: black !important;
+    filter:none !important;
+    -ms-filter: none !important;
+  }
+
+  .markdown-body {
+    font-size:12pt;
+    max-width:100%;
+    outline:none;
+    border: 0;
+  }
+
+  .markdown-body a,
+  .markdown-body a:visited {
+    text-decoration: underline;
+  }
+
+  .markdown-body .headeranchor-link {
+    display: none;
+  }
+
+  .markdown-body a[href]:after {
+    content: " (" attr(href) ")";
+  }
+
+  .markdown-body abbr[title]:after {
+    content: " (" attr(title) ")";
+  }
+
+  .markdown-body .ir a:after,
+  .markdown-body a[href^="javascript:"]:after,
+  .markdown-body a[href^="#"]:after {
+    content: "";
+  }
+
+  .markdown-body pre {
+    white-space: pre;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+  }
+
+  .markdown-body pre,
+  .markdown-body blockquote {
+    border: 1px solid #999;
+    padding-right: 1em;
+    page-break-inside: avoid;
+  }
+
+  .markdown-body .progress,
+  .markdown-body .progress-bar {
+    -moz-box-shadow: none;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+  }
+
+  .markdown-body .progress {
+    border: 1px solid #ddd;
+  }
+
+  .markdown-body .progress-bar {
+    height: 22px;
+    border-right: 1px solid #ddd;
+  }
+
+  .markdown-body tr,
+  .markdown-body img {
+    page-break-inside: avoid;
+  }
+
+  .markdown-body img {
+    max-width: 100% !important;
+  }
+
+  .markdown-body p,
+  .markdown-body h2,
+  .markdown-body h3 {
+    orphans: 3;
+    widows: 3;
+  }
+
+  .markdown-body h2,
+  .markdown-body h3 {
+    page-break-after: avoid;
+  }
+}
+</style><title>README</title></head><body><article class="markdown-body"><h1 id="cmdb-api"><a name="user-content-cmdb-api" href="#cmdb-api" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>CMDB 主机API接口规范</h1>
+<h2 id="_1"><a name="user-content-_1" href="#_1" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>说明</h2>
+<p>CMDB提供了关于查询主机，增加主机，修改主机的api接口，接口统一采用POST的请求方式和token认证，需要在POST的请求头信息添加如下:</p>
+<pre><code>headers = {
+    'Accept': 'application/json',
+    'Authorization': 'Token login_token'
+}
+</code></pre>
+
+<p>并且统一返回json格式的数据。最终返回的json格式为:</p>
+<p><pre><code>{&quot;data&quot;: data, &quot;success&quot;: success}
+</code></pre><br />
+<strong>success</strong> 为真时，表示请求能正确处理， <strong>data</strong>为返回的内容<br />
+<strong>success</strong> 为假时，表示请求有异常，查看<strong>data</strong>的内容获取异常的详细</p>
+<h2 id="_2"><a name="user-content-_2" href="#_2" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>注意事项:</h2>
+<p><strong>每次请求完成以后，先查看status_code的值，如果是200，然后查看success</strong><br />
+<strong>host查询的查看方式不同，具体详见获取服务器列表注意事项</strong></p>
+<h2 id="host"><a name="user-content-host" href="#host" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>host表字段说明</h2>
+<ul>
+<li>
+<p>status 状态标识 整型字段</p>
+<blockquote>
+<p>0未初始化  1可用  2停用  3新机器  4已归还</p>
+</blockquote>
+</li>
+<li>
+<p>host_class 机器归属 整型字段</p>
+<blockquote>
+<p>0公司内网  1公司自有外网机器  2游戏合作商提供</p>
+</blockquote>
+</li>
+<li>
+<p>belongs_to_game_project 所在项目 关联项目表</p>
+<blockquote>
+<p>用项目的中文名，目前不接收英文名称</p>
+</blockquote>
+</li>
+<li>
+<p>belongs_to_room 所在机房 关联机房表</p>
+<blockquote>
+<p>用机房的机房名</p>
+</blockquote>
+</li>
+<li>
+<p>machine_type 机器类型 整型字段</p>
+<blockquote>
+<p>0云主机  1物理机</p>
+</blockquote>
+</li>
+<li>
+<p>belongs_to_business 业务类型 关联业务类型表</p>
+<blockquote>
+<p>用业务类型的名字</p>
+</blockquote>
+</li>
+<li>
+<p>platform 平台或者提供商标识 字符串类型</p>
+</li>
+<li>
+<p>internal_ip 局域网IP 字符串类型</p>
+<blockquote>
+<p>可以为空</p>
+</blockquote>
+</li>
+<li>
+<p>telecom_ip 电信ip 字符串类型</p>
+<blockquote>
+<p>可以为空 唯一约束</p>
+</blockquote>
+</li>
+<li>
+<p>unicom_ip 联通ip 字符串类型</p>
+<blockquote>
+<p>可以为空 唯一约束</p>
+</blockquote>
+</li>
+<li>
+<p>system 操作系统 整型字段</p>
+<blockquote>
+<p>0linux  1windows</p>
+</blockquote>
+</li>
+<li>
+<p>is_internet 是否公网访问状态标识  整型字段</p>
+<blockquote>
+<p>0完全内网机器 1公网访问不了但可上外网 2公网可访问</p>
+</blockquote>
+</li>
+<li>
+<p>sshuser 服务器SSH用户 字符串类型</p>
+</li>
+<li>
+<p>sshport 服务器SSH端口 字符串类型</p>
+</li>
+<li>
+<p>machine_model 机器型号 字符串类型</p>
+</li>
+<li>
+<p>cpu_num cpu核心数 整型字段</p>
+</li>
+<li>
+<p>cpu cpu 字符串类型</p>
+</li>
+<li>
+<p>ram ram 字符串类型</p>
+</li>
+<li>
+<p>disk disk 字符串类型</p>
+</li>
+<li>
+<p>host_comment 用途 字符串类型</p>
+</li>
+<li>
+<p>belongs_to_host 所属宿主机 字符串类型</p>
+</li>
+<li>
+<p>host_identifier 主机唯一标识符 字符串类型</p>
+<blockquote>
+<p>host_identifier一般以 <strong>项目_机房_IP</strong>作为唯一的标识<br />
+  IP可以是电信ip，联通ip，内网ip</p>
+</blockquote>
+</li>
+</ul>
+<h2 id="_3"><a name="user-content-_3" href="#_3" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>获取服务器列表</h2>
+<p><strong>每次请求完成以后，先查看status_code的值，如果是200，然后查看success, success为True,则说明有查询结果，否则没有</strong></p>
+<p><em>接口地址</em></p>
+<ul>
+<li><a href="https://cmdb.cy666.com/api/Host.List/">https://cmdb.cy666.com/api/Host.List/</a></li>
+</ul>
+<p><em>HTTP请求方式</em></p>
+<ul>
+<li>POST</li>
+</ul>
+<p><em>请求参数</em></p>
+<ul>
+<li>keywords <strong>可选</strong><blockquote>
+<p>表示要筛选的字段的值，如果没有，则返回全部的host列表<br />
+example<br />
+<pre><code>keywords = {
+    'status': 1,
+    'telecom_ip': '103.231.67.56',
+}
+</code></pre><br />
+表示获取<strong>状态</strong>为可用, <strong>电信ip</strong>为103.231.67.56的服务器信息</p>
+</blockquote>
+</li>
+</ul>
+<p><em>示例</em></p>
+<ul>
+<li>
+<p>命令行模式</p>
+<blockquote>
+<p><pre><code>curl -X POST -k https://cmdb.cy666.com/api/Host.List/ -H 'Authorization: Token login_token' -H 'Content-Type: application/json' -d '{&quot;keywords&quot;: {&quot;telecom_ip&quot;: &quot;1.1.1.1&quot;}}'
+</code></pre><br />
+返回json:<br />
+<pre><code>{&quot;data&quot;: [{&quot;is_internet&quot;: &quot;\u5b8c\u5168\u5185\u7f51\u673a\u5668&quot;, &quot;host_comment&quot;: &quot;\u5251\u96e8\u624b\u6e38\u7248\u7f72&quot;, &quot;host_class&quot;: &quot;\u516c\u53f8\u5185\u7f51&quot;, &quot;belongs_to_business&quot;: &quot;game&quot;, &quot;disk&quot;: &quot;200G&quot;, &quot;unicom_ip&quot;: &quot;2.2.2.2&quot;, &quot;machine_type&quot;: &quot;\u4e91\u4e3b\u673a&quot;, &quot;belongs_to_room&quot;: &quot;\u5317\u4eac\u6570\u636e\u4e2d\u5fc3&quot;, &quot;telecom_ip&quot;: &quot;1.1.1.1&quot;, &quot;internal_ip&quot;: &quot;3.3.3.3&quot;, &quot;machine_model&quot;: &quot;pc&quot;, &quot;cpu_num&quot;: 4, &quot;platform&quot;: &quot;ruike&quot;, &quot;id&quot;: 22124, &quot;system&quot;: &quot;linux&quot;, &quot;sshport&quot;: 10086, &quot;cpu&quot;: &quot;xen&quot;, &quot;ram&quot;: &quot;16G&quot;, &quot;sshuser&quot;: &quot;root&quot;, &quot;belongs_to_game_project&quot;: &quot;\u5251\u96e8\u6c5f\u6e56&quot;, &quot;status&quot;: &quot;\u505c\u7528&quot;, &quot;host_identifier&quot;: &quot;jyjh_yy_192.168.1.1&quot;}], &quot;success&quot;: true}
+</code></pre><br />
+字段说明<br />
+data  返回的服务器list<br />
+success  操作成功</p>
+</blockquote>
+</li>
+<li>
+<p>python脚本 推荐使用<a href="https://docs.python-requests.org/zh_CN/latest/user/quickstart.html">requests</a>库</p>
+<blockquote>
+<p><pre><code>keywords = {
+    'status': 1,
+    'telecom_ip': '103.231.67.56',
+}
+
+ headers = {
+    'Accept': 'application/json',
+    'Authorization': 'Token login_token'
+}
+
+ def get_host_info(headers, keywords=None):
+    '''根据hostname和相应的字段获取host的信息'''
+    url = 'https://cmdb.cy666.com/api/Host.List/'    # 修改这里的url
+
+    if keywords:
+        payload = {'keywords': keywords}
+    else:
+        payload = None
+
+    r = requests.post(url, headers=headers, json=payload, verify=False)
+    print(r.status_code, r.json().get('data'))
+</code></pre><br />
+返回json:<br />
+<pre><code> {'data': [{'belongs_to_business': 'banshu',
+           'belongs_to_game_project': '手游剑雨',
+           'belongs_to_room': '北京数据中心',
+           'cpu': 'Vcpu',
+           'cpu_num': 4,
+           'disk': '500G',
+           'host_class': '公司自有外网机器',
+           'host_comment': '剑雨手游版署',
+           'id': 22029,
+           'internal_ip': '192.168.67.56',
+           'is_internet': '公网可访问',
+           'machine_model': '云主机',
+           'machine_type': '云主机',
+           'platform': 'ruike',
+           'ram': '8G',
+           'sshport': 9022,
+           'sshuser': 'root',
+           'status': '可用',
+           'system': 'linux',
+           'telecom_ip': '103.231.67.56',
+           ...
+           'unicom_ip': None}],
+  'success': True}
+</code></pre></p>
+</blockquote>
+</li>
+</ul>
+<h2 id="_4"><a name="user-content-_4" href="#_4" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>增加服务器</h2>
+<p><em>接口地址</em></p>
+<ul>
+<li><a href="https://cmdb.cy666.com/api/Host.Create/">https://cmdb.cy666.com/api/Host.Create/</a></li>
+</ul>
+<p><em>HTTP请求方式</em></p>
+<ul>
+<li>POST</li>
+</ul>
+<p><em>请求参数</em></p>
+<ul>
+<li>除了<strong>internal_ip</strong>, <strong>telecom_ip</strong>, <strong>unicom_ip</strong>， <strong>belongs_to_host</strong>可以不填,其他的参数必须要填写,并且不能为空，不然会返回False</li>
+<li>
+<p><strong>internal_ip</strong>, <strong>telecom_ip</strong>, <strong>unicom_ip</strong>至少有一个有值 </p>
+<blockquote>
+<p>表示要筛选的字段的值，如果没有，则返回全部的host列表<br />
+example<br />
+<pre><code>host_info = {
+    'status': 0,
+    'host_class': 0,
+    'belongs_to_game_project': 'jyjh',    # **项目英文名称**
+    'belongs_to_room': '北京数据中心',    # **机房名**
+    'machine_type': 0,
+    'belongs_to_business': 'game',    # **业务类型名**
+    'platform': 'ruike',
+    'telecom_ip': '1.1.1.1',
+    'system': 0,
+    'is_internet': 0,
+    'sshuser': 'root',
+    'sshport': '22',
+    'machine_model': 'pc',
+    'cpu_num': 4,
+    'cpu': 'xen',
+    'ram': '16G',
+    'disk': '200G',
+    'host_comment': '剑雨手游版署',
+    'host_identifier': 'jyjh_yy_192.168.1.1',
+}
+</code></pre><br />
+<em>示例</em></p>
+</blockquote>
+</li>
+<li>
+<p>命令行模式</p>
+<blockquote>
+<p><pre><code>curl -X POST -k https://cmdb.cy666.com/api/Host.Create/ -H 'Authorization: Token login_token' -H 'Content-Type: application/json' -d '{&quot;status&quot;: 0, &quot;host_class&quot;: 0, &quot;belongs_to_game_project&quot;: &quot;剑雨江湖&quot;, &quot;belongs_to_room&quot;: &quot;北京数据中心&quot;, &quot;machine_type&quot;: 0, &quot;belongs_to_business&quot;: &quot;game&quot;, &quot;platform&quot;: &quot;ruike&quot;, &quot;telecom_ip&quot;: &quot;1.1.1.1&quot;, &quot;system&quot;: 0, &quot;is_internet&quot;: 0, &quot;sshuser&quot;: &quot;root&quot;, &quot;sshport&quot;: &quot;23&quot;, &quot;machine_model&quot;: &quot;pc&quot;, &quot;cpu_num&quot;: 4, &quot;cpu&quot;: &quot;xen&quot;, &quot;ram&quot;: &quot;16G&quot;, &quot;disk&quot;: &quot;130G&quot;, &quot;host_comment&quot;: &quot;剑雨手游版署&quot;, &quot;host_identifier&quot;: &quot;jyjh_yy_192.168.1.1&quot;}'
+</code></pre><br />
+返回json:<br />
+<pre><code>{&quot;data&quot;: {&quot;sshuser&quot;: &quot;root&quot;, &quot;machine_type&quot;: &quot;\u4e91\u4e3b\u673a&quot;, &quot;belongs_to_game_project&quot;: &quot;\u5251\u96e8\u6c5f\u6e56&quot;, &quot;internal_ip&quot;: null, &quot;status&quot;: &quot;\u505c\u7528&quot;, &quot;disk&quot;: &quot;130G&quot;, &quot;system&quot;: &quot;linux&quot;, &quot;is_internet&quot;: &quot;\u5b8c\u5168\u5185\u7f51\u673a\u5668&quot;, &quot;id&quot;: 22125, &quot;cpu_num&quot;: 4, &quot;host_comment&quot;: &quot;\u5251\u96e8\u624b\u6e38\u7248\u7f72&quot;, &quot;machine_model&quot;: &quot;pc&quot;, &quot;belongs_to_business&quot;: &quot;game&quot;, &quot;telecom_ip&quot;: &quot;1.1.1.1&quot;, &quot;belongs_to_room&quot;: &quot;\u5317\u4eac\u6570\u636e\u4e2d\u5fc3&quot;, &quot;unicom_ip&quot;: null, &quot;cpu&quot;: &quot;xen&quot;, &quot;ram&quot;: &quot;16G&quot;, &quot;host_class&quot;: &quot;\u516c\u53f8\u5185\u7f51&quot;, &quot;platform&quot;: &quot;ruike&quot;, &quot;sshport&quot;: &quot;23&quot;, &quot;host_identifier&quot;: &quot;jyjh_yy_192.168.1.1&quot;}, &quot;success&quot;: true}
+</code></pre><br />
+字段说明<br />
+data  返回添加成功的host信息<br />
+success  操作成功</p>
+</blockquote>
+</li>
+<li>
+<p>python脚本 推荐使用<a href="https://docs.python-requests.org/zh_CN/latest/user/quickstart.html">requests</a>库<br />
+<pre><code>headers = {
+    'Accept': 'application/json',
+    'Authorization': 'Token login_token'
+}
+
+ host_info = {
+    'status': 0,
+    'host_class': 0,
+    'belongs_to_game_project': '剑雨江湖',
+    'belongs_to_room': '北京数据中心',
+    'machine_type': 0,
+    'belongs_to_business': 'game',
+    'platform': 'ruike',
+    'telecom_ip': '1.1.1.1',
+    'system': 0,
+    'is_internet': 0,
+    'sshuser': 'root',
+    'sshport': '22',
+    'machine_model': 'pc',
+    'cpu_num': 4,
+    'cpu': 'xen',
+    'ram': '16G',
+    'disk': '200G',
+    'host_comment': '剑雨手游版署',
+    'host_identifier': 'jyjh_yy_192.168.1.1',
+}
+
+ def add_host(headers, host_info):
+    '''添加host记录'''
+
+    url = 'https://cmdb.cy666.com/api/Host.Create/'
+
+    payload = host_info
+
+    r = requests.post(url, headers=headers, json=payload, verify=False)
+
+    pprint(r.json())
+</code></pre><br />
+返回json:<br />
+<pre><code>{'data': {'belongs_to_business': 'game',
+          'belongs_to_game_project': '剑雨江湖',
+          'belongs_to_room': '北京数据中心',
+          'cpu': 'xen',
+          'cpu_num': 4,
+          'disk': '200G',
+          'host_class': '公司内网',
+          'host_comment': '剑雨手游版署',
+          'id': 22126,
+          'internal_ip': None,
+          'is_internet': '完全内网机器',
+          'machine_model': 'pc',
+          'machine_type': '云主机',
+          'platform': 'ruike',
+          'ram': '16G',
+          'sshport': '22',
+          'sshuser': 'root',
+          'status': '停用',
+          'system': 'linux',
+          'telecom_ip': '1.1.1.1',
+          'host_identifier': 'jyjh_yy_192.168.1.1',
+          'unicom_ip': None},
+ 'success': True}
+</code></pre><br />
+字段说明</p>
+<blockquote>
+<p>data  返回添加成功的host信息<br />
+success  操作成功</p>
+</blockquote>
+</li>
+</ul>
+<h2 id="_5"><a name="user-content-_5" href="#_5" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>修改服务器信息</h2>
+<p><em>接口地址</em></p>
+<ul>
+<li><a href="https://cmdb.cy666.com/api/Host.Modify/">https://cmdb.cy666.com/api/Host.Modify/</a></li>
+</ul>
+<p><em>HTTP请求方式</em></p>
+<ul>
+<li>POST</li>
+</ul>
+<p><em>请求参数</em></p>
+<ul>
+<li>
+<p>old_host_info <strong>必选</strong></p>
+<blockquote>
+<p>通过原来的服务器的字段的信息来获取cmdb中唯一的记录<br />
+有四种可选的字段<br />
+- telecom_ip  # 唯一约束<br />
+- unicom_ip  # 唯一约束<br />
+- belongs_to_game_project, belongs_to_room, internal_ip  # 三个字段组合唯一<br />
+- host_identifier # 主机唯一标识符<br />
+example<br />
+通过<strong>telecom_ip</strong>获取唯一的记录<br />
+<pre><code>old_host_info = {
+    'telecom_ip': '1.1.1.1',
+</code></pre><br />
+通过<strong>unicom_ip</strong>获取唯一的记录<br />
+<pre><code>old_host_info = {
+    'unicom_ip': '2.2.2.2',
+</code></pre><br />
+通过<strong>belongs_to_game_project</strong>, <strong>belongs_to_room</strong>, <strong>internal_ip</strong>获取唯一的记录<br />
+<pre><code>old_host_info = {
+    'belongs_to_game_project': '剑雨江湖',
+    'belongs_to_room': '北京数据中心',
+    'internal_ip': '3.3.3.3',
+}
+</code></pre><br />
+多个条件的情况下，通过最先匹配的获取唯一记录, 这里是<strong>telecom_ip</strong><br />
+<pre><code>old_host_info = {
+    'telecom_ip': '1.1.1.1',
+    'unicom_ip': '2.2.2.2',
+    'belongs_to_game_project': '剑雨江湖',
+    'belongs_to_room': '北京数据中心',
+    'internal_ip': '3.3.3.3',
+}
+</code></pre></p>
+</blockquote>
+</li>
+<li>
+<p>new_host_info <strong>必选</strong></p>
+<blockquote>
+<p>要更新的字段的值<br />
+example<br />
+这里将匹配到的唯一的记录的sshuser和sshport做了更新<br />
+<pre><code>new_host_info = {
+    'sshuser': 'admin',
+    'sshport': '10086',
+}
+</code></pre><br />
+<em>示例</em></p>
+</blockquote>
+</li>
+<li>
+<p>命令行模式</p>
+<blockquote>
+<p><pre><code>curl -X POST -k https://cmdb.cy666.com/api/Host.Modify/ -H 'Authorization: Token login_token' -H 'Content-Type: application/json' -d '{&quot;old_host_info&quot;: {&quot;telecom_ip&quot;: &quot;1.1.1.1&quot;}, &quot;new_host_info&quot;: {&quot;sshuser&quot;: &quot;admin&quot;, &quot;sshport&quot;: 10086}}'
+</code></pre><br />
+返回json:<br />
+<pre><code>{&quot;data&quot;: {&quot;disk&quot;: &quot;200G&quot;, &quot;ram&quot;: &quot;16G&quot;, &quot;host_comment&quot;: &quot;\u5251\u96e8\u624b\u6e38\u7248\u7f72&quot;, &quot;sshport&quot;: 10086, &quot;belongs_to_game_project&quot;: &quot;\u5251\u96e8\u6c5f\u6e56&quot;, &quot;internal_ip&quot;: null, &quot;status&quot;: &quot;\u505c\u7528&quot;, &quot;platform&quot;: &quot;ruike&quot;, &quot;system&quot;: &quot;linux&quot;, &quot;cpu_num&quot;: 4, &quot;is_internet&quot;: &quot;\u5b8c\u5168\u5185\u7f51\u673a\u5668&quot;, &quot;machine_type&quot;: &quot;\u4e91\u4e3b\u673a&quot;, &quot;belongs_to_room&quot;: &quot;\u5317\u4eac\u6570\u636e\u4e2d\u5fc3&quot;, &quot;belongs_to_business&quot;: &quot;game&quot;, &quot;id&quot;: 22126, &quot;machine_model&quot;: &quot;pc&quot;, &quot;sshuser&quot;: &quot;admin&quot;, &quot;cpu&quot;: &quot;xen&quot;, &quot;unicom_ip&quot;: null, &quot;host_class&quot;: &quot;\u516c\u53f8\u5185\u7f51&quot;, &quot;telecom_ip&quot;: &quot;1.1.1.1&quot;}, &quot;success&quot;: true}
+</code></pre><br />
+字段说明<br />
+data  返回修改成功的host信息<br />
+success  操作成功</p>
+</blockquote>
+</li>
+<li>
+<p>python脚本 推荐使用<a href="https://docs.python-requests.org/zh_CN/latest/user/quickstart.html">requests</a>库<br />
+<pre><code>headers = {
+    'Accept': 'application/json',
+    'Authorization': 'Token login_token'
+}
+old_host_info = {
+    'telecom_ip': '1.1.1.1',
+    'unicom_ip': '2.2.2.2',
+    'belongs_to_game_project': '剑雨江湖',
+    'belongs_to_room': '北京数据中心',
+    'internal_ip': '3.3.3.3',
+}
+new_host_info = {
+    'sshuser': 'admin',
+    'sshport': '10086',
+}
+payload = {'old_host_info': old_host_info, 'new_host_info': new_host_info}
+r = requests.post(url, headers=headers, json=payload)
+pprint(r.json())
+</code></pre><br />
+返回json:<br />
+<pre><code>'data': {'belongs_to_business': 'game',
+          'belongs_to_game_project': '剑雨江湖',
+          'belongs_to_room': '北京数据中心',
+          'cpu': 'xen',
+          'cpu_num': 4,
+          'disk': '200G',
+          'host_class': '公司内网',
+          'host_comment': '剑雨手游版署',
+          'id': 22126,
+          'internal_ip': None,
+          'is_internet': '完全内网机器',
+          'machine_model': 'pc',
+          'machine_type': '云主机',
+          'platform': 'ruike',
+          'ram': '16G',
+          'sshport': 10086,
+          'sshuser': 'admin',
+          'status': '停用',
+          'system': 'linux',
+          'telecom_ip': '1.1.1.1',
+          'unicom_ip': None},
+ 'success': True}
+</code></pre><br />
+字段说明</p>
+<blockquote>
+<p>data  返回添加成功的host信息<br />
+success  操作成功</p>
+</blockquote>
+</li>
+</ul>
+<h2 id="_6"><a name="user-content-_6" href="#_6" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>支持</h2>
+<p>如果有bug和疑问，联系 <a href="mailto:yanwenchi@chuangyunet.com">yanwenchi@chuangyunet.com</a></p></article></body></html>

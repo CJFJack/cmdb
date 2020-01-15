@@ -1,0 +1,445 @@
+{%extends 'template.html'%}
+
+{%block content%}
+<div id="page-wrapper">
+    <div class="row">
+        <div class="col-lg-12">
+            <h1 class="page-header">{{head.value}}</h1>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <div class="btn-group">
+                        <!--<a><button id='bt-add' type="button" class="btn btn-primary">增加</button></a>
+                        <a><button id='bt-del' type="button" class="btn btn-danger">删除</button></a>-->
+                        <button id='bt-search' type="button" class="btn btn-danger">高级搜索</button>
+                        <button id='bt-add' type="button" class="btn btn-success">我的默认配置</button>                          
+                    </div>
+                    <div class="pull-right">
+                      <div class="btn-group">
+                        <!--<a><button id='bt-upload' type="button" class="btn btn-primary" >导入</button></a>
+                        <a href="/assets/export_devices"><button id='bt-export' type="button" class="btn btn-primary" >导出</button></a>-->
+                      </div>
+                    </div>
+                </div>
+                <div class="panel-body">
+                    <div id="div-search" class="hide">
+                      <table id="high-search" style="width: 67%; margin: 0 auto 2em auto;" border="0" cellpadding="3" cellspacing="0">
+                        <thead>
+                            <tr>
+                                <th>目标</th>
+                                <th>内容</th>
+                                <th>正则表达式</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr id="filter_global">
+                                <td>全局搜索</td>
+                                <td align="center"><input style="width:60%" class="global_filter" id="global_filter" type="text"></td>
+                                <td align="center"><input type="checkbox" class="global_filter" id="global_regex"></td>
+                            </tr>
+                            <tr id="filter_col2" data-column="1">
+                                <td>平台名</td>
+                                <td align="center"><input style="width:60%" class="column_filter" id="col1_filter" type="text"></td>
+                                <td align="center"><input type="checkbox" class="column_filter" id="col0_regex"></td>
+                            </tr>
+                            <tr id="filter_col3" data-column="2">
+                                <td>主机名</td>
+                                <td align="center"><input style="width:60%" class="column_filter" id="col2_filter" type="text"></td>
+                                <td align="center"><input type="checkbox" class="column_filter" id="col1_regex"></td>
+                            </tr>
+                            <tr id="filter_col4" data-column="3">
+                                <td>主机IP</td>
+                                <td align="center"><input style="width:60%" class="column_filter" id="col3_filter" type="text"></td>
+                                <td align="center"><input type="checkbox" class="column_filter" id="col1_regex"></td>
+                            </tr>
+                            <tr id="filter_col5" data-column="4">
+                                <td>主机vlan</td>
+                                <td align="center"><input style="width:60%" class="column_filter" id="col4_filter" type="text"></td>
+                                <td align="center"><input type="checkbox" class="column_filter" id="col1_regex"></td>
+                            </tr>
+                            <tr id="filter_col6" data-column="5">
+                                <td>主机掩码</td>
+                                <td align="center"><input style="width:60%" class="column_filter" id="col5_filter" type="text"></td>
+                                <td align="center"><input type="checkbox" class="column_filter" id="col1_regex"></td>
+                            </tr>
+                            <tr id="filter_col7" data-column="6">
+                                <td>主机网关</td>
+                                <td align="center"><input style="width:60%" class="column_filter" id="col6_filter" type="text"></td>
+                                <td align="center"><input type="checkbox" class="column_filter" id="col1_regex"></td>
+                            </tr>
+                            <tr id="filter_col8" data-column="7">
+                                <td>主机IP类型</td>
+                                <td align="center"><input style="width:60%" class="column_filter" id="col7_filter" type="text"></td>
+                                <td align="center"><input type="checkbox" class="column_filter" id="col1_regex"></td>
+                            </tr>
+                            <tr id="filter_col9" data-column="8">
+                                <td>主机网络区域</td>
+                                <td align="center"><input style="width:60%" class="column_filter" id="col8_filter" type="text"></td>
+                                <td align="center"><input type="checkbox" class="column_filter" id="col2_regex"></td>
+                            </tr>
+                            <tr id="filter_col10" data-column="9">
+                                <td>vip</td>
+                                <td align="center"><input style="width:60%" class="column_filter" id="col9_filter" type="text"></td>
+                                <td align="center"><input type="checkbox" class="column_filter" id="col3_regex"></td>
+                            </tr>
+                            <tr id="filter_col11" data-column="10">
+                                <td>vip vlan</td>
+                                <td align="center"><input style="width:60%" class="column_filter" id="col10_filter" type="text"></td>
+                                <td align="center"><input type="checkbox" class="column_filter" id="col3_regex"></td>
+                            </tr>
+                            <tr id="filter_col12" data-column="11">
+                                <td>vip 掩码</td>
+                                <td align="center"><input style="width:60%" class="column_filter" id="col11_filter" type="text"></td>
+                                <td align="center"><input type="checkbox" class="column_filter" id="col3_regex"></td>
+                            </tr>
+                            <tr id="filter_col13" data-column="12">
+                                <td>vip 网关</td>
+                                <td align="center"><input style="width:60%" class="column_filter" id="col12_filter" type="text"></td>
+                                <td align="center"><input type="checkbox" class="column_filter" id="col3_regex"></td>
+                            </tr>
+                            <tr id="filter_col14" data-column="13">
+                                <td>vip 类型</td>
+                                <td align="center"><input style="width:60%" class="column_filter" id="col13_filter" type="text"></td>
+                                <td align="center"><input type="checkbox" class="column_filter" id="col3_regex"></td>
+                            </tr>
+                            <tr id="filter_col15" data-column="14">
+                                <td>vip 网络区域</td>
+                                <td align="center"><input style="width:60%" class="column_filter" id="col14_filter" type="text"></td>
+                                <td align="center"><input type="checkbox" class="column_filter" id="col3_regex"></td>
+                            </tr>
+                            <tr id="filter_col16" data-column="15">
+                                <td>公网负载IP</td>
+                                <td align="center"><input style="width:60%" class="column_filter" id="col15_filter" type="text"></td>
+                                <td align="center"><input type="checkbox" class="column_filter" id="col8_regex"></td>
+                            </tr>
+                            <tr id="filter_col17" data-column="16">
+                                <td>应用类型</td>
+                                <td align="center"><input style="width:60%" class="column_filter" id="col16_filter" type="text"></td>
+                                <td align="center"><input type="checkbox" class="column_filter" id="col9_regex"></td>
+                            </tr>
+                            <tr id="filter_col18" data-column="17">
+                                <td>服务名称</td>
+                                <td align="center"><input style="width:60%" class="column_filter" id="col17_filter" type="text"></td>
+                                <td align="center"><input type="checkbox" class="column_filter" id="col10_regex"></td>
+                            </tr>
+                            <tr id="filter_col19" data-column="18">
+                                <td>系统模板名称</td>
+                                <td align="center"><input style="width:60%" class="column_filter" id="co18_filter" type="text"></td>
+                                <td align="center"><input type="checkbox" class="column_filter" id="col11_regex"></td>
+                            </tr>
+                            <tr id="filter_col20" data-column="19">
+                                <td>操作系统类型</td>
+                                <td align="center"><input style="width:60%" class="column_filter" id="col19_filter" type="text"></td>
+                                <td align="center"><input type="checkbox" class="column_filter" id="col6_regex"></td>
+                            </tr>
+                            <tr id="filter_col21" data-column="20">
+                                <td>系统配置</td>
+                                <td align="center"><input style="width:60%" class="column_filter" id="col20_filter" type="text"></td>
+                                <td align="center"><input type="checkbox" class="column_filter" id="col13_regex"></td>
+                            </tr>
+                            <tr id="filter_col22" data-column="21">
+                                <td>主机状态</td>
+                                <td align="center"><input style="width:60%" class="column_filter" id="col21_filter" type="text"></td>
+                                <td align="center"><input type="checkbox" class="column_filter" id="col15_regex"></td>
+                            </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                    <form class="form-inline">
+                      <div class="form-group">
+                        <div class="col-sm-15">
+                          <ul class="bonsai">
+                            <li data-value="3">
+                              <input name="ip" id="3" value="3" class="toggle-visiable" type="checkbox">
+                              <label for="3">主机ip</label>
+                              <ul class="bonsai">
+                                <li data-value="4">
+                                  <input id="4" value="4" name='ip' class="toggle-visiable" type="checkbox">
+                                  <label for="4">vlan</label>
+                                </li>
+                                <li data-value="5">
+                                  <input name="ip" id="5" value="5" class="toggle-visiable" type="checkbox">
+                                  <label for="5">掩码</label>
+                                </li>
+                                <li data-value="6">
+                                  <input name="ip" id="6" value="6" class="toggle-visiable" type="checkbox">
+                                  <label for="6">网关</label>
+                                </li>
+                                <li data-value="7">
+                                  <input name="ip" id="7" value="7" class="toggle-visiable" type="checkbox">
+                                  <label for="7">类型</label>
+                                </li>
+                                <li data-value="8">
+                                  <input name="ip" id="8" value="8" class="toggle-visiable" type="checkbox">
+                                  <label for="8">网络区域</label>
+                                </li>
+                              </ul>
+                            </li>
+                          </ul>
+                        </div>
+                      </div>
+                      <div class="form-group">
+                        <div class="col-sm-15">
+                          <ul class="bonsai">
+                            <li data-value="9">
+                              <input name="vip" id="9" value="9" class="toggle-visiable" type="checkbox">
+                              <label for="9">vip</label>
+                              <ul class="bonsai">
+                                <li data-value="10">
+                                  <input name="vip" id="10" value="10" class="toggle-visiable" type="checkbox">
+                                  <label for="10">vlan</label>
+                                </li>
+                                <li data-value="11">
+                                  <input name="vip" id="11" value="11" class="toggle-visiable" type="checkbox">
+                                  <label for="11">掩码</label>
+                                </li>
+                                <li data-value="12">
+                                  <input name="vip" id="12" value="12" class="toggle-visiable" type="checkbox">
+                                  <label for="12">网关</label>
+                                </li>
+                                <li data-value="13">
+                                  <input name="vip" id="13" value="13" class="toggle-visiable" type="checkbox">
+                                  <label for="13">类型</label>
+                                </li>
+                                <li data-value="14">
+                                  <input name="vip" id="14" value="14" class="toggle-visiable" type="checkbox">
+                                  <label for="14">网络区域</label>
+                                </li>
+                              </ul>
+                            </li>
+                          </ul>
+                        </div>
+                      </div>
+                      <div class="form-group">
+                        <div class="col-sm-15">
+                          <ul class="bonsai">
+                            <li data-value="15">
+                              <input name="public_load_ip" id="15" value="15" class="toggle-visiable" type="checkbox">
+                              <label for="15">公网负载IP</label>
+                            </li>
+                          </ul>
+                        </div>
+                      </div>
+                      <div class="form-group">
+                        <div class="col-sm-15">
+                          <ul class="bonsai">
+                            <li data-value="16">
+                              <input name="app" id="16" value="16" class="toggle-visiable" type="checkbox">
+                              <label for="16">应用类型</label>
+                              <ul class="bonsai">
+                                <li data-value="8">
+                                  <input name="app" id="17" value="17" class="toggle-visiable" type="checkbox">
+                                  <label for="17">服务名称</label>
+                                </li>
+                              </ul>
+                            </li>
+                          </ul>
+                        </div>
+                      </div>
+                      <div class="form-group">
+                        <div class="col-sm-15">
+                          <ul class="bonsai">
+                            <li data-value="18">
+                              <input name="ostype" id="18" value="18" class="toggle-visiable" type="checkbox">
+                              <label for="18">系统模板名称</label>
+                              <ul class="bonsai">
+                                <li data-value="19">
+                                  <input name="ostype" id="19" value="19" class="toggle-visiable" type="checkbox">
+                                  <label for="19">操作系统详细</label>
+                                </li>
+                                <li data-value="20">
+                                  <input name="ostype" id="20" value="20" class="toggle-visiable" type="checkbox">
+                                  <label for="20">系统配置</label>
+                                </li>
+                              </ul>
+                            </li>
+                          </ul>
+                        </div>
+                      </div>
+                      
+                    </form>
+                      <table id="mytable" class="display" width="100%" cellspacing="0">
+                          <thead>
+                              <tr>
+                                  <!--<th class="center sorting_disabled">
+                                    <label class="pos-rel">
+                                      <input id='chb-all' type="checkbox"/>
+                                    </label>
+                                  </th>-->
+                                  <th>id</th>    <!--0-->
+                                  <th>平台</th>    <!--1-->
+                                  <th>主机名</th>   <!--2-->
+                                  <th>主机ip</th>   <!--3-->
+                                  <th>vlan</th>    <!--4-->
+                                  <th>掩码</th>    <!--5-->
+                                  <th>网关</th>    <!--6-->
+                                  <th>IP类型</th>    <!--7-->
+                                  <th>网络区域</th>    <!--8-->
+                                  <th>vip</th>    <!--9-->
+                                  <th>vlan</th>    <!--10-->
+                                  <th>掩码</th>    <!--11-->
+                                  <th>网关</th>    <!--12-->
+                                  <th>IP类型</th>    <!--13-->
+                                  <th>网络区域</th>    <!--14-->
+                                  <th>公网负载IP</th>    <!--15-->
+                                  <th>应用类型</th>    <!--16-->
+                                  <th>服务名称</th>    <!--17-->
+                                  <th>系统模板名称</th>    <!--18-->
+                                  <th>操作系统类型</th>    <!--19-->
+                                  <th>系统配置</th>    <!--20-->
+                                  <th>主机状态</th>    <!--21-->
+                                  <!--<th>备注</th>-->
+                                  <!--<th>操作</th>-->
+                              </tr>
+                          </thead>
+                      </table>
+                      <!-- Modal -->
+                      <div class="modal fade" id="myModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                              <h4 class="modal-title" id="myModalLabel"></h4>
+                            </div>
+                            <div class="modal-body">
+                              <div class="alert alert-danger alert-dismissable" id='modal-notify'>
+                                <button type="button" class="close" id="bt-modal-notify">&times;</button>
+                                <label id='lb-msg'></label>
+                              </div>
+                              <form class="form-horizontal" role="form">
+                                <div class="form-group">
+                                  <label class="col-sm-2 control-label">主机信息</label>
+                                  <label class="checkbox-inline">
+                                      <input type="checkbox" value="3" class='config'>IP
+                                  </label>
+                                  <label class="checkbox-inline">
+                                      <input type="checkbox" value="4" class='config'>vlan
+                                  </label>
+                                  <label class="checkbox-inline">
+                                      <input type="checkbox" value="5" class='config'>掩码
+                                  </label>
+                                  <label class="checkbox-inline">
+                                      <input type="checkbox" value="6" class='config'>网关
+                                  </label>
+                                  <label class="checkbox-inline">
+                                      <input type="checkbox" value="7" class='config'>类型
+                                  </label>
+                                  <label class="checkbox-inline">
+                                      <input type="checkbox" value="8" class='config'>网络区域
+                                  </label>
+                                </div>
+                                <div class="form-group">
+                                  <label class="col-sm-2 control-label">VIP信息</label>
+                                  <label class="checkbox-inline">
+                                      <input type="checkbox" value="9" class='config'>IP
+                                  </label>
+                                  <label class="checkbox-inline">
+                                      <input type="checkbox" value="10" class='config'>vlan
+                                  </label>
+                                  <label class="checkbox-inline">
+                                      <input type="checkbox" value="11" class='config'>掩码
+                                  </label>
+                                  <label class="checkbox-inline">
+                                      <input type="checkbox" value="12" class='config'>网关
+                                  </label>
+                                  <label class="checkbox-inline">
+                                      <input type="checkbox" value="13" class='config'>类型
+                                  </label>
+                                  <label class="checkbox-inline">
+                                      <input type="checkbox" value="14" class='config'>网络区域
+                                  </label>
+                                </div>
+                                <div class="form-group">
+                                  <label class="col-sm-2 control-label">公网负载IP</label>
+                                  <label class="checkbox-inline">
+                                      <input type="checkbox" value="15" class='config'>公网负载IP
+                                </div>
+                                <div class="form-group">
+                                  <label class="col-sm-2 control-label">应用服务</label>
+                                  <label class="checkbox-inline">
+                                      <input type="checkbox" value="16" class='config'>应用类型
+                                  </label>
+                                  <label class="checkbox-inline">
+                                      <input type="checkbox" value="17" class='config'>服务名称
+                                  </label>
+                                </div>
+                                <div class="form-group">
+                                  <label class="col-sm-2 control-label">操作系统</label>
+                                  <label class="checkbox-inline">
+                                      <input type="checkbox" value="18" class='config'>系统模板名称
+                                  </label>
+                                  <label class="checkbox-inline">
+                                      <input type="checkbox" value="19" class='config'>操作系统详细
+                                  </label>
+                                  <label class="checkbox-inline">
+                                      <input type="checkbox" value="20" class='config'>系统配置
+                                  </label>
+                                </div>
+                                
+                              </form>
+                            </div>
+                            <div class="modal-footer">
+                              <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                              <button id='bt-save' type="button" class="btn btn-primary">保存</button>
+                            </div>
+                          </div><!-- /.modal-content -->
+                        </div><!-- /.modal-dialog -->
+                      </div><!-- /.modal -->
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+      <div class="col-lg-12">
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h1>网络策略</h1>
+          </div>
+          <div class="panel-body">
+            <table id="mytable2" class="display" width="100%" cellspacing="0">
+              <thead>
+                <tr>
+                  <th>策略id</th>
+                  <th>策略名称</th>
+                  <th>源平台</th>
+                  <th>源主机</th>
+                  <th>源IP</th>
+                  <th>目的平台</th>
+                  <th>目的主机</th>
+                  <th>目的IP</th>
+                  <th>协议</th>
+                  <th>端口</th>
+                </tr>
+              </thead>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+</div>
+{%endblock%}
+{%block bodyjs%}
+    <script src="/static/js/jquery.dataTables.js" ></script>
+    {{ django_context_varable }}
+    <!--{% verbatim %}
+    <script id="tpl" type="text/x-handlebars-template">
+          {{#each func}}
+          <button type="button" class="btn btn-{{this.type}} btn-sm" onclick="{{this.fn}}">{{this.name}}</button>
+          {{/each}}
+    </script>
+    {% endverbatim %}-->
+    <script src="/static/js/handlebars-v3.0.1.js"></script>
+    <script src="/static/js/index_detail.js"></script>
+    <script src="/static/js/dataTables.colVis.js"></script>
+    <script src="/static/js/jquery.qubit.js"></script>
+    <script src="/static/js/jquery.bonsai.js"></script>
+{%endblock%}
+{%block css%}
+<link href="/static/css/jquery.dataTables.css" rel="stylesheet" type="text/css">
+<link href="/static/css/mycss.css" rel="stylesheet" type="text/css">
+<link href="/static/css/dataTables.colVis.css" rel="stylesheet" type="text/css">
+<link href="/static/css/jquery.bonsai.css" rel="stylesheet" type="text/css">
+{%endblock%}

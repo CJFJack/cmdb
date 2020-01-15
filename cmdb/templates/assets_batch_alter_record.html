@@ -1,0 +1,129 @@
+{% extends 'template.html' %}
+
+{% block username %}
+    {{ request.user.username }}
+{% endblock %}
+
+{% block content %}
+    <div id="page-wrapper">
+        <div class="row">
+            <div class="col-lg-12">
+                <h1 class="page-header">批量修改资产历史记录</h1>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <div class="btn-group">
+                            <button id='bt-search' type="button" class="btn btn-success">高级搜索</button>
+                            <button id='bt-reset' type="button" class="btn btn-danger">重置高级搜索</button>
+                            <a id='go-back' type="button" href="/it_assets/assets_batch_alter/" class="btn btn-default">返回</a>
+                        </div>
+                    </div>
+                    <div class="panel-body">
+                        <div id="div-search" class="hide">
+                            <table id="high-search" style="width: 40%; margin: 0 auto 2em auto;" border="0"
+                                   cellpadding="0"
+                                   cellspacing="0">
+                                <thead>
+                                <tr>
+                                    <th>目标</th>
+                                    <th>内容</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr id="_filter_alter_user" data-column="2">
+                                    <td>修改人</td>
+                                    <td align="center">
+                                        <select id="filter_alter_user" class="filter_select2" style="width: 100%">
+                                            <option value="0" selected="selected">全部</option>
+                                            {% for user in all_user %}
+                                                <option value={{ user.id }}>{{ user.username }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </td>
+                                </tr>
+                                <tr id="_filter_alter_type" data-column="2">
+                                    <td>修改类型</td>
+                                    <td align="center">
+                                        <select id="filter_alter_type" class="filter_select2" style="width: 100%">
+                                            <option value="0" selected="selected">全部</option>
+                                            {% for type in all_alter_type %}
+                                                <option value={{ type.0 }}>{{ type.1 }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <table id="mytable" class="display" width="100%" cellspacing="0">
+                            <thead>
+                            <tr>
+                                <th>id</th>
+                                <th>修改时间</th>
+                                <th>修改人</th>
+                                <th>修改类型</th>
+                                <th>操作</th>
+                            </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modal -->
+            <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+                 aria-hidden="true">
+                <div class="modal-dialog" style="width:1100px">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                            <h4 class="modal-title" id="myModalLabel">修改详情</h4>
+                        </div>
+                        <div class="modal-body">
+                            <table id="mytable_detail" class="display" width="100%" cellspacing="0">
+                                <thead>
+                                <tr>
+                                    <th>资产编号</th>
+                                    <th>修改前</th>
+                                    <th>修改后</th>
+                                    <th>修改结果</th>
+                                    <th>备注</th>
+                                </tr>
+                                </thead>
+                            </table>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                        </div>
+                    </div><!-- /.modal-content -->
+                </div><!-- /.modal-dialog -->
+            </div><!-- /.modal -->
+
+        </div>
+    </div>
+{% endblock %}
+{% block bodyjs %}
+    <script src="/static/js/jquery.dataTables.js"></script>
+    {{ django_context_varable }}
+    {% verbatim %}
+    <script id="tpl" type="text/x-handlebars-template">
+        {{#each func}}
+        <button type="button" class="btn btn-{{this.type}} btn-sm" onclick="{{this.fn}}">{{this.name}}</button>
+        {{/each}}
+    </script>
+    {% endverbatim %}
+    <script src="/static/js/handlebars-v3.0.1.js"></script>
+    <script src="/static/js/assets_batch_alter_record.js?v=20190806001"></script>
+    <!-- showloading.js-->
+    <script src="/static/js/showloading.min.js"></script>
+{% endblock %}
+
+{% block css %}
+    <link href="/static/css/jquery.dataTables.css" rel="stylesheet" type="text/css">
+    <!-- showloading.css-->
+    <link href="/static/css/showloading.css" rel="stylesheet" media="screen">
+{% endblock %}

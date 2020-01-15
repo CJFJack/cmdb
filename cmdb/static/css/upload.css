@@ -1,0 +1,15 @@
+body{
+	background: url("bg.png");
+}
+
+.pro,.result {
+	width: 200px;
+	margin: 100px auto;
+
+}
+
+.result{
+	text-align: center;
+	text-shadow: 0 0 5px #333333;
+	color:#FFFFFF;
+}

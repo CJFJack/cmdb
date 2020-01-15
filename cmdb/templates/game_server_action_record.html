@@ -1,0 +1,146 @@
+{% extends 'template.html' %}
+
+{% block username %}
+    {{ request.user.username }}
+{% endblock %}
+
+{% block content %}
+    <div id="page-wrapper">
+        <div class="row">
+            <div class="col-lg-12">
+                <h1 class="page-header">区服操作记录</h1>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <div class="btn-group">
+                            <a>
+                                <button id='bt-search' type="button" class="btn btn-success">高级搜索</button>
+                            </a>
+                            <a>
+                                <button id='bt-reset' type="button" class="btn btn-danger">重置高级搜索</button>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="panel-body">
+                        <div id="div-search" class="hide">
+                            <table id="high-search" style="width: 40%; margin: 0 auto 2em auto;" border="0"
+                                   cellpadding="3" cellspacing="0">
+                                <thead>
+                                <tr>
+                                    <th>目标</th>
+                                    <th>内容</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr id="_filter_uuid" data-column="2">
+                                    <td>uuid</td>
+                                    <td align="center">
+                                        <input style="width:100%" class="form-control column_filter"
+                                               id="filter_uuid" type="text">
+                                    </td>
+                                </tr>
+                                <tr id="_filter_project" data-column="2">
+                                    <td>游戏项目</td>
+                                    <td align="center">
+                                        <select id="filter_project" class="filter_select2 form-control"
+                                                style="width: 100%">
+                                            <option value="全部" selected="selected">全部</option>
+                                            {% for gp in game_project %}
+                                                <option value={{ gp.id }}>{{ gp.project_name }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </td>
+                                </tr>
+                                <tr id="_filter_game_server" data-column="2">
+                                    <td>cmdb区服id</td>
+                                    <td align="center">
+                                        <input style="width:100%" class="form-control column_filter"
+                                               id="filter_game_server" type="text">
+                                    </td>
+                                </tr>
+                                <tr id="_filter_operation_user" data-column="2">
+                                    <td>操作人</td>
+                                    <td align="center">
+                                        <select id="filter_operation_user" class="filter_select2 form-control"
+                                                style="width: 100%">
+                                            <option value="全部" selected="selected">全部</option>
+                                            {% for u in user %}
+                                                <option value={{ u.id }}>{{ u.username }}</option>
+                                            {% endfor %}
+                                    </td>
+                                </tr>
+                                <tr id="_filter_status" data-column="2">
+                                    <td>执行结果</td>
+                                    <td align="center">
+                                        <select id="filter_status" class="filter_select2 form-control"
+                                                style="width: 100%">
+                                            <option value="全部" selected="selected">全部</option>
+                                            {% for status in status_list %}
+                                                <option value={{ status.0 }}>{{ status.1 }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </td>
+                                </tr>
+                                <tr id="_filter_operation_time" data-column="2">
+                                    <td>操作时间</td>
+                                    <td align="center">
+                                        <div class="form-group">
+                                            <div class="col-sm-5">
+                                                <input class="flatpickr flatpickr-input form-control" type="text"
+                                                       placeholder="选择开始时间"
+                                                       data-id="datetime" id="filter_start_operation_time">
+                                            </div>
+                                            <label class="col-md-1 control-label">到</label>
+                                            <div class="col-sm-6">
+                                                <input class="flatpickr flatpickr-input form-control" type="text"
+                                                       placeholder="选择结束时间"
+                                                       data-id="datetime" id="filter_end_operation_time">
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <table id="mytable" width="100%" cellspacing="0" class="table table-striped table-hover">
+                            <thead>
+                            <tr>
+                                <th>id</th>
+                                <th>地区</th>
+                                <th>项目名</th>
+                                <th>区服id</th>
+                                <th>操作类型</th>
+                                <th>uuid</th>
+                                <th>操作人</th>
+                                <th>操作时间</th>
+                                <th>源IP</th>
+                                <th>状态</th>
+                                <th>备注</th>
+                            </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block bodyjs %}
+    <script src="/static/js/reconnecting-websocket.js"></script>
+    <script src="/static/js/jquery.dataTables.js"></script>
+    <script src="/static/js/dataTables.colVis.js"></script>
+    <script src="/static/js/game_server_action_record.js?v=20191127001"></script>
+    <script src="/static/js/flatpickr.js"></script>
+    <script src="/static/js/zh.js"></script>
+{% endblock %}
+{% block css %}
+    <link href="/static/css/jquery.dataTables.css" rel="stylesheet" type="text/css">
+    <link href="/static/css/mycss.css" rel="stylesheet" type="text/css">
+    <link href="/static/css/dataTables.colVis.css" rel="stylesheet" type="text/css">
+    <link href="/static/css/select2-bootstrap.css" rel="stylesheet" type="text/css">
+    <link href="/static/css/flatpickr.css" rel="stylesheet" type="text/css">
+    <link href="/static/css/flatpickr_material_green.css" rel="stylesheet" type="text/css">
+{% endblock %}

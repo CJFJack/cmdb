@@ -1,0 +1,397 @@
+{%extends 'template.html'%}
+
+{%block username%}
+{{head.username}}
+{%endblock%}
+
+{%block content%}
+<div id="page-wrapper">
+    <div class="row">
+        <div class="col-lg-12">
+            <h1 class="page-header">{{head.value}}</h1>
+            <h1 class="page-header" id="workflow_id" style="display: none;">{{head.workflow}}</h1>
+            <h1 class="page-header" id="first_name" style="display: none;">{{first_name}}</h1>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div id="example-basic">
+                        <h3>Let's do this</h3>
+                        <section>
+                            <form role="form" class="form-horizontal">
+                                <div class="form-group">
+                                  <label class="col-sm-12" for="TextArea">标题*</label>
+                                  <div class="col-sm-6">
+                                      <input class="form-control" id="title" rows="10"></input>
+                                  </div>
+                                  <div class="alert alert-danger col-sm-4" id="show_title_msg" style="display: none;">
+                                    请输入后端热更新标题!
+                                  </div>
+                                    <div class="alert alert-danger col-sm-4" id="show_title_len_msg"
+                                             style="display: none;">
+                                            后端热更新标题长度超过255个字节!
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                  <label class="col-sm-12" for="TextArea">原因(可选)</label>
+                                  <div class="col-sm-6">
+                                      <textarea class="form-control" id="reason" rows="10" placeholder="可选填"></textarea>
+                                  </div>
+                                  <div class="alert alert-danger col-sm-4" id="show_reason_msg" style="display: none;">
+                                    请输入后端热更新原因!
+                                  </div>
+                                </div>
+                                <div class="form-group" style="display: none">
+                                  <label class="col-sm-12" for="TextArea">注意事项(可选)</label>
+                                  <div class="col-sm-6">
+                                      <textarea class="form-control" id="attention" rows="10"></textarea>
+                                  </div>
+                                </div>
+
+                                <!--<div class="form-group">
+                                  <label class="col-sm-12" for="TextArea">区服列表</label>
+                                  <div class="col-sm-6">
+                                      <select id="demo1" multiple="multiple">
+                                        <option value="31_1" data-section="游戏服/37" selected="selected" data-index="1" data-ip="1.1.1.1" data-srv="31_1" data-gtype='游戏服'>31_1服</option>
+                                        <option value="37_2" data-section="游戏服/37" selected="selected" data-index="2" data-ip="1.1.1.1" data-srv="31_2" data-gtype='游戏服'>37_2服</option>
+                                        <option value="qq_1" data-section="游戏服/qq" selected="selected" data-index="2" data-ip="1.1.1.2" data-srv="qq_1" data-gtype='游戏服'>qq_1服</option>
+                                        <option value="sougou_cross1" data-section="跨服/sougou" selected="selected" data-index="1" data-ip="1.1.1.2" data-srv="sougou_cross1" data-gtype='跨服'>sougou_cross1服</option>
+                                        <option value="yy_cross2" data-section="跨服/yy" selected="selected" data-index="1" data-ip="1.1.1.4" data-srv="yy_cross2" data-gtype='跨服'>yy_cross2服</option>
+                                      </select>
+                                  </div>
+                              </div>-->
+
+                            </form>
+                        </section>
+
+                        <h3>确定项目地区和审批人</h3>
+                        <section>
+                            <form role="form" class="form-horizontal">
+                              <!--
+                              <div class="form-group">
+                                <label class="col-sm-12" for="TextArea">项目</label>
+                                  <div class="col-sm-6">
+                                    <select id="project" style="width: 100%">
+                                      <option value="0" selected="selected">选择项目</option>
+                                    </select>
+                                  </div>
+                                  <div class="alert alert-danger col-sm-4" id="show_project_msg" style="display: none;">
+                                    请选择后端热更新项目!
+                                  </div>
+                              </div>-->
+
+                              <div class="form-group">
+                                <label class="col-sm-12" for="TextArea">区域</label>
+                                  <div class="col-sm-6">
+                                    <select id="area" style="width: 100%">
+                                      <option value="0" selected="selected">选择区域</option>
+                                    </select>
+                                  </div>
+                                  <div class="alert alert-danger col-sm-4" id="show_area_msg" style="display: none;">
+                                    请选择后端热更新地区!
+                                  </div>
+                              </div>
+                              <div class="form-group">
+                                <label class="col-sm-12" for="TextArea">指定备用主程审批人(防止主程请假不能审批的情况)</label>
+                                <div class="col-sm-6">
+                                  <select id="backup_dev" style="width: 100%">
+                                    <option value="0" selected="selected">选择备用主程审批人</option>
+                                  </select>
+                                </div>
+                                <div class="alert alert-danger col-sm-4" id="show_backup_dev_msg" style="display: none;">
+                                    请选择备用的主程审批人!
+                                </div>
+                              </div>
+                              <div class="form-group">
+                                <label class="col-sm-12" for="TextArea">指定测试负责人审批(可多选,可不选,如果不选,则自己会自动完成测试审批)</label>
+                                <div class="col-sm-6">
+                                  <select id="test_head" style="width: 100%">
+                                    <!--<option value="0" selected="selected">选择测试负责人</option>-->
+                                  </select>
+                                </div>
+                                <div class="alert alert-danger col-sm-4" id="show_test_head_msg" style="display: none;">
+                                    请选择至少一个后端热更新测试负责人!
+                                </div>
+                              </div>
+
+                              <div class="form-group">
+                                <label class="col-sm-12" for="TextArea">指定运营负责人审批(可多选)</label>
+                                <div class="col-sm-6">
+                                  <select id="operation_head" style="width: 100%">
+                                    <!--<option value="0" selected="selected">选择运营负责人</option>-->
+                                  </select>
+                                </div>
+                                <div class="alert alert-danger col-sm-4" id="show_operation_head_msg" style="display: none;">
+                                    请选择至少一个后端热更新运营负责人!
+                                </div>
+                              </div>
+
+                              <div class="form-group">
+                                <label class="col-sm-12" for="TextArea">更新完成后额外通知人员</label>
+                                <div class="col-sm-6">
+                                  <select id="extra" style="width: 100%">
+                                    <!--<option value="0" selected="selected">选择运营负责人</option>-->
+                                  </select>
+                                </div>
+                              </div>
+
+                            </form>
+                        </section>
+
+                        </section>
+                        <h3>选择更新版本和区服列表</h3>
+                        <section>
+                            <form role="form" class="form-horizontal">
+                              <div class="form-group" id="on_new_server_div">
+                                <div class="checkbox col-sm-6">
+                                    <label>
+                                        <input type="checkbox" value="" id="on_new_server">同步更新新服
+                                    </label>
+                                    <button type="button" class="btn btn-info btn-xs" data-toggle="tooltip" data-placement="top" title="" data-original-title="Tooltip on top">
+                                      不太明白这个意思?
+                                    </button>
+                                </div>
+                              </div>
+                              <div class="form-group" id='add_server_list_after'>
+                                <label class="col-sm-12" for="TextArea">更新版本号</label>
+                                <div class="col-sm-6">
+                                  <select id="update_version" style="width: 100%">
+                                    <option value="0" selected="selected">选择更新版本号</option>
+                                  </select>
+                                </div>
+                                <div class="alert alert-danger col-sm-4" id="show_update_version_msg" style="display: none;">
+                                    请选择要更新的后端版本号!
+                                </div>
+                              </div>
+                            </form>
+                        </section>
+
+                        <h3>热更文件和erl命令</h3>
+                        <section>
+                            <form role="form" class="form-horizontal">
+                                <div class="form-group">
+                                  <label class="col-sm-12" for="TextArea">更新方式</label>
+                                    <div class="col-sm-6">
+                                      <select id="hot_server_type" style="width: 100%">
+                                        {% for k, v in data.items %}
+                                            {% if k == '1' %}
+                                                <option value={{k}} selected="selected">{{v}}</option>
+                                            {% else %}
+                                                <option value={{k}}>{{v}}</option>
+                                            {% endif %}
+                                        {% endfor %}
+                                      </select>
+                                    </div>
+                                    <div class="alert alert-danger col-sm-4" id="show_hot_server_type" style="display: none;">
+                                        请选择后端热更新项目!
+                                    </div>
+                                </div>
+
+                                <!--<div class="form-group show_update_file">
+                                  <label class="col-sm-12">选择热更文件</label>
+                                  <div class="col-sm-6">
+                                    <input id="files" name="file_name" type="file" multiple class="file-loading">
+                                  </div>
+                                </div>
+
+                                <div class="form-group show_update_file">
+                                  <label class="col-sm-12" for="TextArea">要热更的文件和MD5(要热更新的文件和MD5以此处展示为准)</label>
+                                    <div class="col-sm-6">
+                                        <textarea class="form-control" id="update_files" rows="10" readonly="readonly"></textarea>
+                                    </div>
+                                    <a><button id='bt-reset' type="button" class="btn btn-danger">清空要热更的文件</button></a>
+                                </div>-->
+
+                                <div class="form-group show_update_file" id="add_file_after">
+                                  <div class="col-sm-12">
+                                      <a><button id='bt-require-file' type="button" class="btn btn-success">获取文件列表</button></a>
+                                  </div>
+                                  <div class="alert alert-danger col-sm-4" id="show_file_list_msg" style="display: none;">
+                                    你没有选择热更新文件!
+                                  </div>
+                                </div>
+
+                                <div class="form-group show_erlang_cmd">
+                                  <label class="col-sm-12" for="TextArea">要执行的erl命令(一行一个命令)</label>
+                                    <div class="col-sm-6">
+                                        <textarea class="form-control" id="erlang_cmd_list" rows="10" placeholder="erlang:now()."></textarea>
+                                    </div>
+                                </div>
+                            </form>
+                        </section>
+                        <h3>是否和前端一起热更新</h3>
+                        <section>
+                            <form role="form" class="form-horizontal">
+                                <div class="form-group">
+                                  <label class="col-sm-12" for="TextArea">加入已经创建好的前端热更新代号(和创建互斥)</label>
+                                  <div class="col-sm-6">
+                                    <select id="select_pair_code" style="width: 100%">
+                                      <option value="0" selected="selected">选择加入</option>
+                                    </select>
+                                  </div>
+                                </div>
+                                <div class="form-group">
+                                  <label class="col-sm-12" for="TextArea">创建一个新的代号(如果没有找到匹配的前端热更新代号)(和加入互斥)</label>
+                                  <div class="col-sm-6">
+                                    <input type="text" readonly class="form-control" id="gen_pair_code">
+                                  </div>
+                                  <a><button id='bt-gen' type="button" class="btn btn-primary">生成代号</button></a>
+                                </div>
+                                <div class="form-group">
+                                  <label class="col-sm-12" for="TextArea">执行的先后顺序</label>
+                                  <div class="col-sm-6">
+                                    <select id="order" style="width: 100%">
+                                      <option value="无" selected="selected">选择先后顺序</option>
+                                      <option value="先">先</option>
+                                      <option value="后">后</option>
+                                    </select>
+                                  </div>
+                                </div>
+                                <div class="alert alert-danger col-sm-4" id="show_pair_code_msg" style="display: none;">
+                                  请选择绑定代号和先后顺序，都要选择
+                                </div>
+                            </form>
+                        </section>
+                        <h3>确认提交</h3>
+                        <section>
+                            <form role="form" class="form-horizontal">
+                              <div class="form-group" id="test2">
+                                  <label class="col-sm-12" for="TextArea">
+                                    标题
+                                  </label>
+                                  <div class="col-sm-6">
+                                      <input class="form-control" id="overview_title" readonly="readonly"></input>
+                                  </div>
+                              </div>
+                              <div class="form-group">
+                                  <label class="col-sm-12" for="TextArea">
+                                    原因
+                                  </label>
+                                  <div class="col-sm-6">
+                                      <textarea class="form-control" id="overview_reason" rows="5" readonly="readonly"></textarea>
+                                  </div>
+                              </div>
+                              <div class="form-group" style="display: none">
+                                  <label class="col-sm-12" for="TextArea">
+                                    注意事项
+                                  </label>
+                                  <div class="col-sm-6">
+                                      <textarea class="form-control" id="overview_attention" rows="10" readonly="readonly"></textarea>
+                                  </div>
+                              </div>
+                              <br>
+
+                              <!--<div class="form-group">
+                                  <label class="col-sm-12" for="TextArea">
+                                    热更新项目
+                                  </label>
+                                  <div class="col-sm-6">
+                                      <input class="form-control" id="overview_project" readonly="readonly"></input>
+                                  </div>
+                              </div>
+                              <div class="form-group">
+                                  <label class="col-sm-12" for="TextArea">
+                                    热更新地区
+                                  </label>
+                                  <div class="col-sm-6">
+                                      <input class="form-control" id="overview_area" readonly="readonly"></input>
+                                  </div>
+                              </div>-->
+
+                              <div class="form-group row">
+                                  <label class="col-sm-2 col-form-label" for="overview_project">热更新地区版本号</label>
+                                  <div class="col-sm-2">
+                                      <input type="text" readonly class="form-control" id="overview_area">
+                                  </div>
+                                  <div class="col-sm-2">
+                                      <input type="text" readonly class="form-control" id="overview_update_version">
+                                  </div>
+                              </div>
+
+                              <div class="form-group">
+                                  <label class="col-sm-12" for="TextArea">
+                                    后端热更方式
+                                  </label>
+                                  <div class="col-sm-6">
+                                      <input class="form-control" id="overview_hot_server_type" readonly="readonly"></input>
+                                  </div>
+                              </div>
+
+                              <div class="form-group" id="overview_file_after" style="display: none;">
+                                  <label class="col-sm-12" for="TextArea">要热更的文件和MD5</label>
+                                    <div class="col-sm-6">
+                                        <textarea class="form-control" id="overview_update_files" rows="6" readonly="readonly"></textarea>
+                                    </div>
+                              </div>
+
+                                <div class="form-group" id="show_overview_erlang_cmd_list">
+                                  <label class="col-sm-12" for="TextArea">要执行的erl命令</label>
+                                    <div class="col-sm-6">
+                                        <textarea class="form-control" id="overview_erlang_cmd_list" rows="6" readonly="readonly"></textarea>
+                                    </div>
+                                </div>
+
+                                <!--<div class="form-group" id="overview_after_erl">
+                                  <label class="col-sm-12" for="TextArea">
+                                    热更新后端版本号
+                                  </label>
+                                  <div class="col-sm-6">
+                                      <input class="form-control" id="overview_update_version" readonly="readonly"></input>
+                                  </div>
+                                </div>-->
+
+                                <div class="form-group" id="show_overview_server_list">
+                                  <label class="col-sm-12" for="TextArea">更新的区服(游戏服类型+平台+游戏服名+游戏服id+游戏服IP)</label>
+                                    <div class="col-sm-6">
+                                        <textarea class="form-control" id="overview_server_list" rows="10" readonly="readonly"></textarea>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-group row">
+                                  <label class="col-sm-2 col-form-label">是否同步热更新服</label>
+                                  <div class="col-sm-2">
+                                      <input type="text" readonly class="form-control" id="overview_on_new_server">
+                                  </div>
+                                </div>
+
+                                <div class="form-group">
+                                  <label class="col-sm-12" for="TextArea">
+                                    和前端一起绑定热更新及先后顺序
+                                  </label>
+                                  <div class="col-sm-3">
+                                      <input class="form-control" id="overview_pair_code" readonly="readonly"></input>
+                                  </div>
+                                  <div class="col-sm-3">
+                                      <input class="form-control" id="overview_order" readonly="readonly"></input>
+                                  </div>
+                              </div>
+                            </form>
+                        </section>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{%endblock%}
+{%block bodyjs%}
+    <script src="/static/js/jquery.steps.js"></script>
+    <!--<script src="/static/js/fileinput.min.js"></script>-->
+    <script src="/static/js/common_server_hot_update_workflow.js?v=20191105001"></script>
+    <script src="/static/js/flatpickr.js"></script>
+    <script src="/static/js/zh.js"></script>
+    <script src="/static/js/jquery.tree-multiselect.js"></script>
+    <script src="/static/js/jquery.dataTables.js" ></script>
+    <script src="/static/js/md5.min.js" ></script>
+{%endblock%}
+{%block css%}
+    <link href="/static/css/jquery.steps.css" rel="stylesheet" type="text/css">
+    <!--<link href="/static/css/fileinput.min.css" rel="stylesheet" type="text/css">-->
+    <link href="/static/css/flatpickr.css" rel="stylesheet" type="text/css">
+    <link href="/static/css/jquery.tree-multiselect.css" rel="stylesheet" type="text/css">
+    <link href="/static/css/dataTables.colVis.css" rel="stylesheet" type="text/css">
+    <link href="/static/css/jquery.dataTables.css" rel="stylesheet" type="text/css">
+    <link href="/static/css/client_hot_update.css" rel="stylesheet" type="text/css">
+{%endblock%}

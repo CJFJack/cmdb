@@ -1,0 +1,293 @@
+{% extends 'template.html' %}
+
+{% block username %}
+    {{ head.username }}
+{% endblock %}
+
+{% block content %}
+    <div id="page-wrapper">
+        <div class="row">
+            <div class="col-lg-12">
+                <h1 class="page-header">{{ head.value }}</h1>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <div class="btn-group">
+                            <a>
+                                <button id='bt-search' type="button" class="btn btn-success">高级搜索</button>
+                            </a>
+                            <a>
+                                <button id='bt-reset' type="button" class="btn btn-danger">重置高级搜索</button>
+                            </a>
+                            <a>
+                                <button id='bt-install' data-text="确定安装? 0个" type="button" class="btn btn-primary">安装
+                                </button>
+                            </a>
+                            <a>
+                                <button id='bt-uninstall' data-text="确定卸载? 0个" type="button" class="btn btn-warning">卸载
+                                </button>
+                            </a>
+                        </div>
+                        <div class="pull-right">
+                            <div class="btn-group">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel-body">
+                        <div id="div-search" class="hide">
+                            <table id="high-search" style="width: 67%; margin: 0 auto 2em auto;" border="0"
+                                   cellpadding="3" cellspacing="0">
+                                <thead>
+                                <tr>
+                                    <th>目标</th>
+                                    <th>内容</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr data-column="2">
+                                    <td>项目类型</td>
+                                    <td align="center">
+                                        <select id="filter_project_type" class="filter_select2" style="width: 100%">
+                                            <option value="100" selected="selected">全部</option>
+                                            <option value="0">手游</option>
+                                            <option value="1">页游</option>
+                                        </select>
+                                    </td>
+                                </tr>
+                                <tr data-column="5">
+                                    <td>项目名称</td>
+                                    <td align="center">
+                                        <select id="filter_project" class="filter_select2" style="width: 100%">
+                                            <option value="0" selected="selected">全部</option>
+                                            {% for project in all_project %}
+                                                <option value={{ project.id }}>{{ project.text }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </td>
+                                </tr>
+                                <tr data-column="5">
+                                    <td>状态</td>
+                                    <td align="center">
+                                        <select id="filter_srv_status" class="filter_select2" style="width: 100%">
+                                            <option value="100" selected="selected">全部</option>
+                                            {% for id, value in all_srv_status.items %}
+                                                <option value={{ id }}>{{ value }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </td>
+                                </tr>
+                                <tr data-column="2">
+                                    <td>游戏类型</td>
+                                    <td align="center">
+                                        <select id="filter_game_type" class="filter_select2" style="width: 100%">
+                                            <option value="0" selected="selected">全部</option>
+                                            {% for game_type in all_game_type %}
+                                                <option value={{ game_type.id }}>{{ game_type.text }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </td>
+                                </tr>
+                                <tr data-column="4">
+                                    <td>平台名</td>
+                                    <td align="center"><input style="width:100%" class="column_filter"
+                                                              id="filter_pf_name" type="text"></td>
+                                </tr>
+                                <tr data-column="4">
+                                    <td>区服id</td>
+                                    <td align="center"><input style="width:100%" class="column_filter"
+                                                              id="filter_srv_id" type="text"></td>
+                                </tr>
+                                <tr data-column="4">
+                                    <td>区服名称</td>
+                                    <td align="center"><input style="width:100%" class="column_filter"
+                                                              id="filter_srv_name" type="text"></td>
+                                </tr>
+                                <tr data-column="5">
+                                    <td>机房</td>
+                                    <td align="center">
+                                        <select id="filter_room" class="filter_select2" style="width: 100%">
+                                            <option value="0" selected="selected">全部</option>
+                                            {% for room in all_room %}
+                                                <option value={{ room.id }}>{{ room.text }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </td>
+                                </tr>
+                                <tr data-column="4">
+                                    <td>内网IP</td>
+                                    <td align="center"><input style="width:100%" class="column_filter"
+                                                              id="filter_internal_ip" type="text"></td>
+                                </tr>
+                                <tr data-column="4">
+                                    <td>电信IP</td>
+                                    <td align="center"><input style="width:100%" class="column_filter"
+                                                              id="filter_telecom_ip" type="text"></td>
+                                </tr>
+                                <tr data-column="4">
+                                    <td>联通IP</td>
+                                    <td align="center"><input style="width:100%" class="column_filter"
+                                                              id="filter_unicom_ip" type="text"></td>
+                                </tr>
+                                <tr data-column="4">
+                                    <td>主服id</td>
+                                    <td align="center"><input style="width:100%" class="column_filter"
+                                                              id="filter_merge_id" type="text"></td>
+                                </tr>
+                                <tr data-column="4">
+                                    <td>合服时间</td>
+                                    <td align="center"><input style="width:100%" class="column_filter"
+                                                              id="filter_merge_time" type="text"></td>
+                                </tr>
+                                <tr data-column="4">
+                                    <td>前端版本号</td>
+                                    <td align="center"><input style="width:100%" class="column_filter"
+                                                              id="filter_client_version" type="text"></td>
+                                </tr>
+                                <tr data-column="4">
+                                    <td>后端版本号</td>
+                                    <td align="center"><input style="width:100%" class="column_filter"
+                                                              id="filter_server_version" type="text"></td>
+                                </tr>
+                                <tr data-column="4">
+                                    <td>cdn_root_url</td>
+                                    <td align="center"><input style="width:100%" class="column_filter"
+                                                              id="filter_cdn_root_url" type="text"></td>
+                                </tr>
+                                <tr data-column="4">
+                                    <td>cdn目录</td>
+                                    <td align="center"><input style="width:100%" class="column_filter"
+                                                              id="filter_cdn_dir" type="text"></td>
+                                </tr>
+                                <tr data-column="4">
+                                    <td>开服时间</td>
+                                    <td align="center"><input style="width:100%" class="column_filter"
+                                                              id="filter_open_time" type="text"></td>
+                                </tr>
+                                <tr data-column="4">
+                                    <td>地区</td>
+                                    <td align="center"><input style="width:100%" class="column_filter"
+                                                              id="filter_area_name" type="text"></td>
+                                </tr>
+                                <tr data-column="6">
+                                    <td>只看主服</td>
+                                    <td align="center"><input type="checkbox" id='master_server'></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <table id="mytable" class="display" width="100%" cellspacing="0">
+                            <thead>
+                            <tr>
+                                <th class="center sorting_disabled">
+                                    <label class="pos-rel">
+                                        <input id='chb-all' type="checkbox"/>
+                                    </label>
+                                </th>
+                                <th>id</th>
+                                <th>开服时间</th>
+                                <th>项目</th>
+                                <th>地区</th>
+                                <th>平台ID</th>
+                                <th>平台名称</th>
+                                <th>区服ID</th>
+                                <th>区服名称</th>
+                                <th>后端版本号</th>
+                                <th>前端版本号</th>
+                                <th>前端目录</th>
+                                <th>openqq区服ID</th>
+                                <th>服务器组</th>
+                                <th>服务器群组ID</th>
+                                <th>服务器群组英文名</th>
+                                <th>唯一ID</th>
+                                <th>状态</th>
+                                <th>操作</th>
+                            </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <!-- Modal -->
+            <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+                 aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                            <h4 class="modal-title" id="myModalLabel">修改开服计划</h4>
+                        </div>
+                        <div class="modal-body">
+                            <div class="alert alert-danger alert-dismissable" id='modal-notify'>
+                                <button type="button" class="close" id="bt-modal-notify">&times;</button>
+                                <label id='lb-msg'></label>
+                            </div>
+                            <form class="form-horizontal" role="form">
+                                <div class="form-group" id='show_id'>
+                                    <label class="col-sm-3 control-label">id</label>
+                                    <input type="text" class="form-control " placeholder="id" id="id">
+                                    <div class="col-sm-8">
+                                        <input type="text" class="form-control ">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">区服名称</label>
+                                    <div class="col-sm-8">
+                                        <div class="form-group row">
+                                            <div class="col-sm-8">
+                                                <input type="text" class="form-control" id="srv_name"
+                                                       style="width: 100%" readonly="readonly">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label ">状态</label>
+                                    <div class="col-sm-8">
+                                        <select id="status" style="width: 100%">
+                                            {% for k, v in data.status.items %}
+                                                {% if k == '0' %}
+                                                    <option selected="selected" value={{ k }}>{{ v }}</option>
+                                                {% else %}
+                                                    <option value={{ k }}>{{ v }}</option>
+                                                {% endif %}
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                            <button id='bt-save' type="button" class="btn btn-primary">保存</button>
+                        </div>
+                    </div><!-- /.modal-content -->
+                </div><!-- /.modal-dialog -->
+            </div><!-- /.modal -->
+        </div>
+    </div>
+{% endblock %}
+{% block bodyjs %}
+    <script src="/static/js/jquery.dataTables.js"></script>
+    {{ django_context_varable }}
+    {% verbatim %}
+    <script id="tpl" type="text/x-handlebars-template">
+        {{#each func}}
+        <button type="button" class="btn btn-{{this.type}} btn-sm {{this.is_disabled}}" onclick="{{this.fn}}">
+            {{this.name}}
+        </button>
+        {{/each}}
+    </script>
+    {% endverbatim %}
+    <script src="/static/js/handlebars-v3.0.1.js"></script>
+    <script src="/static/js/reconnecting-websocket.js"></script>
+    <script src="/static/js/install_gameserver_list.js?v=20190902001"></script>
+    <script src="/static/js/dataTables.colVis.js"></script>
+{% endblock %}
+{% block css %}
+    <link href="/static/css/jquery.dataTables.css" rel="stylesheet" type="text/css">
+    <link href="/static/css/mycss.css" rel="stylesheet" type="text/css">
+    <link href="/static/css/dataTables.colVis.css" rel="stylesheet" type="text/css">
+{% endblock %}

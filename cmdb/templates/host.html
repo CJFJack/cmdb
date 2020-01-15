@@ -1,0 +1,669 @@
+{% extends 'template.html' %}
+
+{% block username %}
+    {{ head.username }}
+{% endblock %}
+
+{% block content %}
+    <div id="page-wrapper">
+        <div class="row">
+            <div class="col-lg-12">
+                <h1 class="page-header">{{ head.value }}</h1>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <div class="btn-group">
+                            {% if request.user.is_superuser %}
+                                <a>
+                                    <button id='bt-add' type="button" class="btn btn-primary">增加</button>
+                                </a>
+                                <a>
+                                    <button id='bt-del' data-text="确定删除主机? 0个" type="button" class="btn btn-danger">删除
+                                    </button>
+                                </a>
+                            {% endif %}
+                            <a>
+                                <button id='bt-search' type="button" class="btn btn-success">高级搜索</button>
+                            </a>
+
+                            <a>
+                                <button id='bt-reset' type="button" class="btn btn-danger">重置高级搜索</button>
+                            </a>
+                            <a>
+                                <button id='bt-download' type="button" class="btn btn-primary">导出excel</button>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="panel-body">
+                        <div id="div-search" class="hide">
+                            <table id="high-search" style="width: 67%; margin: 0 auto 2em auto;" border="0"
+                                   cellpadding="3" cellspacing="0">
+                                <thead>
+                                <tr>
+                                    <th>目标</th>
+                                    <th>内容</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr id="_filter_status" data-column="2">
+                                    <td>状态标识</td>
+                                    <td align="center">
+                                        <select id="filter_status" style="width: 100%" class='filter_select2' multiple>
+                                            {#                                            <option value="全部" selected="selected">全部</option>#}
+                                            {% for k, v in head.data.all_status.items %}
+                                                <option value="{{ k }}">{{ v }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </td>
+                                </tr>
+                                <tr id="_filter_host_class" data-column="2">
+                                    <td>机器归属</td>
+                                    <td align="center">
+                                        <select id="filter_host_class" style="width: 100%" class='filter_select2'>
+                                            <option value="全部" selected="selected">全部</option>
+                                            {% for k, v in head.data.all_class.items %}
+                                                <option value="{{ k }}">{{ v }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </td>
+                                </tr>
+                                <tr id="_filter_belongs_to_game_project" data-column="2">
+                                    <td>所在项目</td>
+                                    <td align="center">
+                                        <select id="filter_belongs_to_game_project" style="width: 100%"
+                                                class='filter_select2'>
+                                            <option value="全部" selected="selected">全部</option>
+                                            {% for project in head.data.all_project %}
+                                                <option value="{{ project.id }}">{{ project.text }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </td>
+                                </tr>
+                                <tr id="_filter_belongs_to_room" data-column="2">
+                                    <td>所在机房</td>
+                                    <td align="center">
+                                        <select id="filter_belongs_to_room" style="width: 100%" class='filter_select2'>
+                                            <option value="全部" selected="selected">全部</option>
+                                            {% for room in head.data.all_room %}
+                                                <option value="{{ room.id }}">{{ room.text }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </td>
+                                </tr>
+                                <tr id="_filter_machine_type" data-column="2">
+                                    <td>机器类型</td>
+                                    <td align="center">
+                                        <select id="filter_machine_type" style="width: 100%" class='filter_select2'>
+                                            <option value="全部" selected="selected">全部</option>
+                                            {% for k, v in head.data.all_type.items %}
+                                                <option value="{{ k }}">{{ v }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </td>
+                                </tr>
+                                <tr id="_filter_belongs_to_business" data-column="2">
+                                    <td>业务类型</td>
+                                    <td align="center">
+                                        <select id="filter_belongs_to_business" style="width: 100%"
+                                                class='filter_select2'>
+                                            <option value="全部" selected="selected">全部</option>
+                                            {% for business in head.data.all_business %}
+                                                <option value="{{ business.id }}">{{ business.text }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </td>
+                                </tr>
+                                <tr id="_filter_platform" data-column="8">
+                                    <td>平台</td>
+                                    <td align="center"><input style="width:100%" class="column_filter"
+                                                              id="filter_platform" type="text"></td>
+                                </tr>
+                                <tr id="_filter_internal_ip" data-column="9">
+                                    <td>局域网IP</td>
+                                    <td align="center"><input style="width:100%" class="column_filter"
+                                                              id="filter_internal_ip" type="text"></td>
+                                </tr>
+                                <tr id="_filter_telecom_ip" data-column="10">
+                                    <td>电信ip</td>
+                                    <td align="center"><input style="width:100%" class="column_filter"
+                                                              id="filter_telecom_ip" type="text"></td>
+                                </tr>
+                                <tr id="_filter_unicom_ip" data-column="11">
+                                    <td>联通ip</td>
+                                    <td align="center"><input style="width:100%" class="column_filter"
+                                                              id="filter_unicom_ip" type="text"></td>
+                                </tr>
+                                <tr id="_filter_system" data-column="2">
+                                    <td>操作系统</td>
+                                    <td align="center">
+                                        <select id="filter_system" style="width: 100%" class='filter_select2'>
+                                            <option value="全部" selected="selected">全部</option>
+                                            {% for k, v in head.data.all_system.items %}
+                                                <option value="{{ k }}">{{ v }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </td>
+                                </tr>
+                                <tr id="_filter_is_internet" data-column="2">
+                                    <td>公网访问</td>
+                                    <td align="center">
+                                        <select id="filter_is_internet" style="width: 100%" class='filter_select2'>
+                                            <option value="全部" selected="selected">全部</option>
+                                            {% for k, v in head.data.all_internet.items %}
+                                                <option value="{{ k }}">{{ v }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </td>
+                                </tr>
+                                <tr id="_filter_sshuser" data-column="7">
+                                    <td>SSH用户</td>
+                                    <td align="center"><input style="width:100%" class="column_filter"
+                                                              id="filter_sshuser" type="text"></td>
+                                </tr>
+                                <tr id="_filter_sshport" data-column="7">
+                                    <td>SSH端口</td>
+                                    <td align="center"><input style="width:100%" class="column_filter"
+                                                              id="filter_sshport" type="text"></td>
+                                </tr>
+                                <tr id="_filter_machine_model" data-column="7">
+                                    <td>机器型号</td>
+                                    <td align="center"><input style="width:100%" class="column_filter"
+                                                              id="filter_machine_model" type="text"></td>
+                                </tr>
+                                <tr id="_filter_cpu_num" data-column="7">
+                                    <td>cpu核心数</td>
+                                    <td align="center"><input style="width:100%" class="column_filter"
+                                                              id="filter_cpu_num" type="text"></td>
+                                </tr>
+                                <tr id="_filter_cpu" data-column="7">
+                                    <td>CPU</td>
+                                    <td align="center"><input style="width:100%" class="column_filter" id="filter_cpu"
+                                                              type="text"></td>
+                                </tr>
+                                <tr id="_filter_ram" data-column="7">
+                                    <td>内存</td>
+                                    <td align="center"><input style="width:100%" class="column_filter" id="filter_ram"
+                                                              type="text"></td>
+                                </tr>
+                                <tr id="_filter_disk" data-column="7">
+                                    <td>硬盘</td>
+                                    <td align="center"><input style="width:100%" class="column_filter" id="filter_disk"
+                                                              type="text"></td>
+                                </tr>
+                                <tr id="_filter_host_comment" data-column="7">
+                                    <td>用途</td>
+                                    <td align="center"><input style="width:100%" class="column_filter"
+                                                              id="filter_host_comment" type="text"></td>
+                                </tr>
+                                <tr id="_filter_belongs_to_host" data-column="7">
+                                    <td>宿主机</td>
+                                    <td align="center"><input style="width:100%" class="column_filter"
+                                                              id="filter_belongs_to_host" type="text"></td>
+                                </tr>
+                                <tr id="_filter_host_identifier" data-column="7">
+                                    <td>主机标识符</td>
+                                    <td align="center"><input style="width:100%" class="column_filter"
+                                                              id="filter_host_identifier" type="text"></td>
+                                </tr>
+                                <tr id="_filter_opsmanager" data-column="2">
+                                    <td>运维管理机</td>
+                                    <td align="center">
+                                        <select id="filter_opsmanager" style="width: 100%"
+                                                class='filter_select2'>
+                                            <option value="全部" selected="selected">全部</option>
+                                            {% for opsmanager in head.data.all_opsmanager %}
+                                                <option value="{{ opsmanager.id }}">{{ opsmanager.text }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="col-sm-2">
+                            <label>选择项目</label>
+                            <select id="filter_project" style="width: 100%">
+                                <option value="全部" selected>全部</option>
+                                {% for p in head.data.all_project %}
+                                    <option value="{{ p.id }}">{{ p.text }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-sm-2">
+                            <label>选择机房</label>
+                            <select id="filter_room" style="width: 100%">
+                                <option value="全部" selected>全部</option>
+                                {% for r in head.data.all_room %}
+                                    <option value="{{ r.id }}">{{ r.text }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-sm-3">
+                            <label>状态(可多选)</label>
+                            <select id="filter_status2" style="width: 100%" multiple>
+                                {% for k, v in head.data.all_status.items %}
+                                    <option value="{{ k }}">{{ v }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <br/><br/><br/><br/>
+                        <form>
+                            <div class="form-group">
+                                {% if request.user.is_superuser %}
+                                    <label class="checkbox-inline">
+                                        <input type="checkbox" value="3" class="toggle-visiable">机器归属
+                                    </label>
+                                    <label class="checkbox-inline">
+                                        <input type="checkbox" value="6" class="toggle-visiable">机器类型
+                                    </label>
+                                    <label class="checkbox-inline">
+                                        <input type="checkbox" value="13" class="toggle-visiable">公网访问
+                                    </label>
+                                    <label class="checkbox-inline">
+                                        <input type="checkbox" value="14" class="toggle-visiable">ssh用户
+                                    </label>
+                                    <label class="checkbox-inline">
+                                        <input type="checkbox" value="15" class="toggle-visiable">ssh端口
+                                    </label>
+                                    <label class="checkbox-inline">
+                                        <input type="checkbox" value="16" class="toggle-visiable">机器型号
+                                    </label>
+                                    <label class="checkbox-inline">
+                                        <input type="checkbox" value="17" class="toggle-visiable">cpu核心数
+                                    </label>
+                                    <label class="checkbox-inline">
+                                        <input type="checkbox" value="18" class="toggle-visiable">cpu
+                                    </label>
+                                    <label class="checkbox-inline">
+                                        <input type="checkbox" value="19" class="toggle-visiable">ram
+                                    </label>
+                                    <label class="checkbox-inline">
+                                        <input type="checkbox" value="20" class="toggle-visiable">disk
+                                    </label>
+                                    <label class="checkbox-inline">
+                                        <input type="checkbox" value="22" class="toggle-visiable">宿主机
+                                    </label>
+                                    <label class="checkbox-inline">
+                                        <input type="checkbox" value="23" class="toggle-visiable">标识符
+                                    </label>
+                                    <label class="checkbox-inline">
+                                        <input type="checkbox" value="24" class="toggle-visiable">所属运维管理机
+                                    </label>
+                                    <label class="checkbox-inline">
+                                        <input type="checkbox" value="25" class="toggle-visiable">密码
+                                    </label>
+                                {% endif %}
+                            </div>
+                        </form>
+                        <table id="mytable" class="display" width="100%" cellspacing="0">
+                            <thead>
+                            <tr>
+                                <th class="center sorting_disabled">
+                                    <label class="pos-rel">
+                                        <input id='chb-all' type="checkbox"/>
+                                    </label>
+                                </th>
+                                <th>主机id</th>
+                                <th>状态标识</th>
+                                <th>机器归属</th>
+                                <th>所在项目</th>
+                                <th>所在机房</th>
+                                <th>机器类型</th>
+                                <th>业务类型</th>
+                                <th>平台</th>
+                                <th>局域网IP</th>
+                                <th>电信ip</th>
+                                <th>联通ip</th>
+                                <th>操作系统</th>
+                                <th>公网访问</th>
+                                <th>SSH用户</th>
+                                <th>SSH端口</th>
+                                <th>机器型号</th>
+                                <th>cpu核心数</th>
+                                <th>CPU</th>
+                                <th>内存</th>
+                                <th>硬盘</th>
+                                <th>用途</th>
+                                <th>宿主机</th>
+                                <th>标识符</th>
+                                <th>所属运维管理机</th>
+                                <th>密码</th>
+                                <th>操作</th>
+                            </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <!-- Modal -->
+            <div class="modal fade" id="myModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                            <h4 class="modal-title" id="myModalLabel"></h4>
+                        </div>
+                        <div class="modal-body">
+                            <div class="alert alert-danger alert-dismissable" id='modal-notify'>
+                                <button type="button" class="close" id="bt-modal-notify">&times;</button>
+                                <label id='lb-msg'></label>
+                            </div>
+                            <form class="form-horizontal" role="form">
+                                <div class="form-group" id='show_id'>
+                                    <label class="col-sm-3 control-label">主机id</label>
+                                    <div class="col-sm-8">
+                                        <input type="text" class="form-control " placeholder="" id="id">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label ">状态标识</label>
+                                    <div class="col-sm-8">
+                                        <select id="status">
+                                            <option value="0">未初始化</option>
+                                            <option value="1" selected="selected">可用</option>
+                                            <option value="2">停用</option>
+                                            <option value="3">新机器</option>
+                                            <option value="4">已归还</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label ">机器归属</label>
+                                    <div class="col-sm-8">
+                                        <select id="host_class">
+                                            <option value="0" selected="selected">公司内网</option>
+                                            <option value="1">公司自有外网机器</option>
+                                            <option value="2">游戏合作商提供</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">所在项目</label>
+                                    <div class="col-sm-8">
+                                        <select id="belongs_to_game_project" style="width: 100%">
+                                            <option selected="selected" value="0">选择项目</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label ">所在机房</label>
+                                    <div class="col-sm-8">
+                                        <select id="belongs_to_room" style="width: 100%">
+                                            <option selected="selected" value="0">选择机房</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label ">机器类型</label>
+                                    <div class="col-sm-8">
+                                        <select id="machine_type">
+                                            <option value="0" selected="selected">云主机</option>
+                                            <option value="1">物理机</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label ">业务类型</label>
+                                    <div class="col-sm-8">
+                                        <select id="belongs_to_business" style="width: 100%">
+                                            <option selected="selected" value="0">选择业务类型</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">平台或提供商标识</label>
+                                    <div class="col-sm-8">
+                                        <input type="text" class="form-control" placeholder="YY" id="platform">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">局域网IP</label>
+                                    <div class="col-sm-8">
+                                        <input type="text" class="form-control" placeholder="192.168.1.1"
+                                               id="internal_ip">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">电信ip</label>
+                                    <div class="col-sm-8">
+                                        <input type="text" class="form-control" placeholder="43.18.12.132"
+                                               id="telecom_ip">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">联通ip</label>
+                                    <div class="col-sm-8">
+                                        <input type="text" class="form-control" placeholder="43.18.12.132"
+                                               id="unicom_ip">
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label ">操作系统</label>
+                                    <div class="col-sm-8">
+                                        <select id="system">
+                                            <option value="0" selected="selected">linux</option>
+                                            <option value="1">windows</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label ">公网访问状态标识</label>
+                                    <div class="col-sm-8">
+                                        <select id="is_internet">
+                                            <option value="0" selected="selected">完全内网机器</option>
+                                            <option value="1">公网访问不了但可上外网</option>
+                                            <option value="2">公网可访问</option>
+                                            <option value="3">映射外部受限访问</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">服务器SSH用户</label>
+                                    <div class="col-sm-8">
+                                        <div class="form-group row">
+                                            <div class="col-sm-8">
+                                                <input type="text" class="form-control " id="sshuser">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">服务器SSH端口</label>
+                                    <div class="col-sm-8">
+                                        <div class="form-group row">
+                                            <div class="col-sm-8">
+                                                <input type="text" class="form-control " id="sshport">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">机器型号</label>
+                                    <div class="col-sm-8">
+                                        <div class="form-group row">
+                                            <div class="col-sm-8">
+                                                <input type="text" class="form-control " id="machine_model">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">cpu核心数</label>
+                                    <div class="col-sm-8">
+                                        <div class="form-group row">
+                                            <div class="col-sm-8">
+                                                <input type="text" class="form-control " id="cpu_num">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">cpu</label>
+                                    <div class="col-sm-8">
+                                        <div class="form-group row">
+                                            <div class="col-sm-8">
+                                                <input type="text" class="form-control " id="cpu">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">ram</label>
+                                    <div class="col-sm-8">
+                                        <div class="form-group row">
+                                            <div class="col-sm-8">
+                                                <input type="text" class="form-control " id="ram">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">硬盘</label>
+                                    <div class="col-sm-8">
+                                        <div class="form-group row">
+                                            <div class="col-sm-8">
+                                                <input type="text" class="form-control " id="disk">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">用途</label>
+                                    <div class="col-sm-8">
+                                        <input type="text" class="form-control" placeholder="" id="host_comment">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">宿主机</label>
+                                    <div class="col-sm-8">
+                                        <input type="text" class="form-control" placeholder="" id="belongs_to_host">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">标识符</label>
+                                    <div class="col-sm-8">
+                                        <input type="text" class="form-control" placeholder="" id="host_identifier">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label ">所属运维管理机</label>
+                                    <div class="col-sm-8">
+                                        <select id="opsmanager" style="width: 100%">
+                                            <option selected="selected" value="0">选择所属运维管理机</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">密码</label>
+                                    <div class="col-sm-8">
+                                        <input type="text" class="form-control" placeholder="" id="password">
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                            <button id='bt-save' type="button" class="btn btn-primary">保存</button>
+                        </div>
+                    </div><!-- /.modal-content -->
+                </div><!-- /.modal-dialog -->
+            </div><!-- /.modal -->
+            <div class="modal fade" id="Modal-file" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                            <h4 class="modal-title" id="myModalLabel">导入/导出</h4>
+                        </div>
+                        <form id="submit-file-form" enctype="multipart/form-data" action="/assets/upload_devices"
+                              method="post">
+                            <div class="modal-body">
+                                <div class="alert alert-dismissable" id='upload-notify'>
+                                    <button type="button" class="close" id="bt-upload-notify">&times;</button>
+                                    <label id='lb-msg-upload'></label>
+                                </div>
+                                <!-- {% csrf_token %} -->
+                                <div class="form-group">
+                                    {{ form }}
+                                    <p class="help-block">Example block-level help text here.</p>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                                <button type="submit" class="btn btn-primary" name='action'>保存</button>
+                            </div>
+                        </form>
+                    </div><!-- /.modal-content -->
+                </div><!-- /.modal-dialog -->
+            </div>
+            <div class="modal fade" id="myModal-download" role="dialog" aria-labelledby="myModalLabel"
+                 aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title" id="myModalLabel">下载中...请勿刷新或者离开页面</h4>
+                        </div>
+                        <div class="modal-body">
+                            <form class="form-horizontal" role="form">
+                                <div class="form-group" id='load' style="display: none;">
+                                    <label class="col-sm-12"></label>
+                                    <div class="col-sm-12">
+                                        <div class="ball"></div>
+                                    </div>
+                                </div>
+                                <div class="form-group" id='show-msg'>
+                                    <label class="col-sm-3 control-label"></label>
+                                    <div class="col-sm-8">
+                                        <p id='load-msg'></p>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="modal-footer" id="modal-download-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                        </div>
+                    </div><!-- /.modal-content -->
+                </div><!-- /.modal-dialog -->
+            </div>
+            <div class="modal fade" id="myModalHistory" role="dialog" aria-labelledby="myModalLabelHistory"
+                 aria-hidden="true">
+                <div class="modal-dialog" style="width:800px">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                            <h4 class="modal-title" id="myModalLabelHistory"></h4>
+                        </div>
+                        <div class="modal-body">
+                            <p id="myModalHistoryContent"></p>
+                        </div><!-- /.modal-content -->
+                    </div><!-- /.modal-dialog -->
+                </div><!-- /.modal -->
+            </div>
+            <!-- 管理员标志-->
+            <div id="is_superuser" data-is-superuser="{{ request.user.is_superuser }}"></div>
+        </div>
+    </div>
+{% endblock %}
+{% block bodyjs %}
+    <script src="/static/js/jquery.dataTables.js"></script>
+    {{ django_context_varable }}
+    {% verbatim %}
+    <script id="tpl" type="text/x-handlebars-template">
+        {{#each func}}
+        <button type="button" class="btn btn-{{this.type}} btn-sm" onclick="{{this.fn}}">{{this.name}}</button>
+        {{/each}}
+    </script>
+    {% endverbatim %}
+    <script src="/static/js/handlebars-v3.0.1.js"></script>
+    <script src="/static/js/host.js?v=20191126001"></script>
+{% endblock %}
+{% block css %}
+    <link href="/static/css/jquery.dataTables.css" rel="stylesheet" type="text/css">
+    <link href="/static/css/mycss.css" rel="stylesheet" type="text/css">
+    <link href="/static/css/load.css" rel="stylesheet" type="text/css">
+    <link href="/static/css/select2-bootstrap.css" rel="stylesheet" type="text/css">
+{% endblock %}

@@ -1,0 +1,178 @@
+{% extends 'template.html' %}
+
+{% block username %}
+    {{ head.username }}
+{% endblock %}
+
+{% block content %}
+    <div id="page-wrapper">
+        <div class="row">
+            <div class="col-lg-12">
+                <h1 class="page-header">{{ head.value }}</h1>
+                <h1 class="page-header" id="workflow_id" style="display: none;">{{ head.workflow }}</h1>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <div class="container">
+                                    <form role="form" class="form-horizontal">
+                                        <div class="form-group">
+                                            <label class="col-sm-12" for="TextArea">申请人</label>
+                                            <div class="col-sm-6">
+                                                <select id="applicant" style="width: 100%" disabled="disabled">
+                                                    <option value={{ init_user.id }} selected="selected">{{ init_user.username }}</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-sm-12" for="TextArea">标题</label>
+                                            <div class="col-sm-6">
+                                                <input class="form-control" id="title"></input>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-sm-12" for="TextArea">项目</label>
+                                            <div class="col-sm-6">
+                                                <select id="project" style="width: 100%">
+                                                    <option value="0" selected="selected">选择项目</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-sm-12" for="TextArea">用途</label>
+                                            <div class="col-sm-6">
+                                                <textarea class="form-control" id="purpose" rows="5"></textarea>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-sm-12" for="TextArea">内外网</label>
+                                            <div class="col-sm-6">
+                                                <select id="ip_type" style="width: 100%">
+                                                    <option value='1' selected="selected">外网</option>
+                                                    <option value='0'>内网</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <!--<div class="form-group">
+                              <label class="col-sm-12" for="TextArea">推荐机器配置</label>
+                              <div class="col-lg-3">
+                                <select id="config" style="width: 100%">
+                                  {% for config in list_config %}
+                                    {% if loop.index == 0 %}
+                                      <option value={{config.id}} selected="selected">{{config.text}}</option>
+                                    {% else %}
+                                      <option value={{config.id}}>{{config.text}}</option>
+                                    {% endif %}
+                                  {% endfor %}
+                                </select>
+                              </div>
+                              <button class="btn btn-danger btn-sm" id="number-reduce" type="button">-</button>
+                              <input tpye="text" value=1 id='number' style="width: 5%"></input><span>台</span>
+                              <button class="btn btn-success btn-sm" id="number-add" type="button">+</button>
+                            </div>-->
+
+                                        <div class="form-group" id="add-server-config">
+                                            <div class="col-sm-2">
+                                                <label>添加服务器配置</label>
+                                                <button id='myAdd' class='btn btn-outline btn-primary btn-xs'
+                                                        type='button'>添加
+                                                </button>
+                                            </div>
+                                        </div>
+
+                                        <!--
+                                        <div class="form-group" style="display: none" id=custom>
+                                          <label class="col-sm-12" for="TextArea">自定义机器配置</label>
+                                          <div class="col-lg-3">
+                                            <div class="input-group">
+                                              <input type="text" class="form-control" id='custom_cpu' placeholder="4">
+                                              <span class="input-group-addon">CPU核心数</span>
+                                            </div>
+                                          </div>
+                                          <div class="col-lg-3">
+                                            <div class="input-group">
+                                              <input type="text" class="form-control" id='custom_mem' placeholder="8">
+                                              <span class="input-group-addon">内存G</span>
+                                            </div>
+                                          </div>
+                                          <div class="col-lg-3">
+                                            <div class="input-group">
+                                              <input type="text" class="form-control" id='custom_disk' placeholder="100">
+                                              <span class="input-group-addon">硬盘G</span>
+                                            </div>
+                                          </div>
+                                        </div>-->
+
+                                        <!-- example html -->
+                                        <!--
+                                        <div class="form-group machine-config-all">
+                                          <label class="col-sm-12">自定义机器配置</label>
+                                          <div class="col-lg-3">
+                                            <div class="input-group">
+                                              <input type="text" class="form-control machine-config-cpu" placeholder="4">
+                                              <span class="input-group-addon">CPU核心数</span>
+                                            </div>
+                                          </div>
+                                          <div class="col-lg-3">
+                                            <div class="input-group">
+                                              <input type="text" class="form-control machine-config-mem" placeholder="8">
+                                              <span class="input-group-addon">内存G</span>
+                                            </div>
+                                          </div>
+                                          <div class="col-lg-3">
+                                            <div class="input-group">
+                                              <input type="text" class="form-control machine-config-mem" placeholder="100">
+                                              <span class="input-group-addon">硬盘G</span>
+                                            </div>
+                                          </div>
+                                          <button class="btn btn-danger btn-sm number-reduce" type="button">-</button>
+                                          <input tpye="text" value=1 class="number" style="width: 5%" readonly="readonly"></input><span>台</span>
+                                          <button class="btn btn-success btn-sm number-add" type="button">+</button>
+                                        </div>-->
+                                        <!-- end of example html -->
+
+                                        <div class="form-group">
+                                            <label class="col-sm-12">其他需求(可选)</label>
+                                            <div class="col-sm-6">
+                                                <textarea class="form-control" id="requirements" rows="5"
+                                                          placeholder="带宽100M"></textarea>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label class="col-sm-12">流程步骤</label>
+                                            <div class="col-sm-6">
+                                                <p>{{ state_step.value }}</p>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-sm-6">
+                                                <div class="alert alert-success col-sm-12" id="approve_user"
+                                                     role="alert"></div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group" id='append_before'>
+                                            <div class="col-sm-6">
+                                                <button type="button" class="btn btn-primary" id='bt-commit'>提交</button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                    <hr>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block bodyjs %}
+    <script src="/static/js/machine_workflow.js?v=d656e87a7045d7f7f34935d2354f3a205ea0e115"></script>
+{% endblock %}
+{% block css %}
+{% endblock %}

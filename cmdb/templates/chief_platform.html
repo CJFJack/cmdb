@@ -1,0 +1,131 @@
+{%extends 'template.html'%}
+
+{%block content%}
+<div id="page-wrapper">
+    <div class="row">
+        <div class="col-lg-12">
+            <h1 class="page-header">{{head.value}}</h1>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <div class="btn-group">
+                        <a><button id='bt-add' type="button" class="btn btn-primary">增加</button></a>
+                        <a><button id='bt-del' data-text="确定删除主平台? 0个" type="button" class="btn btn-danger">删除</button></a>
+                    </div>
+                </div>
+                <div class="panel-body">
+                      <table id="mytable" class="display" width="100%" cellspacing="0">
+                          <thead>
+                              <tr>
+                                  <th class="center sorting_disabled">
+                                    <label class="pos-rel">
+                                      <input id='chb-all' type="checkbox"/>
+                                    </label>
+                                  </th>
+                                  <th>id</th>
+                                  <th>主平台名称</th>
+                                  <th>公司名</th>
+                                  <th>项目经理</th>
+                                  <th>项目经理电话</th>
+                                  <th>研发负责人</th>
+                                  <th>研发负责人电话</th>
+                                  <th>操作</th>
+                              </tr>
+                          </thead>
+                      </table>
+                </div>
+            </div>
+        </div>
+        <!-- Modal -->
+        <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">品牌信息</h4>
+              </div>
+              <div class="modal-body">
+                <div class="alert alert-danger alert-dismissable" id='modal-notify'>
+                  <button type="button" class="close" id="bt-modal-notify">&times;</button>
+                  <label id='lb-msg'></label>
+                </div>
+                <form class="form-horizontal" role="form">
+                  <div class="form-group" id="show_id">
+                      <label class="col-sm-3 control-label">id</label>
+                      <div class="col-sm-8">
+                        <input type="text" class="form-control " id="id">
+                      </div>
+                  </div>
+                  <div class="form-group">
+                      <label class="col-sm-3 control-label">主平台名称</label>
+                      <div class="col-sm-8">
+                        <input type="text" class="form-control " placeholder="招商银行" id="chief_platform_name">
+                      </div>
+                  </div>
+                  <div class="form-group">
+                      <label class="col-sm-3 control-label">公司名</label>
+                      <div class="col-sm-8">
+                        <input type="text" class="form-control " placeholder="网金" id="company">
+                      </div>
+                  </div>
+                  <div class="form-group">
+                      <label class="col-sm-3 control-label">项目经理</label>
+                      <div class="col-sm-8">
+                        <input type="text" class="form-control " placeholder="黄总" id="manager">
+                      </div>
+                  </div>
+                  <div class="form-group">
+                      <label class="col-sm-3 control-label">项目经理电话</label>
+                      <div class="col-sm-8">
+                        <input type="text" class="form-control" placeholder="189xxxx2345" id="manager_tel">
+                      </div>
+                  </div>
+                  <div class="form-group">
+                      <label class="col-sm-3 control-label">研发负责人</label>
+                      <div class="col-sm-8">
+                        <input type="text" class="form-control" placeholder="" id="developer">
+                      </div>
+                  </div>
+                  <div class="form-group">
+                      <label class="col-sm-3 control-label">研发负责人电话</label>
+                      <div class="col-sm-8">
+                        <input type="text" class="form-control" placeholder="189xxxx2345" id="developer_tel">
+                      </div>
+                  </div>
+                </form>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button id='bt-save' type="button" class="btn btn-primary">保存</button>
+              </div>
+            </div><!-- /.modal-content -->
+          </div><!-- /.modal-dialog -->
+        </div><!-- /.modal -->
+    </div>
+</div>
+{%endblock%}
+{%block bodyjs%}
+    <script src="/static/js/jquery.dataTables.js" ></script>
+    
+    {{ django_context_varable }}
+    {% verbatim %}
+    <script id="tpl" type="text/x-handlebars-template">
+          {{#each func}}
+          <button type="button" class="btn btn-{{this.type}} btn-sm" onclick="{{this.fn}}">{{this.name}}</button>
+          {{/each}}
+    </script>
+    {% endverbatim %}
+    <script src="/static/js/handlebars-v3.0.1.js"></script>
+    <script src="/static/js/chief_platform.js"></script>
+    <script type="text/javascript" src="/static/js/zebra_datepicker.js"></script>
+    
+{%endblock%}
+
+{%block css%}
+<link href="/static/css/jquery.dataTables.css" rel="stylesheet" type="text/css">
+<link href="/static/css/mycss.css" rel="stylesheet" type="text/css">
+<link rel="stylesheet" type="text/css" href="/static/css/datetimepicker.css">
+{%endblock%}

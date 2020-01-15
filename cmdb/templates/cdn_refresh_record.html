@@ -1,0 +1,84 @@
+{% extends 'template.html' %}
+
+{% block username %}
+    {{ request.user.username }}
+{% endblock %}
+
+{% block content %}
+    <div id="page-wrapper">
+        <div class="alert alert-danger alert-dismissable" style="display: none;" id="refresh_notice">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+            <span id="refresh_notice_text"></span>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <h3 class="page-header">刷新记录查询</h3>
+            </div>
+        </div>
+        <div class="alert alert-info">
+            <p><i class="fa fa-check"></i> 只允许查询最近30天数据</p>
+            <p><i class="fa fa-check"></i> 白山云接口没有返回时间，查询结果无法按时间排序</p>
+            <p><i class="fa fa-check"></i> 腾讯云查询结果按时间倒序排列</p>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <div class="form-group row">
+                            <label class="col-sm-12">选择游戏项目</label>
+                            <div class="col-sm-4">
+                                <select class="form-control" id="project" name="project">
+                                    <option value="0"></option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-12">起止时间</label>
+                            <div class="col-sm-2">
+                                <input class="flatpickr flatpickr-input form-control" type="text" placeholder="选择开始时间"
+                                       data-id="datetime" id="startDate">
+                            </div>
+                            <div class="col-sm-2">
+                                <input class="flatpickr flatpickr-input form-control" type="text" placeholder="选择结束时间"
+                                       data-id="datetime" id="endDate">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-sm-12">
+                                <button type="button" class="btn btn-primary" onclick="initQueryTable()"
+                                        id="query_record">查询
+                                </button>
+                            </div>
+                        </div>
+                        <table id="mytable" cellspacing="0"
+                               class="table table-striped table-hover">
+                            <thead>
+                            <tr>
+                                <th>url/dir</th>
+                                <th>刷新结果</th>
+                                <th>提交刷新时间</th>
+                            </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block bodyjs %}
+    <script src="/static/js/jquery.dataTables.js"></script>
+    <script src="/static/js/cdn_refresh_record.js?v=20190508001"></script>
+    <script src="/static/js/flatpickr.js"></script>
+    <script src="/static/js/zh.js"></script>
+    <!-- showloading.js-->
+    <script src="/static/js/showloading.min.js"></script>
+{% endblock %}
+{% block css %}
+    <link href="/static/css/jquery.dataTables.css" rel="stylesheet" type="text/css">
+    <link href="/static/css/flatpickr.css" rel="stylesheet" type="text/css">
+    <link href="/static/css/flatpickr_material_green.css" rel="stylesheet" type="text/css">
+    <!-- showloading.css-->
+    <link href="/static/css/showloading.css" rel="stylesheet" media="screen">
+    <link href="/static/css/select2-bootstrap.css" rel="stylesheet" type="text/css">
+{% endblock %}

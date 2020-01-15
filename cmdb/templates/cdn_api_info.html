@@ -1,0 +1,296 @@
+{% extends 'template.html' %}
+{% load staticfiles %}
+
+{% block username %}
+    {{ request.user.username }}
+{% endblock %}
+
+{% block content %}
+    <div id="page-wrapper">
+        <div class="row">
+            <div class="col-lg-12">
+                <h1 class="page-header">CDN 接口信息</h1>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <div class="btn-group">
+                            <a>
+                                <button type="button" class="btn btn-success" onclick="add_cdn_info()">新增接口信息
+                                </button>
+                            </a>
+                            <a>
+                                <button id='bt-del' data-text="确定删除接口? 0个" type="button"
+                                        class="btn btn-danger">删除
+                                </button>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="panel-body">
+                        {% if cdn_api_obj %}
+                            <table id="mytable" width="100%" cellspacing="0"
+                                   class="table table-striped table-hover">
+                                <thead>
+                                <tr>
+                                    <th class="center sorting_disabled">
+                                        <label class="pos-rel">
+                                            <input id='chb-all' type="checkbox"/>
+                                        </label>
+                                    </th>
+                                    <th style="display: none;">id</th>
+                                    <th>供应商</th>
+                                    <th>认证方式</th>
+                                    <th>游戏项目</th>
+                                    <th>地区</th>
+                                    <th>备注</th>
+                                    <th>操作</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for cdn_api in cdn_api_obj %}
+                                    <tr>
+                                        <td class=" dt-body-center"><input type="checkbox"></td>
+                                        <td style="display: none;" id="{{ cdn_api.id }}"
+                                            value="{{ cdn_api.id }}"
+                                            name="{{ cdn_api.id }}">{{ cdn_api.id }}</td>
+                                        <td>{{ cdn_api.cdn.name }}</td>
+                                        <td>
+                                            {% if cdn_api.auth == 1 %}Token： {{ cdn_api.token }}{% else %}
+                                                secretId + secretKey： {{ cdn_api.secret_id }} +
+                                                {{ cdn_api.secret_key }}{% endif %}
+                                        </td>
+                                        <td>
+                                            {% for project in cdn_api.game_project.all %}
+                                                <span>{{ project.project_name }}</span><br/>
+                                            {% endfor %}
+                                        </td>
+                                        <td>{% if cdn_api.area %}{{ cdn_api.area }}{% endif %}</td>
+                                        <td>{{ cdn_api.remark }}</td>
+                                        <td>
+                                            <button class="btn btn-sm btn-primary" onclick="edit_cdn_info({{ cdn_api.id }})">
+                                                修改
+                                            </button>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        {% else %}
+                            <p>还没有接口信息，请先添加！</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Edit Modal-->
+            <div class="modal fade" id="Modal-edit" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                            <h4 class="modal-title" id="myModalLabel">修改 CDN 接口信息</h4>
+                        </div>
+                        <form>
+                            <div class="modal-body">
+                                <input style="display: none;" id="edit_cdn_api_id" value="">
+                                <div class="alert alert-danger alert-dismissable" id='modal-notify-edit-api'>
+                                    <button type="button" class="close" id="bt-modal-notify-edit-api">&times;</button>
+                                    <label id='lb-msg-edit-api'></label>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="control-label col-md-2">供应商</label>
+                                    <div class="col-md-8">
+                                        <select id="edit_cdn_supplier" class="form-control" style="width: 100%"
+                                                name="edit_cdn_supplier">
+                                            <option selected="selected" value="0">无</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="control-label col-md-2">认证方式</label>
+                                    <div class="form-check col-md-2">
+                                        <label class="form-check-label">
+                                            <input name="edit_auth" id="edit_auth_token" value="1"
+                                                   class="form-check-input" type="radio"> token
+                                        </label>
+                                    </div>
+                                    <div class="form-check col-md-4">
+                                        <label class="form-check-label">
+                                            <input name="edit_auth" id="edit_auth_secret" value="2"
+                                                   class="form-check-input" type="radio"> secretId + secretKey
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="control-label col-md-2">token</label>
+                                    <div class="col-md-8">
+                                        <input name="edit_token" id="edit_token" value="" class="form-control"
+                                               placeholder="请输入token信息">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="control-label col-md-2">secretId</label>
+                                    <div class="col-md-8">
+                                        <input name="edit_secretId" id="edit_secretId" value="" class="form-control"
+                                               placeholder="请输入secretId">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="control-label col-md-2">secretKey</label>
+                                    <div class="col-md-8">
+                                        <input name="edit_secretKey" id="edit_secretKey" value="" class="form-control"
+                                               placeholder="请输入secretKey">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="control-label col-md-2">游戏项目</label>
+                                    <div class="col-md-8">
+                                        <select class="form-control" id="edit_game_project" multiple=""
+                                                style="width: 100%">
+
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="control-label col-md-2">地区</label>
+                                    <div class="col-md-8">
+                                        <select id="edit_area" class="form-control" style="width: 100%"
+                                                name="edit_area">
+                                            <option selected="selected" value="" disabled="true">请输入接口适用地区</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="control-label col-md-2">备注</label>
+                                    <div class="col-md-8">
+                                        <textarea class="form-control" rows="5" id="edit_remark" name="edit_remark"
+                                                  value=""
+                                                  placeholder="请输入备注（可选）"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                                <button type="button" class="btn btn-primary" name='action'
+                                        onclick="save_edit_cdn_api()">保存
+                                </button>
+                            </div>
+                        </form>
+                    </div><!-- /.modal-content -->
+                </div><!-- /.modal-dialog -->
+            </div>
+
+            <!-- Add API INFO Modal-->
+            <div class="modal fade" id="Modal-Add" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                            <h4 class="modal-title" id="myModalLabel">新增 CDN 接口信息</h4>
+                        </div>
+                        <form>
+                            <div class="modal-body">
+                                <div class="alert alert-danger alert-dismissable" id='modal-notify-add-api'>
+                                    <button type="button" class="close" id="bt-modal-notify-add-api">&times;</button>
+                                    <label id='lb-msg-add-api'></label>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="control-label col-md-2">供应商</label>
+                                    <div class="col-md-8">
+                                        <select id="cdn_supplier" class="form-control" style="width: 100%"
+                                                name="cdn_supplier">
+                                            <option selected="selected" value="0" disabled="true">......</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="control-label col-md-2">认证方式</label>
+                                    <div class="form-check col-md-2">
+                                        <label class="form-check-label">
+                                            <input name="auth" id="add_auth" value="1"
+                                                   class="form-check-input" type="radio"> token
+                                        </label>
+                                    </div>
+                                    <div class="form-check col-md-4">
+                                        <label class="form-check-label">
+                                            <input name="auth" id="add_auth" value="2"
+                                                   class="form-check-input" type="radio"> secretId + secretKey
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="control-label col-md-2">token</label>
+                                    <div class="col-md-8">
+                                        <input name="token" id="token" value="" class="form-control"
+                                               placeholder="请输入token信息">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="control-label col-md-2">secretId</label>
+                                    <div class="col-md-8">
+                                        <input name="secretId" id="secretId" value="" class="form-control"
+                                               placeholder="请输入secretId">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="control-label col-md-2">secretKey</label>
+                                    <div class="col-md-8">
+                                        <input name="secretKey" id="secretKey" value="" class="form-control"
+                                               placeholder="请输入secretKey">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="control-label col-md-2">游戏项目</label>
+                                    <div class="col-md-8">
+                                        <select class="form-control" id="add_game_project" multiple=""
+                                                style="width: 100%">
+
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="control-label col-md-2">地区</label>
+                                    <div class="col-md-8">
+                                        <select id="add_area" class="form-control" style="width: 100%"
+                                                name="add_area">
+                                            <option selected="selected" value="" disabled="true">请输入接口适用地区</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="control-label col-md-2">备注</label>
+                                    <div class="col-md-8">
+                                        <textarea class="form-control" rows="5" id="add_remark" name="remark" value=""
+                                                  placeholder="请输入备注（可选）"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                                <button type="button" class="btn btn-primary" onclick="save_add_cdn_api()"
+                                        name='action'>新增
+                                </button>
+                            </div>
+                        </form>
+                    </div><!-- /.modal-content -->
+                </div><!-- /.modal-dialog -->
+            </div>
+
+            <div id="is_superuser" data-is-superuser="{{ is_superuser }}"></div>
+
+        </div>
+    </div>
+{% endblock %}
+{% block bodyjs %}
+    <script src="/static/js/select2.min.js"></script>
+    <script src="/static/js/jquery.dataTables.min.js"></script>
+    <script src="/static/js/dataTables.colVis.js"></script>
+    <script src="/static/js/cdn_api_info.js?v=20190529001"></script>
+{% endblock %}
+{% block css %}
+    <link href="/static/css/jquery.dataTables.css" rel="stylesheet" type="text/css">
+    <link href="/static/css/dataTables.colVis.css" rel="stylesheet" type="text/css">
+    <link href="/static/css/select2-bootstrap.css" rel="stylesheet" type="text/css">
+{% endblock %}

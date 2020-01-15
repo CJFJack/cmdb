@@ -1,0 +1,73 @@
+{% extends 'template.html' %}
+
+{% block username %}
+    {{ request.user.username }}
+{% endblock %}
+
+{% block content %}
+    <div id="page-wrapper">
+        <p>选择资产回收位置</p>
+        <select id="pos_id">
+            {% for p in all_pos %}
+                {% if p.name == '露乐大厦9F' %}
+                    <option value="{{ p.id }}" selected>{{ p.name }}</option>
+                {% else %}
+                    <option value="{{ p.id }}">{{ p.name }}</option>
+                {% endif %}
+            {% endfor %}
+        </select><br><br>
+        <p>离职员工中文姓名</p>
+        <textarea rows="10" cols="100" placeholder="填入离职员工中文姓名，多个分多行填写，最多不要超过10个，如：&#10;梁家龙&#10;test111&#10;test222"
+                  id="user_list"></textarea>
+        <br>
+        <button class="btn btn-primary" type="button" id="commit">提交</button>
+        <br>
+        <br>
+        <a class="btn btn-primary" href="/users/recently_clean_user/" target="_blank">查看最近清除结果</a>
+    </div>
+{% endblock %}
+{% block bodyjs %}
+    <script>
+        $('#commit').click(function () {
+            var data = {
+                'pos_id': $('#pos_id').val(),
+                'user_list': $('#user_list').val(),
+            };
+
+            var encoded = $.toJSON(data);
+            var pdata = encoded;
+            $.ajax({
+                type: "POST",
+                url: "/users/batch_user_desert_page/",
+                data: pdata,
+                async: true,
+                contentType: "application/json; charset=utf-8",
+                beforeSend: function() {
+                    $('#commit').text('提交中，请等待返回...');
+                    $('#commit').prop('disabled', true)
+                },
+                success: function (data) {
+                    if (data.success) {
+                        alert('提交成功')
+                    }
+                    else {
+                        alert(data.msg)
+                    }
+                    $('#commit').text('提交');
+                    $('#commit').prop('disabled', false)
+                },
+                error: function (xhr, status, error) {
+                    if (xhr.status == '403') {
+                        alert('权限拒绝');
+                    } else {
+                        alert('内部错误');
+                    }
+                    $('#commit').text('提交');
+                    $('#commit').prop('disabled', false)
+                }
+            });
+        })
+    </script>
+{% endblock %}
+{% block css %}
+{% endblock %}

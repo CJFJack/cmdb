@@ -1,0 +1,144 @@
+{%extends 'template.html'%}
+
+{% block username %}
+    {{ head.username }}
+{% endblock %}
+
+{%block content%}
+<div id="page-wrapper">
+    <div class="row">
+        <div class="col-lg-12">
+            <h1 class="page-header">{{head.value}}</h1>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <div class="btn-group">
+                        <a><button id='bt-add' type="button" class="btn btn-primary">增加</button></a>
+                        <a><button id='bt-del' data-text="确定删除所选的公司代号? 0个" type="button" class="btn btn-danger">删除</button></a>
+                    </div>
+                    <div class="pull-right">
+                      <div class="btn-group">
+                      </div>
+                    </div>
+                </div>
+                <div class="panel-body">
+                  <table id="mytable" class="display" width="100%" cellspacing="0">
+                      <thead>
+                          <tr>
+                              <th class="center sorting_disabled">
+                                <label class="pos-rel">
+                                  <input id='chb-all' type="checkbox"/>
+                                </label>
+                              </th>
+                              <th>id</th>
+                              <th>公司名</th>
+                              <th>公司代号</th>
+                              <th>公司领导</th>
+                              <th>操作</th>
+                          </tr>
+                      </thead>
+                  </table>
+                </div>
+            </div>
+        </div>
+        <!-- Modal -->
+        <div class="modal fade" id="myModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel"></h4>
+              </div>
+              <div class="modal-body">
+                <div class="alert alert-danger alert-dismissable" id='modal-notify'>
+                  <button type="button" class="close" id="bt-modal-notify">&times;</button>
+                  <label id='lb-msg'></label>
+                </div>
+                <form class="form-horizontal" role="form">
+                  <div class="form-group" id='show_id'>
+                      <label class="col-sm-3 control-label">id</label>
+                      <div class="col-sm-8">
+                        <input type="text" class="form-control " placeholder="" id="id">
+                      </div>
+                  </div>
+                  <div class="form-group">
+                      <label class="col-sm-3 control-label">公司名</label>
+                      <div class="col-sm-8">
+                        <input type="text" class="form-control" placeholder="" id="name">
+                      </div>
+                  </div>
+                  <div class="form-group">
+                      <label class="col-sm-3 control-label">公司代号</label>
+                      <div class="col-sm-8">
+                        <input type="text" class="form-control" placeholder="" id="code">
+                      </div>
+                  </div>
+                  <div class="form-group">
+                    <label class="col-sm-3 control-label">公司领导</label>
+                    <div class="col-sm-6">
+                      <select id="leader" style="width: 100%">
+                        <option value="0" selected="selected">选择公司领导</option>
+                      </select>
+                    </div>
+                  </div>
+                </form>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button id='bt-save' type="button" class="btn btn-primary">保存</button>
+              </div>
+            </div><!-- /.modal-content -->
+          </div><!-- /.modal-dialog -->
+        </div><!-- /.modal -->
+        <div class="modal fade" id="Modal-file" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">导入/导出</h4>
+              </div>
+              <div class="modal-body">
+                <div class="alert alert-dismissable" id='upload-notify'>
+                    <button type="button" class="close" id="bt-upload-notify">&times;</button>
+                    <label id='lb-msg-upload'></label>
+                </div>
+                <form id="submit-file-form" enctype="multipart/form-data" action="/assets/upload_devices" method="post">
+                  <!-- {% csrf_token %} -->
+                <div class="form-group">
+                  {{form}}
+                  <p class="help-block">Example block-level help text here.</p>
+                </div>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button type="submit" class="btn btn-primary" name='action'>保存</button>
+              </div>
+              </form>
+            </div><!-- /.modal-content -->
+          </div><!-- /.modal-dialog -->
+        </div>
+    </div>
+</div>
+{%endblock%}
+{%block bodyjs%}
+    <script src="/static/js/jquery.dataTables.js" ></script>
+    {{ django_context_varable }}
+    {% verbatim %}
+    <script id="tpl" type="text/x-handlebars-template">
+          {{#each func}}
+          <button type="button" class="btn btn-{{this.type}} btn-sm" onclick="{{this.fn}}">{{this.name}}</button>
+          {{/each}}
+    </script>
+    {% endverbatim %}
+    <script src="/static/js/handlebars-v3.0.1.js"></script>
+    <script src="/static/js/company_code.js?v=9a0d0962ac8e77a676ed4b2e128d5fcbadc378e0"></script>
+    <script src="/static/js/dataTables.colVis.js"></script>
+{%endblock%}
+{%block css%}
+<link href="/static/css/jquery.dataTables.css" rel="stylesheet" type="text/css">
+<link href="/static/css/mycss.css" rel="stylesheet" type="text/css">
+<link href="/static/css/dataTables.colVis.css" rel="stylesheet" type="text/css">
+{%endblock%}

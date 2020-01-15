@@ -1,0 +1,272 @@
+{%extends 'template.html'%}
+{%block content%}
+<div id="page-wrapper">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-12">
+                <h1 class="page-header">{{head.value}}</h1>
+
+            </div>
+        </div>
+        <div class="row">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                  <div class="btn-group">
+                    <a><button id="bt-refresh" type="button" class="btn btn-default">刷新</button></a>
+                    <a><button id="bt-save" type="button" class="btn btn-primary">保存</button></a>
+                  </div>
+                  <div class="pull-right">
+                    <a><button id="bt-add" type="button" class="btn btn-default">新增根项目</button></a>
+                    <a><button id="bt-del" type="button" class="btn btn-danger">删除根项目</button></a>
+                  </div>
+                </div>
+                <div class="panel-body">
+                  <div id="container"></div>
+                </div>
+            </div>
+            <!-- Modal -->
+        <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">新增根项目</h4>
+              </div>
+              <div class="modal-body">
+                <div class="alert alert-danger alert-dismissable" id='modal-notify'>
+                  <button type="button" class="close" id="bt-modal-notify">&times;</button>
+                  <label id='lb-msg'></label>
+                </div>
+                <div>
+                  <input type="text" class="form-control" placeholder="时空" id="project_name">
+                </div>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button type="button" id='bt-create' class="btn btn-primary">保存</button>
+              </div>
+            </div><!-- /.modal-content -->
+          </div><!-- /.modal-dialog -->
+        </div><!-- /.modal -->
+        <div class="modal fade" id="myDeleteModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">删除根项目</h4>
+              </div>
+              <div class="modal-body">
+                <div class="alert alert-danger alert-dismissable" id='delmodal-notify'>
+                  <button type="button" class="close" id="bt-delmodal-notify">&times;</button>
+                  <label id='lb-delmsg'></label>
+                </div>
+                <div>
+                  <select id="sl-del" style="width: 100%">
+                    <option selected="selected" value="0">选择删除根项目</option>
+                  </select>
+                  <p class="help-block" style="color:red">(警告:删除根项目会将其所有子节点删除)</p>
+                </div>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button type="button" id='bt-remove' class="btn btn-danger">删除</button>
+              </div>
+            </div><!-- /.modal-content -->
+          </div><!-- /.modal-dialog -->
+        </div><!-- /.modal -->
+      </div>
+    </div>
+</div>
+{%endblock%}
+{%block css%}
+<link rel="stylesheet" href="/static/css/style.css" />
+{%endblock%}
+{%block bodyjs%}
+<script src="/static/js/jstree.js"></script>
+<script type="text/javascript">
+  function formatRepo (repo) {
+    // if (repo.loading) return repo.text;
+
+    // var markup = '<div class="clearfix">' +
+    // '<div class="col-sm-1">' +
+    // '<img src="' + repo.owner.avatar_url + '" style="max-width: 100%" />' +
+    // '</div>' +
+    // '<div clas="col-sm-10">' +
+    // '<div class="clearfix">' +
+    // '<div class="col-sm-6">' + repo.full_name + '</div>' +
+    // '<div class="col-sm-3"><i class="fa fa-code-fork"></i> ' + repo.forks_count + '</div>' +
+    // '<div class="col-sm-2"><i class="fa fa-star"></i> ' + repo.stargazers_count + '</div>' +
+    // '</div>';
+
+    // if (repo.description) {
+    //   markup += '<div>' + repo.description + '</div>';
+    // }
+
+    // markup += '</div></div>';
+    var markup = '<div class="clearfix"><div clas="col-sm-7">' + repo.text + '</div></div>';
+
+    return markup;
+  };
+
+  function formatRepoSelection (repo) {
+      return repo.text || repo.id;
+  };
+
+  $('#container').bind("rename.jstree", function (node, data) {
+    edit_node(node,data);
+  }),
+
+  $('#container').bind("dblclick.jstree", function (event) {
+    //Double Click to Rename
+    $("#container").jstree("rename");
+    // jQuery.trigger("rename.jstree");
+  })
+  var ids=7
+  $(function() {
+    $('#container').jstree({
+      "core" : { 
+        "check_callback" : true,
+        'data' : {
+          "url" : "/project/project_tree",
+          "dataType" : "json" // needed only if you do not supply JSON headers
+        }
+      },
+      "types" : {
+        "default" : {
+          "icon" : "glyphicon glyphicon-flash"
+        },
+        "demo" : {
+          "icon" : "glyphicon glyphicon-ok"
+        }
+      },
+      "plugins" : ["dnd","contextmenu","types"]
+    });
+
+  });
+  $('#sl-del').select2({
+        ajax: {
+            url: '/project/get_project',
+            dataType: 'json',
+            delay: 250,
+            data: function (params) {
+                return params
+            },
+            processResults: function (data, params) {
+                // parse the results into the format expected by Select2
+                // since we are using custom formatting functions we do not need to
+                // alter the remote JSON data, except to indicate that infinite
+                // scrolling can be used
+                params.page = params.page || 1;
+                return {
+                    results: $.map(data, function(item){
+                        return {
+                            id: item.id,
+                            text: item.text,
+                        }
+                    })
+                    // pagination: {
+                    //     more: (params.page * 30) < data.total_count
+                    // };
+                }
+            },
+            cache: true,
+        },
+        minimumResultsForSearch: Infinity,
+        escapeMarkup: function (markup) { return markup; }, // let our custom formatter work
+        // minimumInputLength: 1,
+        templateResult: formatRepo, // omitted for brevity, see the source of this page
+        templateSelection: formatRepoSelection, // omitted for brevity, see the source of this page
+    });
+  $("#bt-add").click( function () {
+      $('#project_name').val('');
+      $("#modal-notify").hide();
+      $('#myModal').modal('show');
+  });
+  $("#bt-del").click( function () {
+      $("#delmodal-notify").hide();
+      $('#myDeleteModal').modal('show');
+  });
+  $('#bt-modal-notify').click( function () {
+        $("#modal-notify").hide();
+    } );
+  $('#bt-delmodal-notify').click( function () {
+        $("#delmodal-notify").hide();
+    } );
+  $(document).ready(function() {
+    $('#bt-create').on('click', function(){
+      var data = {'name': $('#project_name').val()}
+      $.ajax({
+          type: "POST",
+          url: "/project/create_tree",
+          contentType: "application/json; charset=utf-8",
+          data: $.toJSON(data), 
+          success: function (data) {
+              console.log(data);
+              if (data['data']) {
+                  $("#myModal").modal('hide');
+                  $('#container').jstree(true).refresh();
+              }else{
+                  $('#lb-msg').text(data['msg']);
+                  $("#modal-notify").show();
+              };
+          }
+      });
+    });
+    $('#bt-remove').on('click', function(){
+      console.log($('#sl-del').select2('data'));
+      if ('undefined' !== typeof $('#sl-del').select2('data')){
+        var data = {'uid': $('#sl-del').select2('data')[0].id}
+        console.log(data)
+        $.ajax({
+            type: "POST",
+            url: "/project/delete_tree",
+            contentType: "application/json; charset=utf-8",
+            data: $.toJSON(data), 
+            success: function (data) {
+                console.log(data);
+                if (data['data']) {
+                    $("#myDeleteModal").modal('hide');
+                    $('#container').jstree(true).refresh();
+                }else{
+                    $('#lb-delmsg').text(data['msg']);
+                    $("#delmodal-notify").show();
+                };
+            }
+        });
+      }else{
+        $('#lb-delmsg').text('请选择项目!');
+        $("#delmodal-notify").show();
+      };
+    });
+    $('#bt-refresh').on('click', function(){
+      if(confirm("您确定要执行刷新操作吗？未保存操作将丢失！")){
+        var instance = $('#container').jstree(true);
+        instance.refresh();
+      }else{
+        return false
+      }
+    });
+    $('#bt-save').on('click', function(){
+      var instance = $('#container').jstree(true);
+      console.log($("#container").data().jstree.get_json());
+      var pdata = $.toJSON( $("#container").data().jstree.get_json() );
+      console.log(pdata)
+      $.ajax({
+          type: "POST",
+          url: "/project/save_tree",
+          contentType: "application/json; charset=utf-8",
+          data: pdata, 
+          success: function (data) {
+              console.log(data);
+              if (data['data']) {
+                  instance.refresh();
+              }else{
+                  alert(data['msg']);
+                  instance.refresh();
+              };
+          }
+      });
+    });
+  });
+</script>
+{%endblock%}

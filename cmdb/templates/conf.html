@@ -1,0 +1,305 @@
+{%extends 'template.html'%}
+{%block content%}
+<div id="page-wrapper">
+    <div class="row">
+        <div class="col-lg-12">
+            <h1 class="page-header">{{head.value}}</h1>                
+        </div>            
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+          <div class="panel panel-default">
+            <div class="panel-heading">
+              <div class="row">
+                <div class="col-xs-9"><h4>资源类型配置</h4></div>
+                <div class="col-xs-3 text-right">
+                  <button class="btn btn-primary" id="bt-add">新增</button>
+                  <button class="btn btn-danger" id="bt-del">删除</button>
+                </div>
+              </div>
+            </div>
+            <div class="panel-body">
+              <table id="tb-sourcetype" class="display" width="100%" cellspacing="0">
+                <thead>
+                  <tr>
+                    <th class="center sorting_disabled" style="text-align: center;">
+                      <label class="pos-rel">
+                        <input id='chb-all' type="checkbox">
+                      </label>
+                    </th>
+                    <th>名字</th>
+                    <th>CPU</th>
+                    <th>内存</th>
+                    <th>磁盘</th>
+                    <th>缓存卡</th>
+                    <th>SSD</th>
+                    <th>网卡</th>
+                    <th>操作</th>
+                  </tr>
+                </thead>
+              </table>
+            </div>
+          </div>
+        </div>
+    </div>
+    <!-- Modal -->
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4 class="modal-title" id="myModalLabel"></h4>
+          </div>
+          <div class="modal-body">
+            <div class="alert alert-danger alert-dismissable" id='modal-notify'>
+              <button type="button" class="close" id="bt-modal-notify">&times;</button>
+              <label id='lb-msg'></label>
+            </div>
+            <ul id="modal-list">
+              <li class="form-group">
+                  <label class="col-sm-3 control-label">名字</label>
+                  <div class="col-sm-7">
+                    <input type="text" class="form-control " placeholder="name" id="name">
+                  </div>
+              </li>
+              <li class="form-group">
+                  <label class="col-sm-3 control-label">CPU</label>
+                  <div class="col-sm-7">
+                    <input type="text" class="form-control " placeholder="cpu" id="cpu">
+                  </div>
+              </li>
+              <li class="form-group">
+                  <label class="col-sm-3 control-label">内存</label>
+                  <div class="col-sm-7">
+                    <input type="text" class="form-control " placeholder="memory" id="memory">
+                  </div>
+              </li>
+              <li class="form-group">
+                  <label class="col-sm-3 control-label">磁盘</label>
+                  <div class="col-sm-7">
+                    <input type="text" class="form-control " placeholder="disk" id="disk">
+                  </div>
+              </li>
+              <li class="form-group">
+                  <label class="col-sm-3 control-label">缓存卡</label>
+                  <div class="col-sm-7">
+                    <input type="text" class="form-control " placeholder="cache" id="cache">
+                  </div>
+              </li>
+              <li class="form-group">
+                  <label class="col-sm-3 control-label">SSD</label>
+                  <div class="col-sm-7">
+                    <input type="text" class="form-control " placeholder="ssd" id="ssd">
+                  </div>
+              </li>
+              <li class="form-group">
+                  <label class="col-sm-3 control-label">网卡</label>
+                  <div class="col-sm-7">
+                    <input type="text" class="form-control " placeholder="network" id="network">
+                  </div>
+              </li>
+            </ul>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-primary" id="bt-save">保存</button>
+            <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+          </div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+</div>
+{%endblock%}
+{%block bodyjs%}
+<script src="/static/js/jquery.dataTables.js" ></script>
+<script src="/static/js/handlebars-v3.0.1.js"></script>
+{{ django_context_varable }}
+{% verbatim %}
+<script id="tpl" type="text/x-handlebars-template">
+      {{#each func}}
+      <button type="button" class="btn btn-{{this.type}} btn-sm" onclick="{{this.fn}}">{{this.name}}</button>
+      {{/each}}
+</script>
+{% endverbatim %}
+<script type="text/javascript">
+    var rows_selected = [];
+    var editFlag;
+    var table;
+    var tpl = $("#tpl").html();
+    var template = Handlebars.compile(tpl);
+    function edit(name,cpu,memory,disk,cache_adapter,ssd,network_adapter){
+      editFlag= true;
+      $("#modal-notify").hide();
+      $("#name").val(name);
+      $("#cpu").val(cpu);
+      $("#memory").val(memory);
+      $("#disk").val(disk);
+      $("#cache").val(cache_adapter);
+      $("#ssd").val(ssd);
+      $("#network").val(network_adapter);
+      $("#myModalLabel").text('修改资源类型信息');
+      $("#myModal").modal('show');
+    };
+    $(document).ready(function() {
+        table = $('#tb-sourcetype').DataTable({
+            "ajax": "/assets/data_source_type",
+            "columns": [
+                {"data": null},
+                {"data": "name"},
+                {"data": "cpu"},
+                {"data": "memory"},
+                {"data": "disk"},
+                {"data": "cache_adapter"},
+                {"data": "ssd"},
+                {"data": "network_adapter"},
+                {
+                  "data": null,
+                  "orderable": false,
+                },
+            ],
+            "order": [[1, 'asc']],
+            columnDefs: [
+                {
+                  'targets': 0,
+                  'orderable': false,
+                  'searchable': false,
+                  'className': 'dt-body-center',
+                  'render': function (data, type, full, meta){
+                     return '<input type="checkbox">';
+                    },
+                },
+                {
+                    targets: 8,
+                    render: function (a, b, c, d) {
+                        var context =
+                        {
+                            func: [
+                                {"name": "修改", "fn": "edit(\'" + c.name + "\', \'" + c.cpu + "\', \'" + c.memory + "\', \'" + c.disk + "\', \'" + c.cache_adapter + "\', \'" + c.ssd + "\', \'" + c.network_adapter + "\')", "type": "primary"},
+                            ]
+                        };
+                        var html = template(context);
+                        return html;
+                    }
+                }
+            ],
+            "language": {
+                "url": "/static/js/i18n/Chinese.json"
+            },
+        });
+     
+        $('#chb-all').on('click', function(e){
+            var checkbox = document.getElementById('chb-all');
+            $('#tb-sourcetype tbody td').parent().find('input[type="checkbox"]').map(function(i,n){
+                var $row = $(this).closest('tr');
+                n.checked = checkbox.checked;
+                if (checkbox.checked){
+                  $row.addClass('selected');
+                }else{
+                  $row.removeClass('selected');
+                }
+            });
+        });
+        $("#bt-add").on('click',function (){
+          editFlag = false;
+          $("#modal-notify").hide();
+          $("#name").val('');
+          $("#cpu").val('');
+          $("#memory").val('');
+          $("#disk").val('');
+          $("#cache").val('');
+          $("#ssd").val('');
+          $("#network").val('');
+          $("#myModalLabel").text('新增资源类型信息');
+          $("#myModal").modal('show');
+        });
+        $('#tb-sourcetype tbody').on('click', 'input[type="checkbox"]', function(e){
+            e.stopPropagation();
+            var $row = $(this).closest('tr');
+
+            var data = table.row($row).data();
+            var index = $.inArray(data[0], rows_selected);
+
+            if(this.checked && index === -1){
+                rows_selected.push(data[0]);
+            } else if (!this.checked && index !== -1){
+                rows_selected.splice(index, 1);
+            }
+
+            if(this.checked){
+                $row.addClass('selected');
+            } else {
+                $row.removeClass('selected');
+            }
+
+            // Prevent click event from propagating to parent
+            // e.stopPropagation();
+        });
+     
+        //删除
+        $('#bt-del').click( function () {
+            if (table.row('.selected')[0].length == ''){
+                alert('请选择!')
+            }
+            else{
+                if(confirm("您确定要执行删除操作吗？")){
+                    var length=table.rows('.selected').data().length;
+                    var raw=[];
+                    for (var i=0; i<length; i++){
+                        raw[i] = table.rows('.selected').data()[i]
+                    };
+                    var encoded=$.toJSON( raw );
+                    var pdata = encoded;
+                    $.ajax({
+                        'type': "POST",
+                        'url': "/assets/data_del_source_type",
+                        'contentType': "application/json; charset=utf-8",
+                        'data': pdata,
+                        success: function (data) {
+                            if (data){
+                                table.ajax.reload();
+                            }
+                            else{
+                                alert(data['msg'])
+                            }
+                        }
+                    });
+                }else{
+                    return false;
+                }
+            }
+        } );
+        $('#bt-save').click( function () {
+          var url = '/assets/data_add_source_type';
+          if (editFlag){
+            url = '/assets/data_edit_source_type'
+          };
+          var inputs = {
+            "name": $("#name").val(),
+            "cpu": $("#cpu").val(),
+            "memory": $("#memory").val(),
+            "disk": $("#disk").val(),
+            "cache_adapter": $("#cache").val(),
+            "ssd": $("#ssd").val(),
+            "network_adapter": $("#network").val(),
+          };
+          console.log(inputs);
+          $.ajax({
+            'type': "POST",
+            'url': url,
+            'contentType': "application/json; charset=utf-8",
+            'data': $.toJSON(inputs),
+            success: function (data){
+              if (data){
+                $("#myModal").modal('hide');
+                table.ajax.reload()
+              }else{
+                alert(data['msg'])
+              }
+            }
+          });
+        });
+    } );
+</script>
+{%endblock%}
+{%block css%}
+<link href="/static/css/jquery.dataTables.css" rel="stylesheet" type="text/css">
+{%endblock%}

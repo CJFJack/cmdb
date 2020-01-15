@@ -1,0 +1,233 @@
+{% extends 'template.html' %}
+
+{% block username %}
+    {{ head.username }}
+{% endblock %}
+
+{% block content %}
+    <input id="account" style="display: none;" value="{{ account }}">
+    <div id="page-wrapper">
+        <div class="row">
+            <div class="col-lg-12">
+                <h1 class="page-header">{{ head.value }}</h1>
+                <input type="hidden" class="form-control " id="group_id" value= {{ head.group_id }}>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-6">
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        邮件审批设置
+                    </div>
+                    <!-- /.panel-heading -->
+                    <div class="panel-body">
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label" for="approve">热更新邮件审批</label>
+                            <label class="checkbox-inline">
+                                {% if hot_update_email_approve %}
+                                    <input type="checkbox" name="my-checkbox" checked="checked">
+                                {% else %}
+                                    <input type="checkbox" name="my-checkbox">
+                                {% endif %}
+                            </label>
+                            <label>
+                                <a href="/myworkflows/hotupdate_email_approve_help_doc">使用帮助</a>
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <button type="button" id="bt-save" class="btn btn-outline btn-primary btn-sm">保存</button>
+                        </div>
+                    </div>
+                    <!-- /.panel-body -->
+                </div>
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        微信审批设置
+                    </div>
+                    <!-- /.panel-heading -->
+                    <div class="panel-body">
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label" for="approve">工单微信审批</label>
+                            <label class="checkbox-inline">
+                                {% if wechat_approve %}
+                                    <input type="checkbox" name="my-wechat-checkbox" checked="checked">
+                                {% else %}
+                                    <input type="checkbox" name="my-wechat-checkbox">
+                                {% endif %}
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <button type="button" id="bt-wechat-save" class="btn btn-outline btn-primary btn-sm">
+                                保存
+                            </button>
+                        </div>
+                    </div>
+                    <!-- /.panel-body -->
+                </div>
+                <!--重置CMDB密码 -->
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        重置CMDB密码
+                    </div>
+                    <div class="alert alert-danger alert-dismissable hidden" id='modal-notify-cmdb-pwd'>
+                        <button type="button" class="close" id="bt-modal-notify-cmdb-pwd">&times;</button>
+                        <label id='lb-msg-cmdb-pwd'></label>
+                    </div>
+                    <!-- /.panel-heading -->
+                    <div class="panel-body">
+                        <div class="form-group">
+                            <div class="form-group has-error col-sm-12" id="div-cmdb-pwd-msg" hidden="true">
+                                <label class="control-label" id='cmdb-pwd-msg' for="inputError"></label>
+                            </div>
+                            <div class="form-group col-sm-12">
+                                <div class="col-sm-6">
+                                    <input class="form-control" id="new_passwd1" type="password"
+                                           placeholder="请输入一个新的密码">
+                                </div>
+                            </div>
+                            <div class="form-group col-sm-12">
+                                <div class="col-sm-6">
+                                    <input class="form-control" id="new_passwd2" type="password" placeholder="请再次确认密码">
+                                </div>
+                            </div>
+                            <div class="form-group col-sm-12">
+                                <div class="col-sm-12">
+                                    <button type="button" class="btn btn-primary btn-outline" id='bt-cmdb-pwd-commit'>提交</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--重置企业QQ密码 -->
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        重置企业QQ密码
+                    </div>
+                    <div class="alert alert-danger alert-dismissable hidden" id='modal-notify-ent-qq'>
+                        <button type="button" class="close" id="bt-modal-notify-ent-qq">&times;</button>
+                        <label id='lb-msg-ent-qq'></label>
+                    </div>
+                    <!-- /.panel-heading -->
+                    <div class="panel-body">
+                        <div class="form-group">
+                            <div class="col-sm-8">
+                                <input type="password" class="form-control" id="password-ent-qq" name="password-ent-qq"
+                                       placeholder="请输入登录密码">
+                            </div>
+
+                            <button type="button" id="bt-qq-commit" class="btn btn-outline btn-primary">提交</button>
+                        </div>
+                    </div>
+                    <!-- /.panel-body -->
+                    <div class="panel-footer">
+                        <p class="text-danger"><strong>密码要求：长度必须6-16位，且包含以下情况的三种：字母、数字、符号!、@、*等，不可修改已绑定手机的员工密码</strong>
+                        </p>
+                    </div>
+                </div>
+                <!--重置企业邮箱密码 -->
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        重置企业邮箱密码
+                    </div>
+                    <div class="alert alert-danger alert-dismissable hidden" id='modal-notify-ent-email'>
+                        <button type="button" class="close" id="bt-modal-notify-ent-email">&times;</button>
+                        <label id='lb-msg-ent-email'></label>
+                    </div>
+                    <!-- /.panel-heading -->
+                    <div class="panel-body">
+                        <div class="form-group">
+                            <label>选择修改邮箱</label>
+                            {% for e in email %}
+                                <div class="checkbox">
+                                    <label>
+                                        <input type="radio" name="radio_email"
+                                               {% if email_count == 1 %}checked="true"{% endif %}value="{{ e }}">{{ e }}
+                                    </label>
+                                </div>
+                            {% endfor %}
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-8">
+                                <input type="password" class="form-control" id="password-ent-email"
+                                       name="password-ent-email"
+                                       placeholder="请输入登录密码">
+
+                            </div>
+                            <button type="button" id="bt-email-commit" class="btn btn-outline btn-primary">提交</button>
+                        </div>
+                    </div>
+                    <!-- /.panel-body -->
+                    <div class="panel-footer">
+                        <p class="text-danger"><strong>密码要求：同时包含大写字母、小写字母和数字，长度为6-32个字符，不包含账号信息与空格，不是常见密码</strong>
+                        </p>
+                    </div>
+                </div>
+                <!--重置SVN密码 -->
+                {% if svn_change_passwd %}
+                    <div class="panel panel-primary">
+                        <div class="panel-heading">
+                            重置SVN密码
+                        </div>
+                        <div class="alert alert-danger alert-dismissable hidden" id='modal-notify-svn'>
+                            <button type="button" class="close" id="bt-modal-notify-svn">&times;</button>
+                            <label id='lb-msg-svn'></label>
+                        </div>
+                        <!-- /.panel-heading -->
+                        <div class="panel-body">
+                            <div class="form-group">
+                                <div class="col-sm-8">
+                                    <input type="password" class="form-control" id="password-svn" name="password-svn"
+                                           placeholder="请输入登录密码">
+
+                                </div>
+                                <button type="button" id="bt-svn-commit" class="btn btn-outline btn-primary">提交</button>
+                            </div>
+                        </div>
+                        <!-- /.panel-body -->
+                        <div class="panel-footer">
+                            <p class="text-danger">
+                                <strong>密码要求：同时包含大写字母、小写字母和数字，长度为8-32个字符，不包含账号信息与空格，不是常见密码</strong>
+                            </p>
+                        </div>
+                    </div>
+                {% endif %}
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        重置 Wifi（Cy-Public） /  LDAP 密码  /  Jenkins 密码
+                    </div>
+                    <div class="alert alert-danger alert-dismissable hidden" id='modal-notify-ldap'>
+                        <button type="button" class="close" id="bt-modal-notify-ldap">&times;</button>
+                        <label id='lb-msg-ldap'></label>
+                    </div>
+                    <!-- /.panel-heading -->
+                    <div class="panel-body">
+                        <div class="form-group">
+                            <div class="col-sm-8">
+                                <input type="password" class="form-control" id="password-ldap" name="password-ldap"
+                                       placeholder="请输入密码">
+
+                            </div>
+                            <button type="button" id="bt-ldap-commit" class="btn btn-outline btn-primary">提交</button>
+                        </div>
+                    </div>
+                    <!-- /.panel-body -->
+                    <div class="panel-footer">
+                        <p class="text-danger">
+                            <strong>密码要求：同时包含大写字母、小写字母和数字，长度为8-32个字符，不包含账号信息与空格，不是常见密码</strong>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block bodyjs %}
+    <script src="/static/js/user_profile.js?v=20190602001"></script>
+    <script src="/static/js/bootstrap-switch.js"></script>
+    <script src="/static/js/jquery.toast.min.js"></script>
+{% endblock %}
+{% block css %}
+    <link href="/static/css/bootstrap-switch.css" rel="stylesheet" type="text/css">
+    <link href="/static/css/jquery.toast.min.css" rel="stylesheet" type="text/css">
+    <link href="/static/css/user_profile.css" rel="stylesheet" type="text/css">
+{% endblock %}

@@ -1,0 +1,68 @@
+{%extends 'template.html'%}
+
+{%block username%}
+{{head.username}}
+{%endblock%}
+
+{%block content%}
+<div id="page-wrapper">
+    <div class="row">
+        <div class="col-lg-12">
+            <h1 class="page-header">{{head.value}}</h1>
+        </div>
+    </div>
+
+    <div class="row">
+
+        {% for assets in data.all_assets %}
+            <div class="col-lg-12">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <i class="fa fa-bar-chart-o fa-fw"></i> {{assets.company}}
+                    </div>
+                    <div class="panel-body">
+                        {% for data in assets.data %}
+                            <div class="col-lg-2 col-md-6">
+                                <div class={{data.panel}}>
+                                    <div class="panel-heading">
+                                        <div class="row">
+                                            <div class="col-xs-3">
+                                                <i class="fa fa-tasks fa-5x"></i>
+                                            </div>
+                                            <div class="col-xs-9 text-right">
+                                                <div class="huge">{{data.number}}</div>
+                                                <div>{{data.status}}</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <a href={{data.url}}>
+                                        <div class="panel-footer">
+                                            <span class="pull-left">查看详情</span>
+                                            <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                                            <div class="clearfix"></div>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+
+    </div>
+    
+</div>
+{%endblock%}
+{%block bodyjs%}
+    {{ django_context_varable }}
+    {% verbatim %}
+    <script id="tpl" type="text/x-handlebars-template">
+          {{#each func}}
+          <button type="button" class="btn btn-{{this.type}} btn-sm" onclick="{{this.fn}}">{{this.name}}</button>
+          {{/each}}
+    </script>
+    {% endverbatim %}
+{%endblock%}
+{%block css%}
+{%endblock%}

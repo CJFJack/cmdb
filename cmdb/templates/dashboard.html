@@ -1,0 +1,146 @@
+{% extends 'template.html' %}
+{% block content %}
+    <!-- 60秒刷新一次 -->
+{#    <meta http-equiv="refresh" content="60">#}
+
+    <div id="page-wrapper" style="height:600px;width:89%;overflow:auto;">
+        <div class="row">
+            <div class="col-md-12">
+                <h1 class="page-header">仪表盘</h1>
+            </div>
+        </div>
+        <br/>
+        <div class="row">
+            <div class="col-md-4">
+                <div id="hot_update_pie" style="min-height:300px;"></div>
+                <a class="btn btn-outline btn-primary btn-block" href="/myworkflows/hot_server_list/">热更新控制台</a>
+            </div>
+            <div class="col-md-4">
+                <div id="version_update_pie" style="min-height:300px;"></div>
+                <a class="btn btn-outline btn-primary btn-block"
+                   href="/myworkflows/apply_history_all?workflow=7">版本更新单</a>
+            </div>
+            <div class="col-md-4">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <i class="fa fa-bell fa-fw"></i> 待审批工单
+                    </div>
+                    <div class="panel-body">
+                        <div class="list-group">
+                            {% for x in unapprove %}
+                                <a href="{{ x.url }}" class="list-group-item">
+                                    <i class="fa fa-comment fa-fw"></i> {{ x.title }}
+                                    <span class="pull-right text-muted small"><em>{{ x.t }} 分钟前</em>
+                                    </span>
+                                </a>
+                            {% endfor %}
+                        </div>
+                        <a href="/myworkflows/approve_list/" class="btn btn-outline btn-primary btn-block">我的待审批</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br>
+        <div class="row">
+            <div class="col-md-4">
+                <div id="system_cron_pie" style="min-height:300px;"></div>
+                <a class="btn btn-outline btn-primary btn-block" href="/assets/system_cron_list/">系统作业管理</a>
+            </div>
+            <div class="col-md-4">
+
+            </div>
+            <div class="col-md-4">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <i class="fa fa-bell fa-fw"></i> 最近审批记录
+                    </div>
+                    <div class="panel-body">
+                        <div class="list-group">
+                            {% for x in approved %}
+                                <a href="{{ x.url }}" class="list-group-item">
+                                    <i class="fa fa-comment fa-fw"></i> {{ x.title }}
+                                    <span class="pull-right text-muted small"><em>{{ x.s }}</em>
+                                    </span>
+                                </a>
+                            {% endfor %}
+                        </div>
+                        <a href="/myworkflows/approved_list/" class="btn btn-outline btn-primary btn-block">我的审批记录</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <hr>
+        <div class="row">
+            <div class="col-md-4">
+                <div id="host_migrate_pie" style="min-height:300px;"></div>
+                <a class="btn btn-outline btn-primary btn-block" href="/myworkflows/host_compression_apply_list/">主机迁服控制台</a>
+            </div>
+            <div class="col-md-4">
+                <div id="host_recover_pie" style="min-height:300px;"></div>
+                <a class="btn btn-outline btn-primary btn-block"
+                   href="/myworkflows/host_compression_apply_list/">主机回收控制台</a>
+            </div>
+            <div class="col-md-4">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <i class="fa fa-bell fa-fw"></i> 最近申请记录
+                    </div>
+                    <div class="panel-body">
+                        <div class="list-group">
+                            {% for x in apply_history %}
+                                <a href="{{ x.url }}" class="list-group-item">
+                                    <i class="fa fa-comment fa-fw"></i> {{ x.title }}
+                                    <span class="pull-right text-muted small"><em>{{ x.s }}</em>
+                                    </span>
+                                </a>
+                            {% endfor %}
+                        </div>
+                        <a href="/myworkflows/apply_history/" class="btn btn-outline btn-primary btn-block">我的申请</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br>
+        <div class="row">
+            <div class="col-md-4">
+                <div id="host_initialize_pie" style="min-height:300px;"></div>
+                <a class="btn btn-outline btn-primary btn-block" href="/assets/host_initialize/">主机初始化控制台</a>
+            </div>
+        </div>
+        <hr>
+        <div class="row">
+            <div class="col-md-4">
+                <div id="game_server_action_pie" style="min-height:300px;"></div>
+                <a class="btn btn-outline btn-primary btn-block" href="/myworkflows/game_server_action_record/">区服管理操作控制台</a>
+            </div>
+            <div class="col-md-4">
+                <div id="modsrv_opentime_pie" style="min-height:300px;"></div>
+                <a class="btn btn-outline btn-primary btn-block" href="/ops/modify_srv_open_time_schedule_list/">修改开服时间控制台</a>
+            </div>
+            <div class="col-md-4">
+                <div id="game_server_off_pie" style="min-height:300px;"></div>
+                <a class="btn btn-outline btn-primary btn-block" href="/ops/game_server_off_list/">游戏项目下架控制台</a>
+            </div>
+        </div>
+        <br/>
+        <div class="row">
+            <div class="col-md-4">
+                <div id="game_server_merge_pie" style="min-height:300px;"></div>
+                <a class="btn btn-outline btn-primary btn-block" href="/ops/game_server_merge_list/">合服计划控制台</a>
+            </div>
+            <div class="col-md-4">
+                <div id="game_server_install_pie" style="min-height:300px;"></div>
+                <a class="btn btn-outline btn-primary btn-block" href="/ops/install_gameserver_list/">装服计划控制台</a>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block bodyjs %}
+    <script src="/static/js/echarts/echarts.min.js"></script>
+    <script src="/static/js/dashboard.js?v=20191211001"></script>
+    <!-- showloading.js-->
+    <script src="/static/js/showloading.min.js"></script>
+{% endblock %}
+{% block css %}
+    <link href="/static/css/showloading.css" rel="stylesheet" media="screen">
+{% endblock %}
